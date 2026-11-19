@@ -1,0 +1,791 @@
+{
+  "rows": 80,
+  "binary": {
+    "tp": 22,
+    "fp": 0,
+    "fn": 8,
+    "tn": 40,
+    "precision": 1.0,
+    "recall": 0.7333333333333333,
+    "f1": 0.8461538461538461,
+    "fpr": 0.0,
+    "brier": 0.10411546171428572,
+    "ece": 0.09691999999999998
+  },
+  "context_macro_f1": 0.7973065666727639,
+  "context_accuracy": 0.8375,
+  "context_per_class": {
+    "risiko_aktif": {
+      "f1": 0.8727272727272727,
+      "support": 30
+    },
+    "layanan_normal": {
+      "f1": 0.8450704225352113,
+      "support": 30
+    },
+    "laporan_kejadian": {
+      "f1": 0.9,
+      "support": 10
+    },
+    "konteks_kurang": {
+      "f1": 0.5714285714285714,
+      "support": 10
+    }
+  },
+  "confusion": {
+    "risiko_aktif": {
+      "risiko_aktif": 24,
+      "layanan_normal": 6,
+      "laporan_kejadian": 0,
+      "konteks_kurang": 0
+    },
+    "layanan_normal": {
+      "risiko_aktif": 0,
+      "layanan_normal": 30,
+      "laporan_kejadian": 0,
+      "konteks_kurang": 0
+    },
+    "laporan_kejadian": {
+      "risiko_aktif": 0,
+      "layanan_normal": 1,
+      "laporan_kejadian": 9,
+      "konteks_kurang": 0
+    },
+    "konteks_kurang": {
+      "risiko_aktif": 1,
+      "layanan_normal": 4,
+      "laporan_kejadian": 1,
+      "konteks_kurang": 4
+    }
+  },
+  "errors": [
+    {
+      "text": "Untuk BPJS-nya biar nggak ditolak, ada biaya pengurusan seratus ribu, nggak usah pakai kwitansi ya",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0791,
+          "confidence": 0.9209,
+          "answer_confidence": 0.9209,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.037,
+            "layanan_normal": 0.8885,
+            "laporan_kejadian": 0.0375,
+            "konteks_kurang": 0.037
+          },
+          "confidence": 0.6593,
+          "answer_confidence": 0.8885,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "legacy_stress:4",
+        "category": "legacy_stress",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Kode itu dimasukkan di layar sebelah.",
+      "expected": {
+        "context_status": "konteks_kurang"
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.08,
+          "confidence": 0.92,
+          "answer_confidence": 0.92,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0372,
+            "layanan_normal": 0.8875,
+            "laporan_kejadian": 0.0376,
+            "konteks_kurang": 0.0376
+          },
+          "confidence": 0.6573,
+          "answer_confidence": 0.8875,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:konteks_kurang:4",
+        "category": "konteks_kurang",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Tagihan resminya sejuta, tambahan dua ratus ribu untuk saya tidak dicetak.",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.7945,
+          "confidence": 0.7945,
+          "answer_confidence": 0.7945,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0387,
+            "layanan_normal": 0.8842,
+            "laporan_kejadian": 0.0387,
+            "konteks_kurang": 0.0383
+          },
+          "confidence": 0.6497,
+          "answer_confidence": 0.8842,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:risiko_aktif:3",
+        "category": "risiko_aktif",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Bayarnya ikut yang kemarin saja.",
+      "expected": {
+        "context_status": "konteks_kurang"
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0904,
+          "confidence": 0.9096,
+          "answer_confidence": 0.9096,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "laporan_kejadian",
+          "probabilities": {
+            "risiko_aktif": 0.0431,
+            "layanan_normal": 0.0466,
+            "laporan_kejadian": 0.8676,
+            "konteks_kurang": 0.0427
+          },
+          "confidence": 0.6132,
+          "answer_confidence": 0.8676,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:konteks_kurang:0",
+        "category": "konteks_kurang",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Kalau mau rawat inap hari ini kamar penuh Bu, tapi bisa saya aturkan kalau ada pelicinnya",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0992,
+          "confidence": 0.9008,
+          "answer_confidence": 0.9008,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "risiko_aktif",
+          "probabilities": {
+            "risiko_aktif": 0.7793,
+            "layanan_normal": 0.1342,
+            "laporan_kejadian": 0.0435,
+            "konteks_kurang": 0.043
+          },
+          "confidence": 0.4695,
+          "answer_confidence": 0.7793,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "legacy_stress:9",
+        "category": "legacy_stress",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Saya minta seratus ribu di saku berkas supaya nomor antrean maju.",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.1299,
+          "confidence": 0.8701,
+          "answer_confidence": 0.8701,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "risiko_aktif",
+          "probabilities": {
+            "risiko_aktif": 0.8321,
+            "layanan_normal": 0.0671,
+            "laporan_kejadian": 0.0504,
+            "konteks_kurang": 0.0504
+          },
+          "confidence": 0.5416,
+          "answer_confidence": 0.8321,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:risiko_aktif:1",
+        "category": "risiko_aktif",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Dalam pengaduan ini tertulis bahwa korban diminta transfer ke rekening pegawai.",
+      "expected": {
+        "context_status": "laporan_kejadian",
+        "is_fraud": false
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0799,
+          "confidence": 0.9201,
+          "answer_confidence": 0.9201,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0382,
+            "layanan_normal": 0.8125,
+            "laporan_kejadian": 0.1111,
+            "konteks_kurang": 0.0382
+          },
+          "confidence": 0.5222,
+          "answer_confidence": 0.8125,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:laporan_kejadian:3",
+        "category": "laporan_kejadian",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Kita ganti identitas pasien dengan kartu peserta tetangga agar ditanggung.",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0823,
+          "confidence": 0.9177,
+          "answer_confidence": 0.9177,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0507,
+            "layanan_normal": 0.8457,
+            "laporan_kejadian": 0.0524,
+            "konteks_kurang": 0.0512
+          },
+          "confidence": 0.5675,
+          "answer_confidence": 0.8457,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:risiko_aktif:4",
+        "category": "risiko_aktif",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Kalau Ibu mau lewat jalur khusus, nanti saya antar ke dokter langsung tanpa antri, tapi ada uang terima kasihnya ya",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.1002,
+          "confidence": 0.8998,
+          "answer_confidence": 0.8998,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "risiko_aktif",
+          "probabilities": {
+            "risiko_aktif": 0.8845,
+            "layanan_normal": 0.0414,
+            "laporan_kejadian": 0.0371,
+            "konteks_kurang": 0.0371
+          },
+          "confidence": 0.6503,
+          "answer_confidence": 0.8845,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "legacy_stress:6",
+        "category": "legacy_stress",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Alamat dan rekeningnya boleh dicatat?",
+      "expected": {
+        "context_status": "konteks_kurang"
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0793,
+          "confidence": 0.9207,
+          "answer_confidence": 0.9207,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0478,
+            "layanan_normal": 0.7696,
+            "laporan_kejadian": 0.0534,
+            "konteks_kurang": 0.1293
+          },
+          "confidence": 0.4462,
+          "answer_confidence": 0.7696,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:konteks_kurang:5",
+        "category": "konteks_kurang",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Walau tidak ada pemeriksaan, tulis saja pemeriksaan itu di klaim.",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.106,
+          "confidence": 0.894,
+          "answer_confidence": 0.894,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0345,
+            "layanan_normal": 0.7917,
+            "laporan_kejadian": 0.1394,
+            "konteks_kurang": 0.0345
+          },
+          "confidence": 0.5009,
+          "answer_confidence": 0.7917,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:risiko_aktif:5",
+        "category": "risiko_aktif",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Tolong sebutin kode verifikasi yang masuk ke HP Bapak, saya lagi bantu aktifin akun pasiennya",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0914,
+          "confidence": 0.9086,
+          "answer_confidence": 0.9086,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "risiko_aktif",
+          "probabilities": {
+            "risiko_aktif": 0.889,
+            "layanan_normal": 0.0381,
+            "laporan_kejadian": 0.0365,
+            "konteks_kurang": 0.0365
+          },
+          "confidence": 0.6606,
+          "answer_confidence": 0.889,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "legacy_stress:11",
+        "category": "legacy_stress",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Saya akan bantu urus uangnya.",
+      "expected": {
+        "context_status": "konteks_kurang"
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0937,
+          "confidence": 0.9063,
+          "answer_confidence": 0.9063,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "risiko_aktif",
+          "probabilities": {
+            "risiko_aktif": 0.7715,
+            "layanan_normal": 0.046,
+            "laporan_kejadian": 0.0399,
+            "konteks_kurang": 0.1427
+          },
+          "confidence": 0.4604,
+          "answer_confidence": 0.7715,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:konteks_kurang:3",
+        "category": "konteks_kurang",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Ada orang menunggu uang administrasi.",
+      "expected": {
+        "context_status": "konteks_kurang"
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0784,
+          "confidence": 0.9216,
+          "answer_confidence": 0.9216,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0372,
+            "layanan_normal": 0.8879,
+            "laporan_kejadian": 0.0376,
+            "konteks_kurang": 0.0372
+          },
+          "confidence": 0.6581,
+          "answer_confidence": 0.8879,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:konteks_kurang:7",
+        "category": "konteks_kurang",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Jangan bayar ke kasir, bayar biaya operasi ke rekening pribadi adik saya.",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.8983,
+          "confidence": 0.8983,
+          "answer_confidence": 0.8983,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0902,
+            "layanan_normal": 0.8267,
+            "laporan_kejadian": 0.0418,
+            "konteks_kurang": 0.0413
+          },
+          "confidence": 0.5393,
+          "answer_confidence": 0.8267,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:risiko_aktif:6",
+        "category": "risiko_aktif",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Tolong bacakan enam digit angka yang barusan dikirim lewat SMS ya Bu, itu untuk konfirmasi jadwal dokter",
+      "expected": {
+        "context_status": "risiko_aktif",
+        "is_fraud": true
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0839,
+          "confidence": 0.9161,
+          "answer_confidence": 0.9161,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.048,
+            "layanan_normal": 0.8559,
+            "laporan_kejadian": 0.048,
+            "konteks_kurang": 0.048
+          },
+          "confidence": 0.5884,
+          "answer_confidence": 0.8559,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "legacy_stress:2",
+        "category": "legacy_stress",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    },
+    {
+      "text": "Berkasnya perlu diganti dulu.",
+      "expected": {
+        "context_status": "konteks_kurang"
+      },
+      "answers": {
+        "is_fraud": {
+          "type": "noul",
+          "noul": 0.0782,
+          "confidence": 0.9218,
+          "answer_confidence": 0.9218,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        },
+        "context_status": {
+          "type": "choice",
+          "choice": "layanan_normal",
+          "probabilities": {
+            "risiko_aktif": 0.0601,
+            "layanan_normal": 0.805,
+            "laporan_kejadian": 0.0671,
+            "konteks_kurang": 0.0678
+          },
+          "confidence": 0.4897,
+          "answer_confidence": 0.805,
+          "action": {
+            "act_probability": 1.0
+          },
+          "abstention": "passed",
+          "abstention_threshold": 0.0
+        }
+      },
+      "metadata": {
+        "family_id": "challenge:konteks_kurang:9",
+        "category": "konteks_kurang",
+        "synthetic": true,
+        "variant": "handwritten"
+      }
+    }
+  ],
+  "batch_ms_per_case": 5.397982109570876,
+  "checkpoint": "/home/ojan/laya_ai/ai_fraud_detection_microphone/training/checkpoints/v3-s2",
+  "split": "test"
+}

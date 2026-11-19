@@ -1,0 +1,17 @@
+{
+  "python": "3.12.3",
+  "packages": {
+    "laya": "0.4.35",
+    "torch": "2.15.0",
+    "transformers": "5.23.0",
+    "paho-mqtt": "2.2.0",
+    "PyYAML": "6.0.3",
+    "numpy": "2.5.5",
+    "safetensors": "0.8.0",
+    "faster-whisper": null,
+    "sounddevice": null
+  },
+  "base_checkpoint": "/home/ojan/.cache/huggingface/hub/models--convaiinnovations--laya/snapshots/e333cb7c823cd1787276228260f56d02fbf5180b/multilingual",
+  "base_weights_sha256": "9d628fd971b700382ac6f65920a86f149777b2e748e0c955fb3b19695aa8f204",
+  "timezone": "Asia/Jakarta"
+}

@@ -1,0 +1,12 @@
+{
+  "threshold_review": null,
+  "threshold_escalate": null,
+  "context_min_confidence": 0.7,
+  "context_min_confidence_status": "provisional_not_optimized",
+  "source": "validation",
+  "review_metrics": null,
+  "escalate_metrics": null,
+  "production_ready": false,
+  "mode": "shadow",
+  "reason": "Synthetic pilot; real audio and combined decision policy not yet validated."
+}

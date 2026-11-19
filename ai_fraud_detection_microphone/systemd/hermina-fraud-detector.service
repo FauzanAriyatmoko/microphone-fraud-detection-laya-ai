@@ -1,0 +1,32 @@
+[Unit]
+Description=Hospital Receptionist Laya Voice Fraud Pipeline
+After=network-online.target sound.target
+Wants=network-online.target
+StartLimitIntervalSec=120
+StartLimitBurst=5
+
+[Service]
+Type=simple
+User=ojan
+Group=ojan
+WorkingDirectory=/home/ojan/laya_ai/ai_fraud_detection_microphone
+EnvironmentFile=-/home/ojan/laya_ai/ai_fraud_detection_microphone/config/service.env
+Environment=PYTHONUNBUFFERED=1
+Environment=USE_TF=0
+Environment=TOKENIZERS_PARALLELISM=false
+Environment=OMP_NUM_THREADS=4
+ExecStart=/home/ojan/laya_ai/ai_fraud_detection_microphone/scripts/run_standalone.sh
+Restart=on-failure
+RestartSec=5s
+TimeoutStopSec=40s
+KillSignal=SIGTERM
+KillMode=control-group
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=hermina-fraud-ai
+
+[Install]
+WantedBy=multi-user.target

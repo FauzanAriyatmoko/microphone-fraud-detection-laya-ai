@@ -1,0 +1,5 @@
+__pycache__/
+*.py[cod]
+.native/
+log/
+config/service.env

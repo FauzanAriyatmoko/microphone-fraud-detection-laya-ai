@@ -1,0 +1,50 @@
+[
+  {
+    "text": "Silakan transfer biaya pendaftaran ke rekening pribadi saya, tidak usah ke kasir.",
+    "result": {
+      "fraud_score": 0.9242,
+      "context_status": "risiko_aktif",
+      "context_confidence": 0.8894,
+      "level": "PERLU_DICEK",
+      "reason": "ambang_belum_memenuhi_target",
+      "mode": "shadow",
+      "production_ready": false
+    }
+  },
+  {
+    "text": "Jangan transfer ke rekening pribadi petugas, bayar di kasir resmi.",
+    "result": {
+      "fraud_score": 0.0774,
+      "context_status": "layanan_normal",
+      "context_confidence": 0.8874,
+      "level": "PERLU_DICEK",
+      "reason": "ambang_belum_memenuhi_target",
+      "mode": "shadow",
+      "production_ready": false
+    }
+  },
+  {
+    "text": "Kemarin saya diminta membayar uang pelicin, saya ingin melaporkan kejadian itu.",
+    "result": {
+      "fraud_score": 0.0793,
+      "context_status": "laporan_kejadian",
+      "context_confidence": 0.8879,
+      "level": "PERLU_DICEK",
+      "reason": "tindak_lanjut_pengaduan",
+      "mode": "shadow",
+      "production_ready": false
+    }
+  },
+  {
+    "text": "Pembayarannya nanti lewat sana.",
+    "result": {
+      "fraud_score": 0.082,
+      "context_status": "konteks_kurang",
+      "context_confidence": 0.8877,
+      "level": "PERLU_DICEK",
+      "reason": "minta_klarifikasi",
+      "mode": "shadow",
+      "production_ready": false
+    }
+  }
+]

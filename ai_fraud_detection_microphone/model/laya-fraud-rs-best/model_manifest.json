@@ -1,0 +1,77 @@
+{
+  "model_version": "laya-rs-v3-s2-synthetic-pilot",
+  "source": "/home/ojan/laya_ai/ai_fraud_detection_microphone/training/checkpoints/v3-s2",
+  "weights_sha256": "c5d1bd85a1234e4d33261489b34a0d5ebf505348bfefcd965f088c61d409dfa4",
+  "questions_sha256": "fca298a8f50fd0157506208fbd75e98ae2b5d83cf5549657db5419e67b279ed2",
+  "dataset_manifest": {
+    "seed": 42,
+    "schema_version": "3.0",
+    "synthetic_only": true,
+    "splits": {
+      "train": {
+        "rows": 1200,
+        "families": 63,
+        "labels": {
+          "layanan_normal": 420,
+          "laporan_kejadian": 180,
+          "konteks_kurang": 180,
+          "risiko_aktif": 420
+        },
+        "sha256": "bcf33dbdc0ee607c814384fdcd805909c74ca313f144ac3b222daeabca21588c"
+      },
+      "calibration": {
+        "rows": 240,
+        "families": 18,
+        "labels": {
+          "layanan_normal": 84,
+          "risiko_aktif": 84,
+          "laporan_kejadian": 36,
+          "konteks_kurang": 36
+        },
+        "sha256": "7fc62838459e38e0274d8818894c6671c73fb8ffbde1d4c22953ca52c60d0892"
+      },
+      "validation": {
+        "rows": 400,
+        "families": 29,
+        "labels": {
+          "layanan_normal": 140,
+          "risiko_aktif": 140,
+          "konteks_kurang": 60,
+          "laporan_kejadian": 60
+        },
+        "sha256": "0fdaf0d69185163305e4eaa1e8356b15d4b9b7734aea2e1735762cded7cc070b"
+      },
+      "test": {
+        "rows": 80,
+        "families": 80,
+        "labels": {
+          "risiko_aktif": 30,
+          "layanan_normal": 30,
+          "laporan_kejadian": 10,
+          "konteks_kurang": 10
+        },
+        "sha256": "787918a7ea4273aa4bf7578901a0a00b2099ab076a3d88102a0d5a2563da57f8"
+      }
+    }
+  },
+  "environment": {
+    "python": "3.12.3",
+    "base_checkpoint": "/home/ojan/.cache/huggingface/hub/models--convaiinnovations--laya/snapshots/e333cb7c823cd1787276228260f56d02fbf5180b/multilingual",
+    "base_weights_sha256": "9d628fd971b700382ac6f65920a86f149777b2e748e0c955fb3b19695aa8f204",
+    "seed": 2,
+    "packages": {
+      "laya": "0.4.35",
+      "torch": "2.15.0",
+      "transformers": "5.23.0",
+      "numpy": "2.5.5"
+    }
+  },
+  "production_ready": false,
+  "limitations": [
+    "synthetic templates only",
+    "single/mild multi-turn text; no audio validation",
+    "no trained fine-grained categories or five legacy signals",
+    "domain SOP not reviewed",
+    "threshold policy may abstain on all input"
+  ]
+}

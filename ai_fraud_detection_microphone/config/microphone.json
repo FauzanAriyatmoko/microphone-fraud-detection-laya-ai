@@ -1,0 +1,11 @@
+{
+  "device_index": 9,
+  "sample_rate": 16000,
+  "channels": 1,
+  "block_duration": 0.1,
+  "silence_threshold": 0.025,
+  "silence_timeout": 0.6,
+  "min_speech_duration": 0.5,
+  "max_speech_duration": 15.0,
+  "pre_buffer_duration": 0.4
+}

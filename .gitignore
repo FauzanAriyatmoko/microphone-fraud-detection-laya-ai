@@ -1,0 +1,84 @@
+# ==========================================
+# Environments & Packages
+# ==========================================
+.env*/
+env/
+venv/
+.venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# ==========================================
+# CUDA & Native Prebuilt Libraries
+# ==========================================
+.cuda*/
+.native/
+*.so
+*.so.*
+*.dylib
+*.dll
+*.a
+
+# ==========================================
+# Python Bytecode & Cache
+# ==========================================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# ==========================================
+# Large Model Weights & Checkpoints (>100MB)
+# ==========================================
+*.safetensors
+*.bin
+*.pt
+*.pth
+*.onnx
+*.h5
+*.tflite
+*.ckpt
+**/training/checkpoints/
+**/checkpoint_latest/
+
+# ==========================================
+# Audio & Media Recordings
+# ==========================================
+*.wav
+*.mp3
+*.ogg
+*.flac
+*.m4a
+
+# ==========================================
+# Runtime Logs & Generated Session Files
+# ==========================================
+log/
+logs/
+*.log
+**/log/
+ai_fraud_detection_microphone/log/
+ai_fraud_detection_microphone/tests/artifacts/
+
+# ==========================================
+# Secrets & Environment Configurations
+# ==========================================
+.env
+.env.*
+*.env
+config/service.env
+
+# ==========================================
+# OS & Editor Artifacts
+# ==========================================
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.idea/
+.vscode/

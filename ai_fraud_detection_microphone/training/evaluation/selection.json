@@ -1,0 +1,97 @@
+{
+  "criterion": "validation context_macro_f1, binary_f1, lower seed",
+  "selected_seed": 2,
+  "candidates": [
+    {
+      "seed": 0,
+      "checkpoint": "/home/ojan/laya_ai/ai_fraud_detection_microphone/training/checkpoints/v3-s0",
+      "context_macro_f1": 0.7774148633041555,
+      "binary_f1": 0.8477366255144033,
+      "binary": {
+        "tp": 103,
+        "fp": 0,
+        "fn": 37,
+        "tn": 200,
+        "precision": 1.0,
+        "recall": 0.7357142857142858,
+        "f1": 0.8477366255144033,
+        "fpr": 0.0,
+        "brier": 0.09538436014705882,
+        "ece": 0.0707579411764706
+      },
+      "policy": {
+        "threshold_review": null,
+        "threshold_escalate": null,
+        "context_min_confidence": 0.7,
+        "context_min_confidence_status": "provisional_not_optimized",
+        "source": "validation",
+        "review_metrics": null,
+        "escalate_metrics": null,
+        "production_ready": false,
+        "mode": "shadow",
+        "reason": "Synthetic pilot; real audio and combined decision policy not yet validated."
+      }
+    },
+    {
+      "seed": 1,
+      "checkpoint": "/home/ojan/laya_ai/ai_fraud_detection_microphone/training/checkpoints/v3-s1",
+      "context_macro_f1": 0.854823811152925,
+      "binary_f1": 0.8284518828451883,
+      "binary": {
+        "tp": 99,
+        "fp": 0,
+        "fn": 41,
+        "tn": 200,
+        "precision": 1.0,
+        "recall": 0.7071428571428572,
+        "f1": 0.8284518828451883,
+        "fpr": 0.0,
+        "brier": 0.10295186144117646,
+        "ece": 0.06601205882352944
+      },
+      "policy": {
+        "threshold_review": null,
+        "threshold_escalate": null,
+        "context_min_confidence": 0.7,
+        "context_min_confidence_status": "provisional_not_optimized",
+        "source": "validation",
+        "review_metrics": null,
+        "escalate_metrics": null,
+        "production_ready": false,
+        "mode": "shadow",
+        "reason": "Synthetic pilot; real audio and combined decision policy not yet validated."
+      }
+    },
+    {
+      "seed": 2,
+      "checkpoint": "/home/ojan/laya_ai/ai_fraud_detection_microphone/training/checkpoints/v3-s2",
+      "context_macro_f1": 0.8890705913480741,
+      "binary_f1": 0.8888888888888888,
+      "binary": {
+        "tp": 112,
+        "fp": 0,
+        "fn": 28,
+        "tn": 200,
+        "precision": 1.0,
+        "recall": 0.8,
+        "f1": 0.8888888888888888,
+        "fpr": 0.0,
+        "brier": 0.0711651630882353,
+        "ece": 0.053193823529411745
+      },
+      "policy": {
+        "threshold_review": null,
+        "threshold_escalate": null,
+        "context_min_confidence": 0.7,
+        "context_min_confidence_status": "provisional_not_optimized",
+        "source": "validation",
+        "review_metrics": null,
+        "escalate_metrics": null,
+        "production_ready": false,
+        "mode": "shadow",
+        "reason": "Synthetic pilot; real audio and combined decision policy not yet validated."
+      }
+    }
+  ],
+  "test_used_for_selection": false
+}

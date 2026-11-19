@@ -1,0 +1,6 @@
+{
+  "is_fraud": {
+    "type": "noul",
+    "instructions": "Apakah ucapan resepsionis ini indikasi fraud atau pungutan tidak resmi?"
+  }
+}

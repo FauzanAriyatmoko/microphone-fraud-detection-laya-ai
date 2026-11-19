@@ -1,0 +1,16 @@
+{
+  "is_fraud": {
+    "type": "noul",
+    "instructions": "Apakah percakapan memuat permintaan atau penawaran aktif yang jelas untuk fraud di layanan resepsionis rumah sakit? Larangan, edukasi, laporan kejadian lampau, dan konteks tidak cukup bukan permintaan aktif."
+  },
+  "context_status": {
+    "type": "choice",
+    "instructions": "Tentukan konteks percakapan loket rumah sakit. Bedakan tindakan aktif dari edukasi, laporan, dan informasi yang belum cukup.",
+    "criteria": {
+      "risiko_aktif": "Permintaan aktif pembayaran pribadi, pungli, rahasia autentikasi, atau pemalsuan.",
+      "layanan_normal": "Layanan resmi, pertanyaan biasa, penolakan atau edukasi anti-fraud.",
+      "laporan_kejadian": "Melaporkan atau mengutip dugaan kejadian lampau untuk ditindaklanjuti.",
+      "konteks_kurang": "Tujuan, kanal, atau maksud tidak jelas; perlu klarifikasi."
+    }
+  }
+}

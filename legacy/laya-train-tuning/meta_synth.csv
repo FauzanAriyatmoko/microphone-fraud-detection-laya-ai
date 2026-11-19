@@ -1,0 +1,529 @@
+split,is_fraud,category,text
+train,0,antrian_resmi,"Kami tidak menerima titipan uang untuk mempercepat antrian ya Bapak, semua sesuai nomor"
+train,0,info_umum,"Jadwal dokter poli gigi hari ini mulai jam tiga sore, Ibu"
+train,0,otp_aman,"Kode OTP yang masuk ke HP Ibu jangan diberikan ke siapa pun, termasuk petugas ya"
+train,0,pembayaran_resmi,"Pembayaran hanya melalui transfer ke rekening resmi rumah sakit yang tertera di tagihan, kami tidak menerima pembayaran ke rekening pribadi"
+train,1,pembayaran_pribadi,"Mbak, biaya administrasi lewat nomor GoPay saya saja biar cepat diproses"
+train,1,pembayaran_pribadi,"Bapak, biaya konsultasi lewat rekening atas nama saya sendiri saja biar cepat diproses"
+train,0,info_umum,ibu hasil konsultasi dokter bisa diambil besok jam delapan pagi
+train,1,jalur_cepat,"Antriannya panjang Ibu, tapi kalau ada uang pelicin dua ratus ribu saya masukkan duluan"
+train,1,pembayaran_pribadi,"Silakan transfer biaya operasi ke rekening atas nama saya sendiri ya, Bapak"
+train,0,otp_aman,Pak masukkan sendiri kode OTP-nya di aplikasi resmi rumah sakit ya
+train,0,pembayaran_resmi,"Untuk biaya pemeriksaan silakan ke kasir, jangan transfer ke rekening pribadi petugas siapa pun ya Mas"
+train,1,data_sensitif,"Bu, bacakan kode OTP yang barusan masuk, biar saya yang masukkan"
+train,1,obat_langsung,resep ini lebih murah kalau beli lewat saya transfer saja ke nomor rekening pribadi saya
+train,1,jalur_cepat,antriannya panjang mbak tapi kalau ada uang pelicin 150 ribu saya masukkan duluan
+train,1,jalur_cepat,gini antriannya panjang ibu tapi kalau ada uang pelicin 75 ribu saya masukkan duluan
+train,0,info_umum,"Ibu, hasil pengambilan hasil lab bisa diambil besok jam sepuluh pagi"
+train,1,jalur_cepat,"Antriannya panjang Pak, tapi kalau ada uang pelicin 75 ribu saya masukkan duluan"
+train,0,pembayaran_resmi,nah untuk biaya pemeriksaan silakan ke kasir jangan transfer ke rekening pribadi petugas siapa pun ya bu
+train,1,jalur_cepat,"Antriannya panjang Mas, tapi kalau ada uang pelicin tiga ratus ribu saya masukkan duluan"
+train,0,obat_resmi,"Untuk Obat ini Pak bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,0,obat_resmi,vitamin dan obat ini harus ditebus di apotek luar ya di dalam sini tidak ada apotek
+train,0,antrian_resmi,"Kami tidak menerima titipan uang untuk mempercepat antrian ya Kak, semua sesuai nomor"
+train,1,obat_langsung,obat diabetes ini lebih murah kalau beli lewat saya transfer saja ke nomor dana saya
+train,0,obat_resmi,gini untuk vitamin dan obat ini mas bawa resepnya ke apotek bayar di kasir apotek ya
+train,0,data_dan_biaya_resmi,kami hanya meminta data di formulir pendaftaran resmi kak
+train,0,antrian_resmi,nah antriannya memang panjang mbak mohon menunggu urutannya sesuai nomor antrian
+train,0,obat_resmi,"Obat dari dokter ini bisa ditebus di apotek rumah sakit lantai empat, Kak"
+train,1,obat_langsung,untuk resep ini bayar ke saya saja ibu nanti saya antar ke rumah
+train,0,data_dan_biaya_resmi,"Tidak ada biaya tambahan di luar struk ya Kak, semua tercantum di tagihan"
+train,1,pembayaran_pribadi,Untuk biaya obat bisa langsung ditransfer ke nomor rekening saya ya bu
+train,0,info_umum,jadwal dokter poli kandungan hari ini mulai jam tiga sore bapak
+train,1,data_sensitif,bagi nomor rekening mbak untuk saya simpan secara pribadi nanti saya kirimi 75 ribu
+train,1,data_sensitif,nah tolong sebutkan pin atm bu ya untuk verifikasi di komputer saya
+train,1,biaya_tidak_resmi,jadi biar klaim bpjs-nya cepat cair mbak kasih uang dua ratus ribu ke saya
+train,0,obat_resmi,"Untuk Obat dari dokter ini Mas bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,0,otp_aman,bapak masukkan sendiri kode otp-nya di aplikasi resmi rumah sakit ya
+train,1,obat_langsung,"Obat tetes ini lebih murah kalau beli lewat saya, transfer saja ke nomor rekening pribadi saya"
+train,0,info_umum,"Ibu, hasil pendaftaran bisa diambil besok jam tiga sore"
+train,0,pembayaran_resmi,Pembayaran bisa di kasir atau QRIS resmi rumah sakit ya
+train,0,antrian_resmi,"Nomor antrian Mas dua puluh tiga, silakan tunggu dipanggil di ruang tunggu"
+train,1,pembayaran_pribadi,eh ibu biaya rawat inap lewat rekening saya saja biar cepat diproses
+train,0,otp_aman,"Kalau ada yang meminta password m-banking Pak, jangan diberikan ya, kami tidak pernah memintanya"
+train,0,obat_resmi,untuk obat tetes ini bapak bawa resepnya ke apotek bayar di kasir apotek ya
+train,1,pembayaran_pribadi,"Untuk biaya rawat inap bisa langsung dikirim ke nomor rekening pribadi saya, Bu"
+train,0,info_umum,"Mbak, hasil pemeriksaan bisa diambil besok jam sepuluh pagi"
+train,1,pembayaran_pribadi,"Kirim biaya rawat inap ke nomor GoPay saya dulu ya, nanti saya daftarkan"
+train,0,antrian_resmi,kami tidak menerima titipan uang untuk mempercepat antrian ya pak semua sesuai nomor
+train,0,info_umum,silakan ke poli kandungan lantai empat bu
+train,1,biaya_tidak_resmi,"Ada biaya tambahan 75 ribu untuk pengurusan BPJS, tidak masuk struk, bayar tunai ke saya saja"
+train,1,data_sensitif,nah ibu bacakan kode otp yang barusan masuk biar saya yang masukkan
+train,1,obat_langsung,"Obat diabetes ini lebih murah kalau beli lewat saya, transfer saja ke rekening atas nama saya sendiri"
+train,1,pembayaran_pribadi,nah untuk biaya operasi bisa langsung dikirim ke nomor rekening pribadi saya kak
+train,1,obat_langsung,"Vitamin dan obat ini bisa langsung ditebus ke saya, Mbak, tidak perlu antri di apotek"
+train,0,otp_aman,"Kalau ada yang meminta password m-banking Bapak, jangan diberikan ya, kami tidak pernah memintanya"
+train,1,jalur_cepat,nah untuk pengambilan hasil lab lewat jalur cepat ada biaya dua ratus ribu yang diserahkan ke saya langsung
+train,1,pembayaran_pribadi,kirim biaya pendaftaran ke nomor gopay saya dulu ya nanti saya daftarkan
+train,0,obat_resmi,"Untuk Obat dari dokter ini Bu bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,1,pembayaran_pribadi,"Ibu, biaya pemeriksaan lewat rekening BCA saya saja biar cepat diproses"
+train,1,jalur_cepat,"Antriannya panjang Kak, tapi kalau ada uang pelicin seratus ribu saya masukkan duluan"
+train,1,pembayaran_pribadi,"Kirim biaya konsultasi ke rekening saya dulu ya, nanti saya daftarkan"
+train,0,obat_resmi,"Obat dari dokter ini bisa ditebus di apotek rumah sakit lantai empat, Pak"
+train,0,antrian_resmi,"Untuk konsultasi dokter lebih cepat, Mas bisa daftar online lewat aplikasi resmi sebelum datang"
+train,1,jalur_cepat,nah kalau mau pengambilan hasil lab lebih cepat bu bisa kasih uang tambahan dua ratus ribu ke saya
+train,1,jalur_cepat,"Supaya Mbak tidak perlu mengantri, bayar saja langsung ke saya"
+train,1,jalur_cepat,gini kalau mau pengambilan hasil lab lebih cepat pak bisa kasih uang tambahan 150 ribu ke saya
+train,0,data_dan_biaya_resmi,"Mohon bawa kartu identitas dan kartu BPJS asli untuk pemeriksaan, Mbak"
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Mbak kasih uang 75 ribu ke saya"
+train,0,otp_aman,"Kalau ada yang meminta kode CVV kartu Pak, jangan diberikan ya, kami tidak pernah memintanya"
+train,0,info_umum,"Silakan ke poli jantung lantai satu, Bu"
+train,1,obat_langsung,"Obat ini lebih murah kalau beli lewat saya, transfer saja ke rekening atas nama saya sendiri"
+train,1,jalur_cepat,"Kalau mau pemeriksaan lebih cepat, Bapak bisa kasih uang tambahan 75 ribu ke saya"
+train,0,pembayaran_resmi,nah untuk biaya laboratorium silakan ke kasir jangan transfer ke rekening pribadi petugas siapa pun ya mbak
+train,1,data_sensitif,"Tolong sebutkan kode CVV kartu Kak ya, untuk verifikasi di komputer saya"
+train,0,antrian_resmi,"Untuk pengambilan hasil lab lebih cepat, Mbak bisa daftar online lewat aplikasi resmi sebelum datang"
+train,1,jalur_cepat,"Antriannya panjang Bapak, tapi kalau ada uang pelicin dua ratus ribu saya masukkan duluan"
+train,0,data_dan_biaya_resmi,"Tidak ada biaya tambahan di luar struk ya Mbak, semua tercantum di tagihan"
+train,1,obat_langsung,gini obat diabetes ini bisa langsung ditebus ke saya bapak tidak perlu antri di apotek
+train,0,antrian_resmi,"Kami tidak menerima titipan uang untuk mempercepat antrian ya Pak, semua sesuai nomor"
+train,0,obat_resmi,"Untuk Obat ini Mbak bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,1,pembayaran_pribadi,mbak biaya rawat inap lewat nomor rekening pribadi saya saja biar cepat diproses
+train,1,obat_langsung,"Obat dari dokter ini bisa langsung ditebus ke saya, Kak, tidak perlu antri di apotek"
+train,0,otp_aman,kalau ada yang meminta pin atm mas jangan diberikan ya kami tidak pernah memintanya
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Bu kasih uang 150 ribu ke saya"
+train,0,obat_resmi,untuk obat dari dokter ini mbak bawa resepnya ke apotek bayar di kasir apotek ya
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Mbak kasih uang lima puluh ribu ke saya"
+train,1,obat_langsung,nah resep ini lebih murah kalau beli lewat saya transfer saja ke nomor e-wallet saya
+train,0,antrian_resmi,"Kami tidak menerima titipan uang untuk mempercepat antrian ya Mbak, semua sesuai nomor"
+train,0,otp_aman,eh kalau ada yang meminta pin atm bapak jangan diberikan ya kami tidak pernah memintanya
+train,0,obat_resmi,"Untuk Resep ini Bu bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,0,otp_aman,"Kode OTP yang masuk ke HP Pak jangan diberikan ke siapa pun, termasuk petugas ya"
+train,1,pembayaran_pribadi,"Silakan transfer biaya pendaftaran ke rekening atas nama saya sendiri ya, Pak"
+train,0,data_dan_biaya_resmi,kami hanya meminta data di formulir pendaftaran resmi bu
+train,1,obat_langsung,"Untuk Resep ini bayar ke saya saja Mas, nanti saya antar ke rumah"
+train,1,data_sensitif,boleh minta kode otp yang baru masuk ke hp mas untuk saya proses lebih lanjut
+train,0,pembayaran_resmi,nah pembayaran biaya pemeriksaan bisa di kasir lantai dua atau lewat mesin pembayaran mandiri ya bapak
+train,1,biaya_tidak_resmi,"Ada biaya tambahan lima puluh ribu untuk rawat jalan, tidak masuk struk, bayar tunai ke saya saja"
+train,0,otp_aman,"Kode OTP yang masuk ke HP Mbak jangan diberikan ke siapa pun, termasuk petugas ya"
+train,0,pembayaran_resmi,untuk biaya operasi silakan ke kasir jangan transfer ke rekening pribadi petugas siapa pun ya pak
+train,1,data_sensitif,bagi nomor rekening mas untuk saya simpan secara pribadi nanti saya kirimi dua ratus ribu
+train,1,jalur_cepat,"Kalau mau pengurusan BPJS lebih cepat, Ibu bisa kasih uang tambahan 150 ribu ke saya"
+train,1,data_sensitif,"Tolong sebutkan password m-banking Ibu ya, untuk verifikasi di komputer saya"
+train,0,pembayaran_resmi,"Pembayaran hanya melalui kartu debit di kasir, kami tidak menerima pembayaran ke rekening pribadi"
+train,0,antrian_resmi,untuk rawat jalan lebih cepat bu bisa daftar online lewat aplikasi resmi sebelum datang
+train,1,data_sensitif,"Ibu, bacakan kode OTP yang barusan masuk, biar saya yang masukkan"
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Ibu kasih uang 150 ribu ke saya"
+train,1,pembayaran_pribadi,"Silakan transfer biaya pemeriksaan ke nomor e-wallet saya ya, Bapak"
+train,1,biaya_tidak_resmi,"Ada biaya tambahan seratus ribu untuk pengurusan BPJS, tidak masuk struk, bayar tunai ke saya saja"
+train,0,obat_resmi,untuk resep ini mas bawa resepnya ke apotek bayar di kasir apotek ya
+train,0,otp_aman,nah bu masukkan sendiri kode otp-nya di aplikasi resmi rumah sakit ya
+train,0,info_umum,"Jadwal dokter poli anak hari ini mulai jam satu siang, Pak"
+train,1,pembayaran_pribadi,jadi silakan transfer biaya pemeriksaan ke nomor e-wallet saya ya pak
+train,1,obat_langsung,"Obat tetes ini lebih murah kalau beli lewat saya, transfer saja ke nomor GoPay saya"
+train,1,obat_langsung,"Obat ini bisa langsung ditebus ke saya bu, agar ibu tidak perlu mengantri"
+train,1,data_sensitif,tolong sebutkan kode verifikasi mas ya untuk verifikasi di komputer saya
+train,1,pembayaran_pribadi,"Untuk biaya pendaftaran bisa langsung dikirim ke nomor rekening pribadi saya, Pak"
+train,1,pembayaran_pribadi,"Kirim biaya operasi ke rekening atas nama saya sendiri dulu ya, nanti saya daftarkan"
+train,1,data_sensitif,pak bacakan kode otp yang barusan masuk biar saya yang masukkan
+train,0,pembayaran_resmi,"Pembayaran biaya konsultasi bisa di kasir lantai tiga atau lewat kartu debit di kasir ya, Bapak"
+train,1,obat_langsung,"Untuk Obat dari dokter ini bayar ke saya saja Kak, nanti saya antar ke rumah"
+train,1,data_sensitif,jadi bagi nomor rekening kak untuk saya simpan secara pribadi nanti saya kirimi tiga ratus ribu
+train,0,info_umum,"Mas, hasil pendaftaran bisa diambil besok jam delapan pagi"
+train,0,otp_aman,gini kalau ada yang meminta pin atm kak jangan diberikan ya kami tidak pernah memintanya
+train,1,pembayaran_pribadi,"Kirim biaya operasi ke nomor rekening pribadi saya dulu ya, nanti saya daftarkan"
+train,0,info_umum,"Jadwal dokter poli gigi hari ini mulai jam tiga sore, Bu"
+train,0,obat_resmi,"Untuk Resep ini Bapak bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,0,data_dan_biaya_resmi,"Kami hanya meminta data di formulir pendaftaran resmi, Ibu"
+train,1,data_sensitif,"Bagi nomor rekening Mbak untuk saya simpan secara pribadi, nanti saya kirimi 75 ribu"
+train,1,pembayaran_pribadi,"Bapak, biaya pemeriksaan lewat rekening BCA saya saja biar cepat diproses"
+train,0,pembayaran_resmi,pembayaran hanya melalui mesin pembayaran mandiri kami tidak menerima pembayaran ke rekening pribadi
+train,1,jalur_cepat,"Antriannya panjang Bapak, tapi kalau ada uang pelicin 150 ribu saya masukkan duluan"
+train,0,otp_aman,"Kalau ada yang meminta kode CVV kartu Kak, jangan diberikan ya, kami tidak pernah memintanya"
+train,1,pembayaran_pribadi,"Silakan transfer uang muka ke rekening saya ya, Kak"
+train,1,biaya_tidak_resmi,untuk pengurusan bpjs ada biaya di luar tarif seratus ribu diserahkan ke saya jangan ke kasir ya ibu
+train,1,biaya_tidak_resmi,nah untuk pengambilan hasil lab ada biaya di luar tarif tiga ratus ribu diserahkan ke saya jangan ke kasir ya kak
+train,0,pembayaran_resmi,"Mas, biaya operasi dibayarkan lewat mesin pembayaran mandiri, rinciannya ada di tagihan"
+train,0,antrian_resmi,eh kami tidak menerima titipan uang untuk mempercepat antrian ya kak semua sesuai nomor
+train,0,data_dan_biaya_resmi,"Mohon bawa kartu identitas dan kartu BPJS asli untuk rontgen, Kak"
+train,0,info_umum,"Bapak, hasil rawat jalan bisa diambil besok jam delapan pagi"
+train,1,jalur_cepat,"Kalau mau rontgen lebih cepat, Kak bisa kasih uang tambahan seratus ribu ke saya"
+train,1,jalur_cepat,Untuk pengurusan BPJS lewat jalur cepat ada biaya lima puluh ribu yang diserahkan ke saya langsung
+train,1,pembayaran_pribadi,"Mbak, biaya operasi lewat nomor DANA saya saja biar cepat diproses"
+train,1,jalur_cepat,Untuk rawat jalan lewat jalur cepat ada biaya 75 ribu yang diserahkan ke saya langsung
+train,1,jalur_cepat,"Kalau mau pemeriksaan lebih cepat, Kak bisa kasih uang tambahan lima puluh ribu ke saya"
+train,0,antrian_resmi,"Antriannya memang panjang Kak, mohon menunggu, urutannya sesuai nomor antrian"
+train,1,biaya_tidak_resmi,biar klaim bpjs-nya cepat cair pak kasih uang 75 ribu ke saya
+train,0,otp_aman,Bapak masukkan sendiri kode OTP-nya di aplikasi resmi rumah sakit ya
+train,0,data_dan_biaya_resmi,kami hanya meminta data di formulir pendaftaran resmi ibu
+train,0,antrian_resmi,antriannya memang panjang ibu mohon menunggu urutannya sesuai nomor antrian
+train,1,data_sensitif,"Tolong sebutkan password m-banking Mas ya, untuk verifikasi di komputer saya"
+train,1,obat_langsung,"Obat tetes ini lebih murah kalau beli lewat saya, transfer saja ke nomor e-wallet saya"
+train,1,data_sensitif,"Bagi nomor rekening Mbak untuk saya simpan secara pribadi, nanti saya kirimi tiga ratus ribu"
+train,0,info_umum,"Silakan ke poli gigi lantai empat, Bapak"
+train,0,obat_resmi,"Vitamin dan obat ini harus ditebus di apotek luar ya, di dalam sini tidak ada apotek"
+train,0,data_dan_biaya_resmi,kami hanya meminta data di formulir pendaftaran resmi bapak
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Kak kasih uang seratus ribu ke saya"
+train,0,obat_resmi,"Untuk Obat ini Ibu bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,0,obat_resmi,eh obat diabetes ini harus ditebus di apotek luar ya di dalam sini tidak ada apotek
+train,1,biaya_tidak_resmi,"Untuk pendaftaran ada biaya di luar tarif, tiga ratus ribu, diserahkan ke saya jangan ke kasir ya Kak"
+train,1,data_sensitif,Bisa bagi nomor rekening ibu untuk saya simpan secara pribadi
+train,1,data_sensitif,"Bagi nomor rekening Kak untuk saya simpan secara pribadi, nanti saya kirimi seratus ribu"
+train,0,data_dan_biaya_resmi,"Kami hanya meminta data di formulir pendaftaran resmi, Kak"
+train,0,info_umum,"Kak, hasil pengurusan BPJS bisa diambil besok jam tiga sore"
+train,0,otp_aman,Bu masukkan sendiri kode OTP-nya di aplikasi resmi rumah sakit ya
+train,0,antrian_resmi,"Untuk pemeriksaan lebih cepat, Mbak bisa daftar online lewat aplikasi resmi sebelum datang"
+train,0,data_dan_biaya_resmi,nah tidak ada biaya tambahan di luar struk ya bapak semua tercantum di tagihan
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Ibu kasih uang dua ratus ribu ke saya"
+train,1,jalur_cepat,"Supaya Bu tidak perlu mengantri, bayar saja langsung ke saya"
+train,0,pembayaran_resmi,"Pembayaran biaya administrasi bisa di kasir lantai empat atau lewat transfer ke rekening resmi rumah sakit yang tertera di tagihan ya, Bu"
+train,1,pembayaran_pribadi,"Silakan transfer biaya rawat inap ke nomor GoPay saya ya, Bu"
+train,1,obat_langsung,"Obat ini bisa langsung ditebus ke saya, Mas, tidak perlu antri di apotek"
+train,0,data_dan_biaya_resmi,mohon bawa kartu identitas dan kartu bpjs asli untuk pengurusan bpjs bu
+train,1,obat_langsung,"Obat dari dokter ini lebih murah kalau beli lewat saya, transfer saja ke rekening BCA saya"
+train,0,obat_resmi,"Obat dari dokter ini bisa ditebus di apotek rumah sakit lantai satu, Mbak"
+train,1,obat_langsung,"Untuk Obat dari dokter ini bayar ke saya saja Ibu, nanti saya antar ke rumah"
+train,0,otp_aman,"Kode OTP yang masuk ke HP Kak jangan diberikan ke siapa pun, termasuk petugas ya"
+train,0,info_umum,"Kak, hasil rawat jalan bisa diambil besok jam delapan pagi"
+train,1,data_sensitif,bagi nomor rekening bapak untuk saya simpan secara pribadi nanti saya kirimi lima puluh ribu
+train,1,data_sensitif,"Tolong sebutkan PIN ATM Kak ya, untuk verifikasi di komputer saya"
+train,0,obat_resmi,"Obat ini bisa ditebus di apotek rumah sakit lantai dua, Mbak"
+train,0,data_dan_biaya_resmi,"Kami hanya meminta data di formulir pendaftaran resmi, Pak"
+train,0,pembayaran_resmi,ibu biaya pendaftaran dibayarkan lewat qris resmi rumah sakit rinciannya ada di tagihan
+train,0,data_dan_biaya_resmi,mohon bawa kartu identitas dan kartu bpjs asli untuk pemeriksaan pak
+train,0,pembayaran_resmi,"Pembayaran hanya melalui QRIS resmi rumah sakit, kami tidak menerima pembayaran ke rekening pribadi"
+train,1,obat_langsung,obat ini bisa langsung ditebus ke saya kak tidak perlu antri di apotek
+train,1,pembayaran_pribadi,jadi kirim biaya pendaftaran ke nomor e-wallet saya dulu ya nanti saya daftarkan
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Mas kasih uang lima puluh ribu ke saya"
+train,1,data_sensitif,Boleh minta kode OTP yang baru masuk ke HP Ibu? untuk saya proses lebih lanjut
+train,1,pembayaran_pribadi,"Silakan transfer uang muka ke rekening atas nama saya sendiri ya, Bapak"
+train,1,biaya_tidak_resmi,untuk rawat jalan ada biaya di luar tarif seratus ribu diserahkan ke saya jangan ke kasir ya pak
+train,0,obat_resmi,"Obat diabetes ini bisa ditebus di apotek rumah sakit lantai empat, Ibu"
+train,1,jalur_cepat,supaya kak tidak perlu mengantri bayar saja langsung ke saya
+train,1,pembayaran_pribadi,"Kirim biaya pemeriksaan ke rekening BCA saya dulu ya, nanti saya daftarkan"
+train,0,antrian_resmi,nomor antrian mbak empat puluh satu silakan tunggu dipanggil di ruang tunggu
+train,0,otp_aman,gini bapak masukkan sendiri kode otp-nya di aplikasi resmi rumah sakit ya
+train,0,antrian_resmi,untuk rawat jalan lebih cepat mbak bisa daftar online lewat aplikasi resmi sebelum datang
+train,1,pembayaran_pribadi,"Untuk biaya pemeriksaan bisa langsung dikirim ke rekening saya, Mas"
+train,0,pembayaran_resmi,"Pembayaran hanya melalui virtual account yang tertera di tagihan, kami tidak menerima pembayaran ke rekening pribadi"
+train,0,obat_resmi,"Resep ini bisa ditebus di apotek rumah sakit lantai empat, Bu"
+train,1,jalur_cepat,"Antriannya panjang Ibu, tapi kalau ada uang pelicin 150 ribu saya masukkan duluan"
+train,0,pembayaran_resmi,"Pembayaran biaya pendaftaran bisa di kasir lantai empat atau lewat mesin pembayaran mandiri ya, Mbak"
+train,1,biaya_tidak_resmi,"Ada biaya tambahan 75 ribu untuk konsultasi dokter, tidak masuk struk, bayar tunai ke saya saja"
+train,1,pembayaran_pribadi,"Pak, biaya laboratorium lewat nomor e-wallet saya saja biar cepat diproses"
+train,1,obat_langsung,"Resep ini bisa langsung ditebus ke saya, Mbak, tidak perlu antri di apotek"
+train,0,pembayaran_resmi,"Kak, biaya operasi dibayarkan lewat transfer ke rekening resmi rumah sakit yang tertera di tagihan, rinciannya ada di tagihan"
+train,0,data_dan_biaya_resmi,"Tidak ada biaya tambahan di luar struk ya Pak, semua tercantum di tagihan"
+train,0,obat_resmi,"Resep ini harus ditebus di apotek luar ya, di dalam sini tidak ada apotek"
+train,0,otp_aman,"Kode OTP yang masuk ke HP Mas jangan diberikan ke siapa pun, termasuk petugas ya"
+train,1,obat_langsung,"Untuk Obat tetes ini bayar ke saya saja Mas, nanti saya antar ke rumah"
+train,0,info_umum,gini jadwal dokter poli anak hari ini mulai jam satu siang kak
+train,1,obat_langsung,"Untuk Obat ini bayar ke saya saja Bapak, nanti saya antar ke rumah"
+train,0,pembayaran_resmi,"Pembayaran biaya rawat inap bisa di kasir lantai tiga atau lewat transfer ke rekening resmi rumah sakit yang tertera di tagihan ya, Pak"
+train,1,obat_langsung,"Resep ini bisa langsung ditebus ke saya, Ibu, tidak perlu antri di apotek"
+train,1,jalur_cepat,"Kalau mau rawat jalan lebih cepat, Ibu bisa kasih uang tambahan dua ratus ribu ke saya"
+train,0,data_dan_biaya_resmi,"biaya rawat inap sesuai tarif resmi, rinciannya ada di struk, Ibu"
+train,1,obat_langsung,"Untuk Obat ini bayar ke saya saja Mbak, nanti saya antar ke rumah"
+train,1,data_sensitif,mas bacakan kode otp yang barusan masuk biar saya yang masukkan
+train,0,info_umum,"Pak, hasil pendaftaran bisa diambil besok jam tiga sore"
+train,1,jalur_cepat,"Antriannya panjang Bu, tapi kalau ada uang pelicin dua ratus ribu saya masukkan duluan"
+train,1,pembayaran_pribadi,"Bu, biaya pemeriksaan lewat nomor rekening pribadi saya saja biar cepat diproses"
+train,1,data_sensitif,Boleh minta kode OTP yang baru masuk ke HP Kak? untuk saya proses lebih lanjut
+train,0,otp_aman,jadi ibu masukkan sendiri kode otp-nya di aplikasi resmi rumah sakit ya
+train,1,jalur_cepat,"Supaya Pak tidak perlu mengantri, bayar saja langsung ke saya"
+train,1,data_sensitif,Boleh minta kode OTP yang baru masuk ke HP Mas? untuk saya proses lebih lanjut
+train,0,otp_aman,"Kalau ada yang meminta kode verifikasi Mbak, jangan diberikan ya, kami tidak pernah memintanya"
+train,1,obat_langsung,resep ini bisa langsung ditebus ke saya mbak tidak perlu antri di apotek
+train,0,pembayaran_resmi,"Untuk biaya konsultasi silakan ke kasir, jangan transfer ke rekening pribadi petugas siapa pun ya Kak"
+train,0,obat_resmi,untuk resep ini bu bawa resepnya ke apotek bayar di kasir apotek ya
+train,1,pembayaran_pribadi,"Kak, biaya operasi lewat nomor rekening pribadi saya saja biar cepat diproses"
+train,1,obat_langsung,"Untuk Vitamin dan obat ini bayar ke saya saja Mbak, nanti saya antar ke rumah"
+train,1,pembayaran_pribadi,"Untuk biaya operasi bisa langsung dikirim ke nomor e-wallet saya, Mas"
+train,0,data_dan_biaya_resmi,"biaya rawat inap sesuai tarif resmi, rinciannya ada di struk, Kak"
+train,0,data_dan_biaya_resmi,"Tidak ada biaya tambahan di luar struk ya Mas, semua tercantum di tagihan"
+train,0,antrian_resmi,"Kami tidak menerima titipan uang untuk mempercepat antrian ya Ibu, semua sesuai nomor"
+train,0,data_dan_biaya_resmi,"biaya administrasi sesuai tarif resmi, rinciannya ada di struk, Pak"
+train,0,data_dan_biaya_resmi,"Kami hanya meminta data di formulir pendaftaran resmi, Mas"
+train,1,jalur_cepat,"Supaya Ibu tidak perlu mengantri, bayar saja langsung ke saya"
+train,0,obat_resmi,"Untuk Obat tetes ini Pak bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,1,biaya_tidak_resmi,biar klaim bpjs-nya cepat cair mas kasih uang 75 ribu ke saya
+train,1,pembayaran_pribadi,Silahkan transfer ke nomor rekening pribadi saya untuk biaya administrasi ya
+train,1,data_sensitif,"Bagi nomor rekening Mas untuk saya simpan secara pribadi, nanti saya kirimi dua ratus ribu"
+train,1,data_sensitif,"Tolong sebutkan kode verifikasi Bapak ya, untuk verifikasi di komputer saya"
+train,0,info_umum,"Silakan ke poli mata lantai dua, Mas"
+train,1,data_sensitif,Boleh minta kode OTP yang baru masuk ke HP Bu? untuk saya proses lebih lanjut
+train,0,antrian_resmi,"Untuk pengambilan hasil lab lebih cepat, Mas bisa daftar online lewat aplikasi resmi sebelum datang"
+train,0,pembayaran_resmi,"Untuk biaya pendaftaran silakan ke kasir, jangan transfer ke rekening pribadi petugas siapa pun ya Mas"
+train,1,obat_langsung,"Vitamin dan obat ini bisa langsung ditebus ke saya, Bu, tidak perlu antri di apotek"
+train,1,biaya_tidak_resmi,biar klaim bpjs-nya cepat cair kak kasih uang tiga ratus ribu ke saya
+train,1,obat_langsung,"Bisa minta alamat dan nomor rekening ibu, nanti saya antar obatnya"
+train,1,data_sensitif,"Kak, bacakan kode OTP yang barusan masuk, biar saya yang masukkan"
+train,1,data_sensitif,"Mbak, bacakan kode OTP yang barusan masuk, biar saya yang masukkan"
+train,0,info_umum,"Silakan ke poli penyakit dalam lantai dua, Kak"
+train,0,otp_aman,kode otp yang masuk ke hp kak jangan diberikan ke siapa pun termasuk petugas ya
+train,0,info_umum,nah jadwal dokter poli gigi hari ini mulai jam satu siang bu
+train,1,pembayaran_pribadi,"Mas, biaya laboratorium lewat rekening BCA saya saja biar cepat diproses"
+train,1,obat_langsung,"Vitamin dan obat ini bisa langsung ditebus ke saya, Kak, tidak perlu antri di apotek"
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Mas kasih uang seratus ribu ke saya"
+train,1,data_sensitif,eh tolong sebutkan kode cvv kartu mbak ya untuk verifikasi di komputer saya
+train,0,data_dan_biaya_resmi,mohon bawa kartu identitas dan kartu bpjs asli untuk pemeriksaan mas
+train,0,pembayaran_resmi,"Pembayaran biaya konsultasi bisa di kasir lantai dua atau lewat QRIS resmi rumah sakit ya, Ibu"
+train,0,obat_resmi,"Obat ini bisa ditebus di apotek rumah sakit lantai empat, Kak"
+train,1,jalur_cepat,supaya pak tidak perlu mengantri bayar saja langsung ke saya
+train,1,data_sensitif,ibu bacakan kode otp yang barusan masuk biar saya yang masukkan
+train,0,data_dan_biaya_resmi,"Kami hanya meminta data di formulir pendaftaran resmi, Bapak"
+train,1,jalur_cepat,Untuk pengambilan hasil lab lewat jalur cepat ada biaya dua ratus ribu yang diserahkan ke saya langsung
+train,0,obat_resmi,"Obat dari dokter ini bisa ditebus di apotek rumah sakit lantai dua, Bapak"
+train,0,data_dan_biaya_resmi,"biaya konsultasi sesuai tarif resmi, rinciannya ada di struk, Pak"
+train,1,pembayaran_pribadi,"Kirim biaya konsultasi ke nomor rekening pribadi saya dulu ya, nanti saya daftarkan"
+train,0,data_dan_biaya_resmi,eh kami hanya meminta data di formulir pendaftaran resmi bapak
+train,0,obat_resmi,"Untuk Obat tetes ini Bapak bawa resepnya ke apotek, bayar di kasir apotek ya"
+train,0,info_umum,gini silakan ke poli anak lantai satu mbak
+train,1,pembayaran_pribadi,"Untuk biaya pendaftaran bisa langsung dikirim ke rekening saya, Bu"
+train,0,data_dan_biaya_resmi,nah tidak ada biaya tambahan di luar struk ya ibu semua tercantum di tagihan
+train,0,pembayaran_resmi,"Untuk biaya laboratorium silakan ke kasir, jangan transfer ke rekening pribadi petugas siapa pun ya Ibu"
+train,0,data_dan_biaya_resmi,tidak ada biaya tambahan di luar struk ya ibu semua tercantum di tagihan
+train,1,jalur_cepat,"Kalau mau rontgen lebih cepat, Kak bisa kasih uang tambahan 75 ribu ke saya"
+train,0,otp_aman,Mas masukkan sendiri kode OTP-nya di aplikasi resmi rumah sakit ya
+train,0,antrian_resmi,"Untuk rawat jalan lebih cepat, Mbak bisa daftar online lewat aplikasi resmi sebelum datang"
+train,0,antrian_resmi,"Untuk pendaftaran lebih cepat, Mbak bisa daftar online lewat aplikasi resmi sebelum datang"
+train,0,otp_aman,"Kalau ada yang meminta kode verifikasi Ibu, jangan diberikan ya, kami tidak pernah memintanya"
+train,1,data_sensitif,gini bagi nomor rekening bu untuk saya simpan secara pribadi nanti saya kirimi 150 ribu
+train,0,pembayaran_resmi,"Bu, uang muka dibayarkan lewat kartu debit di kasir, rinciannya ada di tagihan"
+train,1,biaya_tidak_resmi,"Ada biaya tambahan dua ratus ribu untuk konsultasi dokter, tidak masuk struk, bayar tunai ke saya saja"
+train,1,obat_langsung,"Untuk Obat diabetes ini bayar ke saya saja Mas, nanti saya antar ke rumah"
+train,1,biaya_tidak_resmi,"Ada biaya tambahan lima puluh ribu untuk pemeriksaan, tidak masuk struk, bayar tunai ke saya saja"
+train,1,jalur_cepat,"Kalau mau rontgen lebih cepat, Pak bisa kasih uang tambahan tiga ratus ribu ke saya"
+train,1,jalur_cepat,"Antriannya panjang Pak, tapi kalau ada uang pelicin tiga ratus ribu saya masukkan duluan"
+train,0,info_umum,eh mbak hasil konsultasi dokter bisa diambil besok jam tiga sore
+train,0,pembayaran_resmi,pembayaran hanya melalui qris resmi rumah sakit kami tidak menerima pembayaran ke rekening pribadi
+train,1,obat_langsung,jadi vitamin dan obat ini bisa langsung ditebus ke saya mbak tidak perlu antri di apotek
+train,1,jalur_cepat,Untuk pengambilan hasil lab lewat jalur cepat ada biaya 150 ribu yang diserahkan ke saya langsung
+train,0,otp_aman,"Kode OTP yang masuk ke HP Bu jangan diberikan ke siapa pun, termasuk petugas ya"
+train,1,pembayaran_pribadi,"Pak, biaya operasi lewat rekening saya saja biar cepat diproses"
+train,1,biaya_tidak_resmi,ada biaya tambahan lima puluh ribu untuk pengambilan hasil lab tidak masuk struk bayar tunai ke saya saja
+train,1,jalur_cepat,gini antriannya panjang kak tapi kalau ada uang pelicin 75 ribu saya masukkan duluan
+train,0,otp_aman,jadi kode otp yang masuk ke hp kak jangan diberikan ke siapa pun termasuk petugas ya
+train,0,pembayaran_resmi,"Mbak, biaya konsultasi dibayarkan lewat transfer ke rekening resmi rumah sakit yang tertera di tagihan, rinciannya ada di tagihan"
+train,1,biaya_tidak_resmi,nah untuk pengurusan bpjs ada biaya di luar tarif lima puluh ribu diserahkan ke saya jangan ke kasir ya ibu
+train,1,biaya_tidak_resmi,"Untuk konsultasi dokter ada biaya di luar tarif, lima puluh ribu, diserahkan ke saya jangan ke kasir ya Mas"
+train,0,pembayaran_resmi,gini mbak biaya rawat inap dibayarkan lewat mesin pembayaran mandiri rinciannya ada di tagihan
+train,0,antrian_resmi,untuk rontgen lebih cepat pak bisa daftar online lewat aplikasi resmi sebelum datang
+train,0,data_dan_biaya_resmi,"biaya rawat inap sesuai tarif resmi, rinciannya ada di struk, Bapak"
+train,0,antrian_resmi,nah antriannya memang panjang kak mohon menunggu urutannya sesuai nomor antrian
+train,0,antrian_resmi,"Kami tidak menerima titipan uang untuk mempercepat antrian ya Mas, semua sesuai nomor"
+train,0,otp_aman,"Kalau ada yang meminta PIN ATM Mas, jangan diberikan ya, kami tidak pernah memintanya"
+train,0,otp_aman,"Kalau ada yang meminta PIN ATM Kak, jangan diberikan ya, kami tidak pernah memintanya"
+train,1,data_sensitif,"Pak, bacakan kode OTP yang barusan masuk, biar saya yang masukkan"
+train,1,obat_langsung,"Obat ini lebih murah kalau beli lewat saya, transfer saja ke nomor GoPay saya"
+train,1,jalur_cepat,"Kalau mau pemeriksaan lebih cepat, Mbak bisa kasih uang tambahan dua ratus ribu ke saya"
+train,1,data_sensitif,Bisa bagi nomor OTP yang baru saja masuk bu? untuk saya proses lebih lanjut
+train,0,info_umum,"Ibu, hasil pengurusan BPJS bisa diambil besok jam tiga sore"
+train,0,info_umum,"Jadwal dokter poli kandungan hari ini mulai jam tiga sore, Bu"
+train,1,biaya_tidak_resmi,untuk rawat jalan ada biaya di luar tarif dua ratus ribu diserahkan ke saya jangan ke kasir ya mbak
+train,1,biaya_tidak_resmi,"Ada biaya tambahan tiga ratus ribu untuk pendaftaran, tidak masuk struk, bayar tunai ke saya saja"
+train,0,data_dan_biaya_resmi,"Mohon bawa kartu identitas dan kartu BPJS asli untuk konsultasi dokter, Bapak"
+train,1,pembayaran_pribadi,eh bu biaya pemeriksaan lewat rekening atas nama saya sendiri saja biar cepat diproses
+train,0,obat_resmi,"Resep ini bisa ditebus di apotek rumah sakit lantai tiga, Bapak"
+train,1,jalur_cepat,kalau mau pengambilan hasil lab lebih cepat ibu bisa kasih uang tambahan 75 ribu ke saya
+train,1,biaya_tidak_resmi,biar klaim bpjs-nya cepat cair bu kasih uang dua ratus ribu ke saya
+train,1,data_sensitif,"Bapak, bacakan kode OTP yang barusan masuk, biar saya yang masukkan"
+train,1,jalur_cepat,Untuk konsultasi dokter lewat jalur cepat ada biaya lima puluh ribu yang diserahkan ke saya langsung
+train,1,pembayaran_pribadi,"Untuk biaya operasi bisa langsung dikirim ke nomor GoPay saya, Mas"
+train,0,info_umum,jadwal dokter poli mata hari ini mulai jam sepuluh pagi mas
+train,0,otp_aman,gini kode otp yang masuk ke hp bapak jangan diberikan ke siapa pun termasuk petugas ya
+train,0,info_umum,jadi silakan ke poli penyakit dalam lantai tiga ibu
+train,1,pembayaran_pribadi,"Untuk biaya rawat inap bisa langsung dikirim ke nomor e-wallet saya, Mbak"
+train,0,antrian_resmi,"Nomor antrian Pak dua belas, silakan tunggu dipanggil di ruang tunggu"
+train,0,pembayaran_resmi,"Mas, biaya pendaftaran dibayarkan lewat kartu debit di kasir, rinciannya ada di tagihan"
+train,0,otp_aman,"Kalau ada yang meminta password m-banking Mbak, jangan diberikan ya, kami tidak pernah memintanya"
+train,0,otp_aman,kode otp yang masuk ke hp bu jangan diberikan ke siapa pun termasuk petugas ya
+train,1,biaya_tidak_resmi,"Ada biaya tambahan dua ratus ribu untuk pendaftaran, tidak masuk struk, bayar tunai ke saya saja"
+train,0,antrian_resmi,"Antriannya memang panjang Bapak, mohon menunggu, urutannya sesuai nomor antrian"
+train,0,info_umum,jadi silakan ke poli saraf lantai satu kak
+train,0,antrian_resmi,"Kami tidak menerima titipan uang untuk mempercepat antrian ya Bu, semua sesuai nomor"
+train,0,pembayaran_resmi,"Untuk biaya operasi silakan ke kasir, jangan transfer ke rekening pribadi petugas siapa pun ya Mbak"
+train,1,pembayaran_pribadi,gini kirim biaya pendaftaran ke nomor gopay saya dulu ya nanti saya daftarkan
+train,1,biaya_tidak_resmi,"Untuk pengambilan hasil lab ada biaya di luar tarif, lima puluh ribu, diserahkan ke saya jangan ke kasir ya Bapak"
+train,0,pembayaran_resmi,untuk biaya rawat inap silakan ke kasir jangan transfer ke rekening pribadi petugas siapa pun ya mas
+train,1,jalur_cepat,supaya mas tidak perlu mengantri bayar saja langsung ke saya
+train,0,obat_resmi,"Vitamin dan obat ini bisa ditebus di apotek rumah sakit lantai satu, Ibu"
+train,1,obat_langsung,"Untuk Obat dari dokter ini bayar ke saya saja Mas, nanti saya antar ke rumah"
+train,1,data_sensitif,"Bagi nomor rekening Bapak untuk saya simpan secara pribadi, nanti saya kirimi 150 ribu"
+train,0,info_umum,mas hasil pendaftaran bisa diambil besok jam satu siang
+train,0,info_umum,"Mbak, hasil pengurusan BPJS bisa diambil besok jam satu siang"
+train,1,jalur_cepat,"Antriannya panjang Bu, tapi kalau ada uang pelicin 75 ribu saya masukkan duluan"
+train,0,otp_aman,Mbak masukkan sendiri kode OTP-nya di aplikasi resmi rumah sakit ya
+train,0,data_dan_biaya_resmi,"Mohon bawa kartu identitas dan kartu BPJS asli untuk pengurusan BPJS, Bu"
+train,0,pembayaran_resmi,pembayaran biaya administrasi bisa di kasir lantai tiga atau lewat virtual account yang tertera di tagihan ya kak
+train,1,pembayaran_pribadi,kirim biaya rawat inap ke nomor rekening pribadi saya dulu ya nanti saya daftarkan
+train,0,data_dan_biaya_resmi,gini mohon bawa kartu identitas dan kartu bpjs asli untuk konsultasi dokter kak
+train,0,pembayaran_resmi,"Untuk biaya rawat inap silakan ke kasir, jangan transfer ke rekening pribadi petugas siapa pun ya Bu"
+train,1,data_sensitif,eh bagi nomor rekening mas untuk saya simpan secara pribadi nanti saya kirimi tiga ratus ribu
+train,0,pembayaran_resmi,"Untuk biaya konsultasi silakan ke kasir, jangan transfer ke rekening pribadi petugas siapa pun ya Bapak"
+train,1,pembayaran_pribadi,"Ibu, biaya rawat inap lewat nomor GoPay saya saja biar cepat diproses"
+train,0,antrian_resmi,nah nomor antrian bu dua belas silakan tunggu dipanggil di ruang tunggu
+train,0,data_dan_biaya_resmi,"Mohon bawa kartu identitas dan kartu BPJS asli untuk pendaftaran, Kak"
+train,1,data_sensitif,jadi bagi nomor rekening pak untuk saya simpan secara pribadi nanti saya kirimi 150 ribu
+train,0,antrian_resmi,"Antriannya memang panjang Mbak, mohon menunggu, urutannya sesuai nomor antrian"
+train,0,antrian_resmi,antriannya memang panjang pak mohon menunggu urutannya sesuai nomor antrian
+train,0,info_umum,silakan ke poli jantung lantai dua bu
+train,0,antrian_resmi,"Untuk rontgen lebih cepat, Bu bisa daftar online lewat aplikasi resmi sebelum datang"
+train,1,jalur_cepat,untuk konsultasi dokter lewat jalur cepat ada biaya 150 ribu yang diserahkan ke saya langsung
+train,1,biaya_tidak_resmi,"Untuk rontgen ada biaya di luar tarif, 75 ribu, diserahkan ke saya jangan ke kasir ya Bu"
+train,1,biaya_tidak_resmi,"Untuk pemeriksaan ada biaya di luar tarif, tiga ratus ribu, diserahkan ke saya jangan ke kasir ya Bu"
+train,1,obat_langsung,"Untuk Vitamin dan obat ini bayar ke saya saja Bapak, nanti saya antar ke rumah"
+train,1,biaya_tidak_resmi,jadi untuk pemeriksaan ada biaya di luar tarif 75 ribu diserahkan ke saya jangan ke kasir ya bapak
+train,1,obat_langsung,"Untuk Obat tetes ini bayar ke saya saja Kak, nanti saya antar ke rumah"
+train,1,data_sensitif,Boleh minta kode OTP yang baru masuk ke HP Bapak? untuk saya proses lebih lanjut
+train,0,antrian_resmi,"Antriannya memang panjang Mas, mohon menunggu, urutannya sesuai nomor antrian"
+train,0,otp_aman,"Kalau ada yang meminta kode CVV kartu Mbak, jangan diberikan ya, kami tidak pernah memintanya"
+train,0,obat_resmi,resep ini harus ditebus di apotek luar ya di dalam sini tidak ada apotek
+train,0,info_umum,"Silakan ke poli kandungan lantai empat, Mas"
+train,1,obat_langsung,untuk vitamin dan obat ini bayar ke saya saja bu nanti saya antar ke rumah
+train,1,obat_langsung,obat tetes ini bisa langsung ditebus ke saya mas tidak perlu antri di apotek
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Bu kasih uang tiga ratus ribu ke saya"
+train,1,data_sensitif,Boleh minta kode OTP yang baru masuk ke HP Mbak? untuk saya proses lebih lanjut
+train,1,obat_langsung,"Obat tetes ini bisa langsung ditebus ke saya, Bapak, tidak perlu antri di apotek"
+train,0,otp_aman,kak masukkan sendiri kode otp-nya di aplikasi resmi rumah sakit ya
+train,1,data_sensitif,bagi nomor rekening bu untuk saya simpan secara pribadi nanti saya kirimi tiga ratus ribu
+train,0,data_dan_biaya_resmi,"Tidak ada biaya tambahan di luar struk ya Bu, semua tercantum di tagihan"
+train,0,antrian_resmi,eh antriannya memang panjang ibu mohon menunggu urutannya sesuai nomor antrian
+train,1,obat_langsung,jadi obat dari dokter ini lebih murah kalau beli lewat saya transfer saja ke rekening saya
+train,1,obat_langsung,"Vitamin dan obat ini bisa langsung ditebus ke saya, Mas, tidak perlu antri di apotek"
+train,0,info_umum,"Silakan ke poli gigi lantai empat, Kak"
+train,0,info_umum,"Jadwal dokter poli anak hari ini mulai jam delapan pagi, Bu"
+train,0,obat_resmi,"Vitamin dan obat ini bisa ditebus di apotek rumah sakit lantai dua, Mbak"
+train,0,pembayaran_resmi,jadi bu biaya operasi dibayarkan lewat qris resmi rumah sakit rinciannya ada di tagihan
+train,1,biaya_tidak_resmi,"Ada biaya tambahan 150 ribu untuk pengurusan BPJS, tidak masuk struk, bayar tunai ke saya saja"
+train,0,pembayaran_resmi,"Pembayaran hanya melalui mesin pembayaran mandiri, kami tidak menerima pembayaran ke rekening pribadi"
+train,1,biaya_tidak_resmi,nah untuk rawat jalan ada biaya di luar tarif 150 ribu diserahkan ke saya jangan ke kasir ya ibu
+train,1,biaya_tidak_resmi,untuk pemeriksaan ada biaya di luar tarif tiga ratus ribu diserahkan ke saya jangan ke kasir ya mbak
+train,0,obat_resmi,"Obat tetes ini harus ditebus di apotek luar ya, di dalam sini tidak ada apotek"
+train,1,biaya_tidak_resmi,gini biar klaim bpjs-nya cepat cair bapak kasih uang tiga ratus ribu ke saya
+train,1,biaya_tidak_resmi,"Ada biaya tambahan tiga ratus ribu untuk rawat jalan, tidak masuk struk, bayar tunai ke saya saja"
+train,0,obat_resmi,"Obat ini harus ditebus di apotek luar ya, di dalam sini tidak ada apotek"
+train,1,obat_langsung,"Obat tetes ini lebih murah kalau beli lewat saya, transfer saja ke rekening BCA saya"
+train,1,jalur_cepat,"Supaya Bapak tidak perlu mengantri, bayar saja langsung ke saya"
+train,1,jalur_cepat,"Kalau mau rontgen lebih cepat, Mbak bisa kasih uang tambahan seratus ribu ke saya"
+train,0,pembayaran_resmi,gini pembayaran hanya melalui qris resmi rumah sakit kami tidak menerima pembayaran ke rekening pribadi
+train,1,data_sensitif,bu bacakan kode otp yang barusan masuk biar saya yang masukkan
+train,0,obat_resmi,jadi obat tetes ini bisa ditebus di apotek rumah sakit lantai empat ibu
+train,0,antrian_resmi,"Untuk pemeriksaan lebih cepat, Bu bisa daftar online lewat aplikasi resmi sebelum datang"
+train,0,otp_aman,Kak masukkan sendiri kode OTP-nya di aplikasi resmi rumah sakit ya
+train,0,obat_resmi,obat ini bisa ditebus di apotek rumah sakit lantai tiga bapak
+train,0,data_dan_biaya_resmi,tidak ada biaya tambahan di luar struk ya bapak semua tercantum di tagihan
+train,1,data_sensitif,gini bagi nomor rekening mbak untuk saya simpan secara pribadi nanti saya kirimi seratus ribu
+train,1,obat_langsung,"Untuk Vitamin dan obat ini bayar ke saya saja Ibu, nanti saya antar ke rumah"
+train,1,biaya_tidak_resmi,"Biar klaim BPJS-nya cepat cair, Pak kasih uang 75 ribu ke saya"
+train,1,pembayaran_pribadi,"Bapak, biaya pendaftaran lewat nomor DANA saya saja biar cepat diproses"
+heldout,1,data_sensitif,"Untuk rawat jalan saya butuh kode verifikasi Pak, kirim lewat WhatsApp pribadi saya saja"
+heldout,1,jalur_cepat,"Biar pemeriksaan diprioritaskan, Mas cukup titip tiga ratus ribu ke saya"
+heldout,0,otp_aman,"Untuk konsultasi dokter Kak cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+heldout,1,biaya_tidak_resmi,gini ibu mau rawat jalan gratis bisa asal bayar 75 ribu ke saya dulu
+heldout,1,biaya_tidak_resmi,"Bapak mau pengurusan BPJS gratis? bisa, asal bayar 75 ribu ke saya dulu"
+heldout,1,pembayaran_pribadi,gini pembayaran biaya pemeriksaan nggak usah ke kasir langsung ke rekening bca saya saja ibu
+heldout,1,obat_langsung,"Bisa minta alamat dan nomor rekening Kak, nanti saya antar obatnya"
+heldout,1,pembayaran_pribadi,"Pembayaran biaya laboratorium nggak usah ke kasir, langsung ke rekening saya saja Bapak"
+heldout,0,pembayaran_resmi,"Tagihan biaya pemeriksaan sudah tercetak di lembar ini, Bu bayar di kasir ya"
+heldout,0,info_umum,"Ruang tunggu poli saraf ada di sebelah kanan, Mbak silakan duduk dulu"
+heldout,0,obat_resmi,"Vitamin dan obat ini tersedia di apotek depan, bisa pakai BPJS atau bayar langsung di sana"
+heldout,0,pembayaran_resmi,"Tagihan biaya konsultasi sudah tercetak di lembar ini, Mas bayar di kasir ya"
+heldout,0,data_dan_biaya_resmi,eh klaim bpjs diproses langsung oleh rumah sakit ibu tidak perlu membayar apa pun ke petugas
+heldout,1,data_sensitif,untuk konsultasi dokter saya butuh pin atm bapak kirim lewat whatsapp pribadi saya saja
+heldout,0,pembayaran_resmi,"Tagihan biaya administrasi sudah tercetak di lembar ini, Kak bayar di kasir ya"
+heldout,0,antrian_resmi,Pak bisa ambil nomor antrian di mesin dekat pintu masuk untuk pengambilan hasil lab
+heldout,0,otp_aman,"Untuk rawat jalan Bapak cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+heldout,1,pembayaran_pribadi,"Pembayaran uang muka nggak usah ke kasir, langsung ke nomor e-wallet saya saja Bapak"
+heldout,1,obat_langsung,"Bisa minta alamat dan nomor rekening Mas, nanti saya antar obatnya"
+heldout,1,data_sensitif,"Untuk pemeriksaan saya butuh kode verifikasi Kak, kirim lewat WhatsApp pribadi saya saja"
+heldout,1,obat_langsung,bisa minta alamat dan nomor rekening kak nanti saya antar obatnya
+heldout,0,info_umum,"Ruang tunggu poli kandungan ada di sebelah kanan, Bapak silakan duduk dulu"
+heldout,1,biaya_tidak_resmi,"Ibu mau pendaftaran gratis? bisa, asal bayar seratus ribu ke saya dulu"
+heldout,1,biaya_tidak_resmi,mas mau pengurusan bpjs gratis bisa asal bayar 75 ribu ke saya dulu
+heldout,0,obat_resmi,"Obat tetes ini tersedia di apotek depan, bisa pakai BPJS atau bayar langsung di sana"
+heldout,1,jalur_cepat,biar konsultasi dokter diprioritaskan bu cukup titip 150 ribu ke saya
+heldout,1,data_sensitif,eh untuk pengambilan hasil lab saya butuh kode verifikasi bu kirim lewat whatsapp pribadi saya saja
+heldout,0,otp_aman,"Untuk konsultasi dokter Ibu cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+heldout,1,data_sensitif,untuk konsultasi dokter saya butuh kode cvv kartu bu kirim lewat whatsapp pribadi saya saja
+heldout,0,otp_aman,"Untuk pemeriksaan Bapak cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+heldout,1,biaya_tidak_resmi,"Bu mau pendaftaran gratis? bisa, asal bayar dua ratus ribu ke saya dulu"
+heldout,1,jalur_cepat,"Biar pengambilan hasil lab diprioritaskan, Bapak cukup titip 75 ribu ke saya"
+heldout,0,pembayaran_resmi,tagihan biaya pemeriksaan sudah tercetak di lembar ini kak bayar di kasir ya
+heldout,0,pembayaran_resmi,tagihan biaya pemeriksaan sudah tercetak di lembar ini ibu bayar di kasir ya
+heldout,0,data_dan_biaya_resmi,"Klaim BPJS diproses langsung oleh rumah sakit, Kak tidak perlu membayar apa pun ke petugas"
+heldout,0,data_dan_biaya_resmi,"Klaim BPJS diproses langsung oleh rumah sakit, Bu tidak perlu membayar apa pun ke petugas"
+heldout,0,antrian_resmi,Bu bisa ambil nomor antrian di mesin dekat pintu masuk untuk pengurusan BPJS
+heldout,0,antrian_resmi,Bapak bisa ambil nomor antrian di mesin dekat pintu masuk untuk konsultasi dokter
+heldout,1,obat_langsung,bisa minta alamat dan nomor rekening bapak nanti saya antar obatnya
+heldout,0,info_umum,"Ruang tunggu poli jantung ada di sebelah kanan, Pak silakan duduk dulu"
+heldout,0,data_dan_biaya_resmi,klaim bpjs diproses langsung oleh rumah sakit mas tidak perlu membayar apa pun ke petugas
+heldout,1,biaya_tidak_resmi,"Pak mau rontgen gratis? bisa, asal bayar tiga ratus ribu ke saya dulu"
+heldout,1,data_sensitif,untuk pemeriksaan saya butuh pin atm kak kirim lewat whatsapp pribadi saya saja
+heldout,1,obat_langsung,"Bisa minta alamat dan nomor rekening Bu, nanti saya antar obatnya"
+heldout,1,pembayaran_pribadi,gini nanti biaya pemeriksaan ditransfer ke nomor e-wallet saya supaya bu tidak perlu antre di kasir
+heldout,0,pembayaran_resmi,tagihan biaya laboratorium sudah tercetak di lembar ini bu bayar di kasir ya
+heldout,0,data_dan_biaya_resmi,"Klaim BPJS diproses langsung oleh rumah sakit, Ibu tidak perlu membayar apa pun ke petugas"
+heldout,1,pembayaran_pribadi,Nanti biaya rawat inap ditransfer ke rekening BCA saya supaya Bu tidak perlu antre di kasir
+heldout,0,data_dan_biaya_resmi,"Klaim BPJS diproses langsung oleh rumah sakit, Pak tidak perlu membayar apa pun ke petugas"
+heldout,1,biaya_tidak_resmi,mbak mau pendaftaran gratis bisa asal bayar lima puluh ribu ke saya dulu
+heldout,0,antrian_resmi,Ibu bisa ambil nomor antrian di mesin dekat pintu masuk untuk pemeriksaan
+heldout,0,pembayaran_resmi,nah tagihan biaya pemeriksaan sudah tercetak di lembar ini mas bayar di kasir ya
+heldout,1,data_sensitif,"Untuk pemeriksaan saya butuh password m-banking Pak, kirim lewat WhatsApp pribadi saya saja"
+heldout,0,otp_aman,"Untuk rontgen Ibu cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+heldout,0,otp_aman,"Untuk pendaftaran Bu cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+heldout,0,otp_aman,"Untuk pemeriksaan Mbak cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+heldout,0,otp_aman,"Untuk rontgen Kak cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+heldout,0,info_umum,"Ruang tunggu poli kandungan ada di sebelah kanan, Mas silakan duduk dulu"
+heldout,1,jalur_cepat,gini biar pendaftaran diprioritaskan ibu cukup titip tiga ratus ribu ke saya
+heldout,0,antrian_resmi,eh mas bisa ambil nomor antrian di mesin dekat pintu masuk untuk rawat jalan
+heldout,0,info_umum,ruang tunggu poli saraf ada di sebelah kanan bapak silakan duduk dulu
+heldout,1,obat_langsung,"Bisa minta alamat dan nomor rekening Ibu, nanti saya antar obatnya"
+heldout,0,data_dan_biaya_resmi,"Klaim BPJS diproses langsung oleh rumah sakit, Mbak tidak perlu membayar apa pun ke petugas"
+heldout,0,obat_resmi,eh obat dari dokter ini tersedia di apotek depan bisa pakai bpjs atau bayar langsung di sana
+heldout,1,pembayaran_pribadi,"Pembayaran biaya pemeriksaan nggak usah ke kasir, langsung ke rekening BCA saya saja Bu"
+heldout,1,jalur_cepat,nah biar pengurusan bpjs diprioritaskan bu cukup titip lima puluh ribu ke saya
+heldout,0,pembayaran_resmi,"Tagihan biaya konsultasi sudah tercetak di lembar ini, Ibu bayar di kasir ya"
+heldout,1,biaya_tidak_resmi,"Ibu mau pengambilan hasil lab gratis? bisa, asal bayar seratus ribu ke saya dulu"
+heldout,1,jalur_cepat,"Biar rawat jalan diprioritaskan, Pak cukup titip seratus ribu ke saya"
+heldout,1,obat_langsung,bisa minta alamat dan nomor rekening pak nanti saya antar obatnya
+heldout,0,info_umum,"Ruang tunggu poli kandungan ada di sebelah kanan, Pak silakan duduk dulu"
+heldout,1,obat_langsung,"Bisa minta alamat dan nomor rekening Pak, nanti saya antar obatnya"
+heldout,0,otp_aman,nah untuk pengambilan hasil lab mbak cukup login sendiri di aplikasi kami tidak perlu kode apa pun
+heldout,1,jalur_cepat,"Biar rawat jalan diprioritaskan, Bu cukup titip seratus ribu ke saya"
+heldout,0,data_dan_biaya_resmi,klaim bpjs diproses langsung oleh rumah sakit bapak tidak perlu membayar apa pun ke petugas
+heldout,1,biaya_tidak_resmi,bapak mau rawat jalan gratis bisa asal bayar lima puluh ribu ke saya dulu
+heldout,0,obat_resmi,nah resep ini tersedia di apotek depan bisa pakai bpjs atau bayar langsung di sana
+heldout,0,obat_resmi,"Obat diabetes ini tersedia di apotek depan, bisa pakai BPJS atau bayar langsung di sana"
+heldout,0,obat_resmi,"Obat dari dokter ini tersedia di apotek depan, bisa pakai BPJS atau bayar langsung di sana"
+heldout,0,data_dan_biaya_resmi,"Klaim BPJS diproses langsung oleh rumah sakit, Bapak tidak perlu membayar apa pun ke petugas"
+heldout,0,obat_resmi,obat dari dokter ini tersedia di apotek depan bisa pakai bpjs atau bayar langsung di sana
+heldout,1,jalur_cepat,biar pemeriksaan diprioritaskan ibu cukup titip seratus ribu ke saya
+heldout,1,obat_langsung,"Bisa minta alamat dan nomor rekening Mbak, nanti saya antar obatnya"
+heldout,0,antrian_resmi,Mbak bisa ambil nomor antrian di mesin dekat pintu masuk untuk pengambilan hasil lab
+heldout,1,pembayaran_pribadi,eh pembayaran biaya laboratorium nggak usah ke kasir langsung ke nomor rekening pribadi saya saja bu
+heldout,1,biaya_tidak_resmi,ibu mau pengurusan bpjs gratis bisa asal bayar lima puluh ribu ke saya dulu
+heldout,0,pembayaran_resmi,"Tagihan biaya operasi sudah tercetak di lembar ini, Ibu bayar di kasir ya"
+heldout,1,data_sensitif,untuk pemeriksaan saya butuh kode verifikasi mbak kirim lewat whatsapp pribadi saya saja
+heldout,0,otp_aman,untuk rawat jalan bapak cukup login sendiri di aplikasi kami tidak perlu kode apa pun
+heldout,1,jalur_cepat,"Biar rontgen diprioritaskan, Mbak cukup titip tiga ratus ribu ke saya"
+heldout,1,pembayaran_pribadi,Nanti biaya konsultasi ditransfer ke rekening saya supaya Ibu tidak perlu antre di kasir
+heldout,0,pembayaran_resmi,eh tagihan biaya laboratorium sudah tercetak di lembar ini pak bayar di kasir ya
+heldout,1,data_sensitif,untuk pendaftaran saya butuh kode verifikasi kak kirim lewat whatsapp pribadi saya saja
+heldout,1,pembayaran_pribadi,eh pembayaran biaya administrasi nggak usah ke kasir langsung ke nomor e-wallet saya saja ibu
+heldout,1,jalur_cepat,gini biar rontgen diprioritaskan ibu cukup titip lima puluh ribu ke saya
+heldout,0,obat_resmi,"Obat ini tersedia di apotek depan, bisa pakai BPJS atau bayar langsung di sana"
+heldout,0,info_umum,"Ruang tunggu poli anak ada di sebelah kanan, Mas silakan duduk dulu"
+heldout,0,data_dan_biaya_resmi,jadi klaim bpjs diproses langsung oleh rumah sakit pak tidak perlu membayar apa pun ke petugas
+heldout,1,biaya_tidak_resmi,"Ibu mau pendaftaran gratis? bisa, asal bayar lima puluh ribu ke saya dulu"
+heldout,1,data_sensitif,"Untuk pemeriksaan saya butuh kode CVV kartu Mas, kirim lewat WhatsApp pribadi saya saja"
+heldout,0,obat_resmi,"Resep ini tersedia di apotek depan, bisa pakai BPJS atau bayar langsung di sana"
+heldout,0,antrian_resmi,Pak bisa ambil nomor antrian di mesin dekat pintu masuk untuk pemeriksaan
+heldout,0,obat_resmi,vitamin dan obat ini tersedia di apotek depan bisa pakai bpjs atau bayar langsung di sana
+heldout,1,obat_langsung,eh bisa minta alamat dan nomor rekening pak nanti saya antar obatnya
+heldout,0,antrian_resmi,Mas bisa ambil nomor antrian di mesin dekat pintu masuk untuk rontgen
+heldout,1,biaya_tidak_resmi,"Bu mau konsultasi dokter gratis? bisa, asal bayar seratus ribu ke saya dulu"
+heldout,1,pembayaran_pribadi,pembayaran biaya laboratorium nggak usah ke kasir langsung ke nomor rekening pribadi saya saja mbak
+heldout,1,jalur_cepat,"Biar rontgen diprioritaskan, Mbak cukup titip dua ratus ribu ke saya"
+heldout,0,info_umum,ruang tunggu poli mata ada di sebelah kanan mas silakan duduk dulu
+heldout,0,antrian_resmi,mas bisa ambil nomor antrian di mesin dekat pintu masuk untuk pendaftaran
+heldout,1,obat_langsung,bisa minta alamat dan nomor rekening ibu nanti saya antar obatnya
+heldout,1,pembayaran_pribadi,nanti biaya pendaftaran ditransfer ke nomor gopay saya supaya mas tidak perlu antre di kasir
+heldout,1,data_sensitif,"Untuk pendaftaran saya butuh password m-banking Kak, kirim lewat WhatsApp pribadi saya saja"
+heldout,1,obat_langsung,"Bisa minta alamat dan nomor rekening Bapak, nanti saya antar obatnya"
+heldout,0,antrian_resmi,Bapak bisa ambil nomor antrian di mesin dekat pintu masuk untuk pengambilan hasil lab
+heldout,1,pembayaran_pribadi,"Pembayaran biaya operasi nggak usah ke kasir, langsung ke nomor DANA saya saja Ibu"
+heldout,1,data_sensitif,"Untuk pendaftaran saya butuh kode verifikasi Ibu, kirim lewat WhatsApp pribadi saya saja"
+heldout,0,info_umum,eh ruang tunggu poli saraf ada di sebelah kanan kak silakan duduk dulu
+heldout,0,info_umum,ruang tunggu poli saraf ada di sebelah kanan ibu silakan duduk dulu
+heldout,1,jalur_cepat,"Biar konsultasi dokter diprioritaskan, Kak cukup titip lima puluh ribu ke saya"

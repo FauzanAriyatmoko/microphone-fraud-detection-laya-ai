@@ -1,0 +1,46 @@
+{
+  "validation": [
+    {
+      "gold_context": "konteks_kurang",
+      "level": "PERLU_DICEK",
+      "count": 60
+    },
+    {
+      "gold_context": "laporan_kejadian",
+      "level": "PERLU_DICEK",
+      "count": 60
+    },
+    {
+      "gold_context": "layanan_normal",
+      "level": "PERLU_DICEK",
+      "count": 140
+    },
+    {
+      "gold_context": "risiko_aktif",
+      "level": "PERLU_DICEK",
+      "count": 140
+    }
+  ],
+  "test": [
+    {
+      "gold_context": "konteks_kurang",
+      "level": "PERLU_DICEK",
+      "count": 10
+    },
+    {
+      "gold_context": "laporan_kejadian",
+      "level": "PERLU_DICEK",
+      "count": 10
+    },
+    {
+      "gold_context": "layanan_normal",
+      "level": "PERLU_DICEK",
+      "count": 30
+    },
+    {
+      "gold_context": "risiko_aktif",
+      "level": "PERLU_DICEK",
+      "count": 30
+    }
+  ]
+}

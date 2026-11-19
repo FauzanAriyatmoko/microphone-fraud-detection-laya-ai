@@ -1,0 +1,51 @@
+{
+  "seed": 42,
+  "schema_version": "3.0",
+  "synthetic_only": true,
+  "splits": {
+    "train": {
+      "rows": 1200,
+      "families": 63,
+      "labels": {
+        "layanan_normal": 420,
+        "laporan_kejadian": 180,
+        "konteks_kurang": 180,
+        "risiko_aktif": 420
+      },
+      "sha256": "bcf33dbdc0ee607c814384fdcd805909c74ca313f144ac3b222daeabca21588c"
+    },
+    "calibration": {
+      "rows": 240,
+      "families": 18,
+      "labels": {
+        "layanan_normal": 84,
+        "risiko_aktif": 84,
+        "laporan_kejadian": 36,
+        "konteks_kurang": 36
+      },
+      "sha256": "7fc62838459e38e0274d8818894c6671c73fb8ffbde1d4c22953ca52c60d0892"
+    },
+    "validation": {
+      "rows": 400,
+      "families": 29,
+      "labels": {
+        "layanan_normal": 140,
+        "risiko_aktif": 140,
+        "konteks_kurang": 60,
+        "laporan_kejadian": 60
+      },
+      "sha256": "0fdaf0d69185163305e4eaa1e8356b15d4b9b7734aea2e1735762cded7cc070b"
+    },
+    "test": {
+      "rows": 80,
+      "families": 80,
+      "labels": {
+        "risiko_aktif": 30,
+        "layanan_normal": 30,
+        "laporan_kejadian": 10,
+        "konteks_kurang": 10
+      },
+      "sha256": "787918a7ea4273aa4bf7578901a0a00b2099ab076a3d88102a0d5a2563da57f8"
+    }
+  }
+}

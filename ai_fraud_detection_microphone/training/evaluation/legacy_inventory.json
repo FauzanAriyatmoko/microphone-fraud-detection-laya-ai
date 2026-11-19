@@ -1,0 +1,1184 @@
+[
+  {
+    "path": "legacy/convert_speech_to_text.py",
+    "bytes": 633,
+    "sha256": "e6ce3139ce5713e85e0efca355dbd77c20ee0138811ee5ca77a22bbae8351ba5",
+    "lines": 18
+  },
+  {
+    "path": "legacy/laya-train-tuning/find_threshold.py",
+    "bytes": 2417,
+    "sha256": "9adb4fb6fbe26e7abf7a10c0c844df13742d4cabacc91cd93cf09082c03fb424",
+    "lines": 51
+  },
+  {
+    "path": "legacy/laya-train-tuning/finetune.md",
+    "bytes": 19810,
+    "sha256": "19eeb4e97c6a7766b0390199f3696218f24134c24d42edb6b7bcbc6b024d2f7c",
+    "lines": 359
+  },
+  {
+    "path": "legacy/laya-train-tuning/gen_fraud_dataset.py",
+    "bytes": 10259,
+    "sha256": "8333219d64868a07c0da34f8811617c7a20a7536d398dbd98e48a4e4834ce7e3",
+    "lines": 191
+  },
+  {
+    "path": "legacy/laya-train-tuning/heldout_synth.jsonl",
+    "bytes": 31445,
+    "sha256": "a79ab740414034d92b065c8e2423107b7c24c5b6eede37dd862279f90e28233e",
+    "lines": 120
+  },
+  {
+    "path": "legacy/laya-train-tuning/heldout_v2.jsonl",
+    "bytes": 54871,
+    "sha256": "64c57d9b230fd006c31679fb0c84312b0e352843fc4444d9b9986f14ed9736ec",
+    "lines": 204
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/checkpoint_latest/encoder/config.json",
+    "bytes": 1939,
+    "top_level_keys": [
+      "architectures",
+      "attention_bias",
+      "attention_dropout",
+      "bos_token_id",
+      "classifier_activation",
+      "classifier_bias",
+      "classifier_dropout",
+      "classifier_pooling",
+      "cls_token_id",
+      "decoder_bias",
+      "deterministic_flash_attn",
+      "dtype",
+      "embedding_dropout",
+      "eos_token_id",
+      "global_attn_every_n_layers",
+      "gradient_checkpointing",
+      "hidden_activation",
+      "hidden_size",
+      "initializer_cutoff_factor",
+      "initializer_range",
+      "intermediate_size",
+      "layer_norm_eps",
+      "layer_types",
+      "local_attention",
+      "mask_token_id",
+      "max_position_embeddings",
+      "mlp_bias",
+      "mlp_dropout",
+      "model_type",
+      "norm_bias"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/checkpoint_latest/model.safetensors",
+    "bytes": 643835524,
+    "tensor_count": 170,
+    "tensor_dtypes": [
+      "F16"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/checkpoint_latest/questions.json",
+    "bytes": 137,
+    "top_level_keys": [
+      "is_fraud"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/checkpoint_latest/rl_agent_config.json",
+    "bytes": 5272,
+    "top_level_keys": [
+      "encoder",
+      "head_layers",
+      "max_len",
+      "head_max_len",
+      "max_prefixes",
+      "act_costs",
+      "cost_wrong_act",
+      "amp_dtype",
+      "model_name",
+      "temperature",
+      "training",
+      "fine_tuned"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/checkpoint_latest/tokenizer/tokenizer.json",
+    "bytes": 34363285,
+    "top_level_keys": [
+      "version",
+      "truncation",
+      "padding",
+      "added_tokens",
+      "normalizer",
+      "pre_tokenizer",
+      "post_processor",
+      "decoder",
+      "model"
+    ],
+    "vocabulary_entries": 256000
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/checkpoint_latest/tokenizer/tokenizer_config.json",
+    "bytes": 666,
+    "top_level_keys": [
+      "backend",
+      "bos_token",
+      "clean_up_tokenization_spaces",
+      "cls_token",
+      "eos_token",
+      "extra_0",
+      "extra_1",
+      "is_local",
+      "local_files_only",
+      "mask_token",
+      "model_input_names",
+      "model_max_length",
+      "model_specific_special_tokens",
+      "pad_token",
+      "padding_side",
+      "sep_token",
+      "spaces_between_special_tokens",
+      "tokenizer_class",
+      "unk_token"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/checkpoint_latest/train_report.json",
+    "bytes": 2692,
+    "top_level_keys": [
+      "eval_source",
+      "eval_mode",
+      "is_held_out",
+      "eval_items",
+      "note",
+      "before",
+      "after",
+      "comparison",
+      "calibration",
+      "abstention_thresholds",
+      "training"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/encoder/config.json",
+    "bytes": 1939,
+    "top_level_keys": [
+      "architectures",
+      "attention_bias",
+      "attention_dropout",
+      "bos_token_id",
+      "classifier_activation",
+      "classifier_bias",
+      "classifier_dropout",
+      "classifier_pooling",
+      "cls_token_id",
+      "decoder_bias",
+      "deterministic_flash_attn",
+      "dtype",
+      "embedding_dropout",
+      "eos_token_id",
+      "global_attn_every_n_layers",
+      "gradient_checkpointing",
+      "hidden_activation",
+      "hidden_size",
+      "initializer_cutoff_factor",
+      "initializer_range",
+      "intermediate_size",
+      "layer_norm_eps",
+      "layer_types",
+      "local_attention",
+      "mask_token_id",
+      "max_position_embeddings",
+      "mlp_bias",
+      "mlp_dropout",
+      "model_type",
+      "norm_bias"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/model.safetensors",
+    "bytes": 643835524,
+    "tensor_count": 170,
+    "tensor_dtypes": [
+      "F16"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/questions.json",
+    "bytes": 137,
+    "top_level_keys": [
+      "is_fraud"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/rl_agent_config.json",
+    "bytes": 5272,
+    "top_level_keys": [
+      "encoder",
+      "head_layers",
+      "max_len",
+      "head_max_len",
+      "max_prefixes",
+      "act_costs",
+      "cost_wrong_act",
+      "amp_dtype",
+      "model_name",
+      "temperature",
+      "training",
+      "fine_tuned"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/tokenizer/tokenizer.json",
+    "bytes": 34363285,
+    "top_level_keys": [
+      "version",
+      "truncation",
+      "padding",
+      "added_tokens",
+      "normalizer",
+      "pre_tokenizer",
+      "post_processor",
+      "decoder",
+      "model"
+    ],
+    "vocabulary_entries": 256000
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/tokenizer/tokenizer_config.json",
+    "bytes": 624,
+    "top_level_keys": [
+      "bos_token",
+      "clean_up_tokenization_spaces",
+      "cls_token",
+      "eos_token",
+      "extra_0",
+      "extra_1",
+      "local_files_only",
+      "mask_token",
+      "model_input_names",
+      "model_max_length",
+      "model_specific_special_tokens",
+      "pad_token",
+      "padding_side",
+      "sep_token",
+      "spaces_between_special_tokens",
+      "tokenizer_class",
+      "unk_token"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v1/train_report.json",
+    "bytes": 2692,
+    "top_level_keys": [
+      "eval_source",
+      "eval_mode",
+      "is_held_out",
+      "eval_items",
+      "note",
+      "before",
+      "after",
+      "comparison",
+      "calibration",
+      "abstention_thresholds",
+      "training"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/checkpoint_latest/encoder/config.json",
+    "bytes": 1939,
+    "top_level_keys": [
+      "architectures",
+      "attention_bias",
+      "attention_dropout",
+      "bos_token_id",
+      "classifier_activation",
+      "classifier_bias",
+      "classifier_dropout",
+      "classifier_pooling",
+      "cls_token_id",
+      "decoder_bias",
+      "deterministic_flash_attn",
+      "dtype",
+      "embedding_dropout",
+      "eos_token_id",
+      "global_attn_every_n_layers",
+      "gradient_checkpointing",
+      "hidden_activation",
+      "hidden_size",
+      "initializer_cutoff_factor",
+      "initializer_range",
+      "intermediate_size",
+      "layer_norm_eps",
+      "layer_types",
+      "local_attention",
+      "mask_token_id",
+      "max_position_embeddings",
+      "mlp_bias",
+      "mlp_dropout",
+      "model_type",
+      "norm_bias"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/checkpoint_latest/model.safetensors",
+    "bytes": 643835524,
+    "tensor_count": 170,
+    "tensor_dtypes": [
+      "F16"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/checkpoint_latest/questions.json",
+    "bytes": 137,
+    "top_level_keys": [
+      "is_fraud"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/checkpoint_latest/rl_agent_config.json",
+    "bytes": 5168,
+    "top_level_keys": [
+      "encoder",
+      "head_layers",
+      "max_len",
+      "head_max_len",
+      "max_prefixes",
+      "act_costs",
+      "cost_wrong_act",
+      "amp_dtype",
+      "model_name",
+      "temperature",
+      "training",
+      "fine_tuned"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/checkpoint_latest/tokenizer/tokenizer.json",
+    "bytes": 34363285,
+    "top_level_keys": [
+      "version",
+      "truncation",
+      "padding",
+      "added_tokens",
+      "normalizer",
+      "pre_tokenizer",
+      "post_processor",
+      "decoder",
+      "model"
+    ],
+    "vocabulary_entries": 256000
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/checkpoint_latest/tokenizer/tokenizer_config.json",
+    "bytes": 666,
+    "top_level_keys": [
+      "backend",
+      "bos_token",
+      "clean_up_tokenization_spaces",
+      "cls_token",
+      "eos_token",
+      "extra_0",
+      "extra_1",
+      "is_local",
+      "local_files_only",
+      "mask_token",
+      "model_input_names",
+      "model_max_length",
+      "model_specific_special_tokens",
+      "pad_token",
+      "padding_side",
+      "sep_token",
+      "spaces_between_special_tokens",
+      "tokenizer_class",
+      "unk_token"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/checkpoint_latest/train_report.json",
+    "bytes": 2644,
+    "top_level_keys": [
+      "eval_source",
+      "eval_mode",
+      "is_held_out",
+      "eval_items",
+      "note",
+      "before",
+      "after",
+      "comparison",
+      "calibration",
+      "abstention_thresholds",
+      "training"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/encoder/config.json",
+    "bytes": 1939,
+    "top_level_keys": [
+      "architectures",
+      "attention_bias",
+      "attention_dropout",
+      "bos_token_id",
+      "classifier_activation",
+      "classifier_bias",
+      "classifier_dropout",
+      "classifier_pooling",
+      "cls_token_id",
+      "decoder_bias",
+      "deterministic_flash_attn",
+      "dtype",
+      "embedding_dropout",
+      "eos_token_id",
+      "global_attn_every_n_layers",
+      "gradient_checkpointing",
+      "hidden_activation",
+      "hidden_size",
+      "initializer_cutoff_factor",
+      "initializer_range",
+      "intermediate_size",
+      "layer_norm_eps",
+      "layer_types",
+      "local_attention",
+      "mask_token_id",
+      "max_position_embeddings",
+      "mlp_bias",
+      "mlp_dropout",
+      "model_type",
+      "norm_bias"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/model.safetensors",
+    "bytes": 643835524,
+    "tensor_count": 170,
+    "tensor_dtypes": [
+      "F16"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/questions.json",
+    "bytes": 137,
+    "top_level_keys": [
+      "is_fraud"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/rl_agent_config.json",
+    "bytes": 5168,
+    "top_level_keys": [
+      "encoder",
+      "head_layers",
+      "max_len",
+      "head_max_len",
+      "max_prefixes",
+      "act_costs",
+      "cost_wrong_act",
+      "amp_dtype",
+      "model_name",
+      "temperature",
+      "training",
+      "fine_tuned"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/tokenizer/tokenizer.json",
+    "bytes": 34363285,
+    "top_level_keys": [
+      "version",
+      "truncation",
+      "padding",
+      "added_tokens",
+      "normalizer",
+      "pre_tokenizer",
+      "post_processor",
+      "decoder",
+      "model"
+    ],
+    "vocabulary_entries": 256000
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/tokenizer/tokenizer_config.json",
+    "bytes": 624,
+    "top_level_keys": [
+      "bos_token",
+      "clean_up_tokenization_spaces",
+      "cls_token",
+      "eos_token",
+      "extra_0",
+      "extra_1",
+      "local_files_only",
+      "mask_token",
+      "model_input_names",
+      "model_max_length",
+      "model_specific_special_tokens",
+      "pad_token",
+      "padding_side",
+      "sep_token",
+      "spaces_between_special_tokens",
+      "tokenizer_class",
+      "unk_token"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s0/train_report.json",
+    "bytes": 2644,
+    "top_level_keys": [
+      "eval_source",
+      "eval_mode",
+      "is_held_out",
+      "eval_items",
+      "note",
+      "before",
+      "after",
+      "comparison",
+      "calibration",
+      "abstention_thresholds",
+      "training"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/checkpoint_latest/encoder/config.json",
+    "bytes": 1939,
+    "top_level_keys": [
+      "architectures",
+      "attention_bias",
+      "attention_dropout",
+      "bos_token_id",
+      "classifier_activation",
+      "classifier_bias",
+      "classifier_dropout",
+      "classifier_pooling",
+      "cls_token_id",
+      "decoder_bias",
+      "deterministic_flash_attn",
+      "dtype",
+      "embedding_dropout",
+      "eos_token_id",
+      "global_attn_every_n_layers",
+      "gradient_checkpointing",
+      "hidden_activation",
+      "hidden_size",
+      "initializer_cutoff_factor",
+      "initializer_range",
+      "intermediate_size",
+      "layer_norm_eps",
+      "layer_types",
+      "local_attention",
+      "mask_token_id",
+      "max_position_embeddings",
+      "mlp_bias",
+      "mlp_dropout",
+      "model_type",
+      "norm_bias"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/checkpoint_latest/model.safetensors",
+    "bytes": 643835524,
+    "tensor_count": 170,
+    "tensor_dtypes": [
+      "F16"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/checkpoint_latest/questions.json",
+    "bytes": 137,
+    "top_level_keys": [
+      "is_fraud"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/checkpoint_latest/rl_agent_config.json",
+    "bytes": 5160,
+    "top_level_keys": [
+      "encoder",
+      "head_layers",
+      "max_len",
+      "head_max_len",
+      "max_prefixes",
+      "act_costs",
+      "cost_wrong_act",
+      "amp_dtype",
+      "model_name",
+      "temperature",
+      "training",
+      "fine_tuned"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/checkpoint_latest/tokenizer/tokenizer.json",
+    "bytes": 34363285,
+    "top_level_keys": [
+      "version",
+      "truncation",
+      "padding",
+      "added_tokens",
+      "normalizer",
+      "pre_tokenizer",
+      "post_processor",
+      "decoder",
+      "model"
+    ],
+    "vocabulary_entries": 256000
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/checkpoint_latest/tokenizer/tokenizer_config.json",
+    "bytes": 666,
+    "top_level_keys": [
+      "backend",
+      "bos_token",
+      "clean_up_tokenization_spaces",
+      "cls_token",
+      "eos_token",
+      "extra_0",
+      "extra_1",
+      "is_local",
+      "local_files_only",
+      "mask_token",
+      "model_input_names",
+      "model_max_length",
+      "model_specific_special_tokens",
+      "pad_token",
+      "padding_side",
+      "sep_token",
+      "spaces_between_special_tokens",
+      "tokenizer_class",
+      "unk_token"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/checkpoint_latest/train_report.json",
+    "bytes": 2637,
+    "top_level_keys": [
+      "eval_source",
+      "eval_mode",
+      "is_held_out",
+      "eval_items",
+      "note",
+      "before",
+      "after",
+      "comparison",
+      "calibration",
+      "abstention_thresholds",
+      "training"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/encoder/config.json",
+    "bytes": 1939,
+    "top_level_keys": [
+      "architectures",
+      "attention_bias",
+      "attention_dropout",
+      "bos_token_id",
+      "classifier_activation",
+      "classifier_bias",
+      "classifier_dropout",
+      "classifier_pooling",
+      "cls_token_id",
+      "decoder_bias",
+      "deterministic_flash_attn",
+      "dtype",
+      "embedding_dropout",
+      "eos_token_id",
+      "global_attn_every_n_layers",
+      "gradient_checkpointing",
+      "hidden_activation",
+      "hidden_size",
+      "initializer_cutoff_factor",
+      "initializer_range",
+      "intermediate_size",
+      "layer_norm_eps",
+      "layer_types",
+      "local_attention",
+      "mask_token_id",
+      "max_position_embeddings",
+      "mlp_bias",
+      "mlp_dropout",
+      "model_type",
+      "norm_bias"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/model.safetensors",
+    "bytes": 643835524,
+    "tensor_count": 170,
+    "tensor_dtypes": [
+      "F16"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/questions.json",
+    "bytes": 137,
+    "top_level_keys": [
+      "is_fraud"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/rl_agent_config.json",
+    "bytes": 5160,
+    "top_level_keys": [
+      "encoder",
+      "head_layers",
+      "max_len",
+      "head_max_len",
+      "max_prefixes",
+      "act_costs",
+      "cost_wrong_act",
+      "amp_dtype",
+      "model_name",
+      "temperature",
+      "training",
+      "fine_tuned"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/tokenizer/tokenizer.json",
+    "bytes": 34363285,
+    "top_level_keys": [
+      "version",
+      "truncation",
+      "padding",
+      "added_tokens",
+      "normalizer",
+      "pre_tokenizer",
+      "post_processor",
+      "decoder",
+      "model"
+    ],
+    "vocabulary_entries": 256000
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/tokenizer/tokenizer_config.json",
+    "bytes": 624,
+    "top_level_keys": [
+      "bos_token",
+      "clean_up_tokenization_spaces",
+      "cls_token",
+      "eos_token",
+      "extra_0",
+      "extra_1",
+      "local_files_only",
+      "mask_token",
+      "model_input_names",
+      "model_max_length",
+      "model_specific_special_tokens",
+      "pad_token",
+      "padding_side",
+      "sep_token",
+      "spaces_between_special_tokens",
+      "tokenizer_class",
+      "unk_token"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s1/train_report.json",
+    "bytes": 2637,
+    "top_level_keys": [
+      "eval_source",
+      "eval_mode",
+      "is_held_out",
+      "eval_items",
+      "note",
+      "before",
+      "after",
+      "comparison",
+      "calibration",
+      "abstention_thresholds",
+      "training"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/checkpoint_latest/encoder/config.json",
+    "bytes": 1939,
+    "top_level_keys": [
+      "architectures",
+      "attention_bias",
+      "attention_dropout",
+      "bos_token_id",
+      "classifier_activation",
+      "classifier_bias",
+      "classifier_dropout",
+      "classifier_pooling",
+      "cls_token_id",
+      "decoder_bias",
+      "deterministic_flash_attn",
+      "dtype",
+      "embedding_dropout",
+      "eos_token_id",
+      "global_attn_every_n_layers",
+      "gradient_checkpointing",
+      "hidden_activation",
+      "hidden_size",
+      "initializer_cutoff_factor",
+      "initializer_range",
+      "intermediate_size",
+      "layer_norm_eps",
+      "layer_types",
+      "local_attention",
+      "mask_token_id",
+      "max_position_embeddings",
+      "mlp_bias",
+      "mlp_dropout",
+      "model_type",
+      "norm_bias"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/checkpoint_latest/model.safetensors",
+    "bytes": 643835524,
+    "tensor_count": 170,
+    "tensor_dtypes": [
+      "F16"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/checkpoint_latest/questions.json",
+    "bytes": 137,
+    "top_level_keys": [
+      "is_fraud"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/checkpoint_latest/rl_agent_config.json",
+    "bytes": 5156,
+    "top_level_keys": [
+      "encoder",
+      "head_layers",
+      "max_len",
+      "head_max_len",
+      "max_prefixes",
+      "act_costs",
+      "cost_wrong_act",
+      "amp_dtype",
+      "model_name",
+      "temperature",
+      "training",
+      "fine_tuned"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/checkpoint_latest/tokenizer/tokenizer.json",
+    "bytes": 34363285,
+    "top_level_keys": [
+      "version",
+      "truncation",
+      "padding",
+      "added_tokens",
+      "normalizer",
+      "pre_tokenizer",
+      "post_processor",
+      "decoder",
+      "model"
+    ],
+    "vocabulary_entries": 256000
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/checkpoint_latest/tokenizer/tokenizer_config.json",
+    "bytes": 666,
+    "top_level_keys": [
+      "backend",
+      "bos_token",
+      "clean_up_tokenization_spaces",
+      "cls_token",
+      "eos_token",
+      "extra_0",
+      "extra_1",
+      "is_local",
+      "local_files_only",
+      "mask_token",
+      "model_input_names",
+      "model_max_length",
+      "model_specific_special_tokens",
+      "pad_token",
+      "padding_side",
+      "sep_token",
+      "spaces_between_special_tokens",
+      "tokenizer_class",
+      "unk_token"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/checkpoint_latest/train_report.json",
+    "bytes": 2633,
+    "top_level_keys": [
+      "eval_source",
+      "eval_mode",
+      "is_held_out",
+      "eval_items",
+      "note",
+      "before",
+      "after",
+      "comparison",
+      "calibration",
+      "abstention_thresholds",
+      "training"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/encoder/config.json",
+    "bytes": 1939,
+    "top_level_keys": [
+      "architectures",
+      "attention_bias",
+      "attention_dropout",
+      "bos_token_id",
+      "classifier_activation",
+      "classifier_bias",
+      "classifier_dropout",
+      "classifier_pooling",
+      "cls_token_id",
+      "decoder_bias",
+      "deterministic_flash_attn",
+      "dtype",
+      "embedding_dropout",
+      "eos_token_id",
+      "global_attn_every_n_layers",
+      "gradient_checkpointing",
+      "hidden_activation",
+      "hidden_size",
+      "initializer_cutoff_factor",
+      "initializer_range",
+      "intermediate_size",
+      "layer_norm_eps",
+      "layer_types",
+      "local_attention",
+      "mask_token_id",
+      "max_position_embeddings",
+      "mlp_bias",
+      "mlp_dropout",
+      "model_type",
+      "norm_bias"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/model.safetensors",
+    "bytes": 643835524,
+    "tensor_count": 170,
+    "tensor_dtypes": [
+      "F16"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/questions.json",
+    "bytes": 137,
+    "top_level_keys": [
+      "is_fraud"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/rl_agent_config.json",
+    "bytes": 5156,
+    "top_level_keys": [
+      "encoder",
+      "head_layers",
+      "max_len",
+      "head_max_len",
+      "max_prefixes",
+      "act_costs",
+      "cost_wrong_act",
+      "amp_dtype",
+      "model_name",
+      "temperature",
+      "training",
+      "fine_tuned"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/tokenizer/tokenizer.json",
+    "bytes": 34363285,
+    "top_level_keys": [
+      "version",
+      "truncation",
+      "padding",
+      "added_tokens",
+      "normalizer",
+      "pre_tokenizer",
+      "post_processor",
+      "decoder",
+      "model"
+    ],
+    "vocabulary_entries": 256000
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/tokenizer/tokenizer_config.json",
+    "bytes": 624,
+    "top_level_keys": [
+      "bos_token",
+      "clean_up_tokenization_spaces",
+      "cls_token",
+      "eos_token",
+      "extra_0",
+      "extra_1",
+      "local_files_only",
+      "mask_token",
+      "model_input_names",
+      "model_max_length",
+      "model_specific_special_tokens",
+      "pad_token",
+      "padding_side",
+      "sep_token",
+      "spaces_between_special_tokens",
+      "tokenizer_class",
+      "unk_token"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/laya-fraud-rs-v2-s2/train_report.json",
+    "bytes": 2633,
+    "top_level_keys": [
+      "eval_source",
+      "eval_mode",
+      "is_held_out",
+      "eval_items",
+      "note",
+      "before",
+      "after",
+      "comparison",
+      "calibration",
+      "abstention_thresholds",
+      "training"
+    ]
+  },
+  {
+    "path": "legacy/laya-train-tuning/meta_synth.csv",
+    "bytes": 55254,
+    "sha256": "9c57449c377fac42b8380fe8a252976274745ef032141b67ad336632b3e79b64",
+    "lines": 529
+  },
+  {
+    "path": "legacy/laya-train-tuning/meta_v2.csv",
+    "bytes": 107583,
+    "sha256": "f43b553fea309bf67df46ba0078735f62ab8244a935b1e4ecaabd23c85868cc3",
+    "lines": 873
+  },
+  {
+    "path": "legacy/laya-train-tuning/probe.py",
+    "bytes": 1379,
+    "sha256": "e24fc09e8f5c38efbc832d4c0dcbcae8fc992e66f85e9c5db0aa0547251c5d84",
+    "lines": 23
+  },
+  {
+    "path": "legacy/laya-train-tuning/show_errors_v2.py",
+    "bytes": 2650,
+    "sha256": "6ae56c0e11654ad14eb4267ec4d9d3fee66fcf3165f9f3b3a3c9b08453b47f9c",
+    "lines": 57
+  },
+  {
+    "path": "legacy/laya-train-tuning/show_erros.py",
+    "bytes": 698,
+    "sha256": "ab6cd0d5fc19d661bd835bfcf41bd807ba17bdb08fae3289a7862aa0fb0cfe04",
+    "lines": 15
+  },
+  {
+    "path": "legacy/laya-train-tuning/stress_test.jsonl",
+    "bytes": 8580,
+    "sha256": "fe9b17c7f5fa63e41c7491806fd05338484b0f4976a62a01e984635a22ebb8a2",
+    "lines": 30
+  },
+  {
+    "path": "legacy/laya-train-tuning/train_synth.jsonl",
+    "bytes": 106313,
+    "sha256": "e898e13e7b4aca4ceeb3d01c686ee0f271ef3112e3952cc6b43b28c82bd472a6",
+    "lines": 408
+  },
+  {
+    "path": "legacy/laya-train-tuning/train_v2.jsonl",
+    "bytes": 165520,
+    "sha256": "42a2b4b0e6402658ace1f4d00e1b1cfbe47317b5d99fed03f00047bd8eab012e",
+    "lines": 638
+  },
+  {
+    "path": "legacy/laya-train-tuning-v2/gen_fraud_dataset_v2.py",
+    "bytes": 21577,
+    "sha256": "baa867c3b5bd80cfef253e0c7da2cf8349f663985e9d99e61e09b11dc9145149",
+    "lines": 356
+  },
+  {
+    "path": "legacy/laya-train-tuning-v2/heldout_v2.jsonl",
+    "bytes": 54871,
+    "sha256": "64c57d9b230fd006c31679fb0c84312b0e352843fc4444d9b9986f14ed9736ec",
+    "lines": 204
+  },
+  {
+    "path": "legacy/laya-train-tuning-v2/meta_v2.csv",
+    "bytes": 107583,
+    "sha256": "f43b553fea309bf67df46ba0078735f62ab8244a935b1e4ecaabd23c85868cc3",
+    "lines": 873
+  },
+  {
+    "path": "legacy/laya-train-tuning-v2/show_errors_v2.py",
+    "bytes": 2650,
+    "sha256": "6ae56c0e11654ad14eb4267ec4d9d3fee66fcf3165f9f3b3a3c9b08453b47f9c",
+    "lines": 57
+  },
+  {
+    "path": "legacy/laya-train-tuning-v2/stress_test.jsonl",
+    "bytes": 8580,
+    "sha256": "fe9b17c7f5fa63e41c7491806fd05338484b0f4976a62a01e984635a22ebb8a2",
+    "lines": 30
+  },
+  {
+    "path": "legacy/laya-train-tuning-v2/train_v2.jsonl",
+    "bytes": 165520,
+    "sha256": "42a2b4b0e6402658ace1f4d00e1b1cfbe47317b5d99fed03f00047bd8eab012e",
+    "lines": 638
+  },
+  {
+    "path": "legacy/laya_fraud_rs.py",
+    "bytes": 15705,
+    "sha256": "c5c04b7902efc92e55847375f7b62cdb539f3ab8d0d15967da043de678a56007",
+    "lines": 401
+  },
+  {
+    "path": "legacy/output_c270_new.wav",
+    "bytes": 320058,
+    "riff_wave": true,
+    "audio_format": 3,
+    "channels": 1,
+    "sample_rate": 16000,
+    "bits_per_sample": 32
+  },
+  {
+    "path": "legacy/plan_prompt.md",
+    "bytes": 1298,
+    "sha256": "aea6c58f00e2de6e556a6422e212236c6ad6b0fc7165198e472aac958d658b07",
+    "lines": 25
+  },
+  {
+    "path": "legacy/speech_to_text_microphone.py",
+    "bytes": 5224,
+    "sha256": "51b6d87f5da1cede45d1da7e560b5d2505ee8fe175b374837084766034d0d81e",
+    "lines": 145
+  },
+  {
+    "path": "legacy/test_fraud_laya.py",
+    "bytes": 1614,
+    "sha256": "43ea355f81858129385c5a8e22935a4732cdce5e390d6c6cbeb6a1085cabf0f3",
+    "lines": 46
+  },
+  {
+    "path": "legacy/test_output_new.wav",
+    "bytes": 960058,
+    "riff_wave": true,
+    "audio_format": 3,
+    "channels": 1,
+    "sample_rate": 16000,
+    "bits_per_sample": 32
+  },
+  {
+    "path": "legacy/test_record.py",
+    "bytes": 510,
+    "sha256": "845834fd4627810f3a9f39638f1cc50fbf6248c0aff38e94a53e2ddc67fb158f",
+    "lines": 16
+  },
+  {
+    "path": "legacy/train.jsonl",
+    "bytes": 2493,
+    "sha256": "3e74b80c40fa884eb1e7e19257400e0bd28ff31e25fc4adf3d694b96778f9e0e",
+    "lines": 10
+  }
+]

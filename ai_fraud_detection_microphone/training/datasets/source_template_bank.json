@@ -1,0 +1,1012 @@
+{
+  "provenance": {
+    "source": "legacy/laya-train-tuning-v2/gen_fraud_dataset_v2.py",
+    "sha256": "baa867c3b5bd80cfef253e0c7da2cf8349f663985e9d99e61e09b11dc9145149"
+  },
+  "slots": {
+    "sapa": [
+      "Bu",
+      "Pak",
+      "Ibu",
+      "Bapak",
+      "Mbak",
+      "Mas",
+      "Kak"
+    ],
+    "biaya": [
+      "biaya administrasi",
+      "biaya pendaftaran",
+      "uang muka",
+      "biaya pemeriksaan",
+      "biaya rawat inap",
+      "biaya konsultasi",
+      "biaya laboratorium",
+      "biaya operasi"
+    ],
+    "rek_pribadi": [
+      "nomor rekening pribadi saya",
+      "rekening saya",
+      "rekening atas nama saya sendiri",
+      "nomor DANA saya",
+      "nomor GoPay saya",
+      "nomor e-wallet saya",
+      "rekening BCA saya"
+    ],
+    "rek_pribadi_umum": [
+      "rekening pribadi",
+      "rekening perorangan",
+      "nomor DANA pribadi",
+      "e-wallet pribadi"
+    ],
+    "nomor_hp": [
+      "nomor WhatsApp saya",
+      "nomor HP pribadi saya",
+      "WA pribadi saya"
+    ],
+    "layanan": [
+      "pendaftaran",
+      "pemeriksaan",
+      "rawat jalan",
+      "pengambilan hasil lab",
+      "konsultasi dokter",
+      "rontgen",
+      "pengurusan BPJS"
+    ],
+    "nominal": [
+      "lima puluh ribu",
+      "seratus ribu",
+      "dua ratus ribu",
+      "tiga ratus ribu",
+      "75 ribu",
+      "150 ribu"
+    ],
+    "obat": [
+      "Obat ini",
+      "Obat dari dokter ini",
+      "Resep ini",
+      "Vitamin dan obat ini",
+      "Obat tetes ini",
+      "Obat diabetes ini"
+    ],
+    "kanal_resmi": [
+      "QRIS resmi rumah sakit",
+      "virtual account yang tertera di tagihan",
+      "mesin pembayaran mandiri",
+      "transfer ke rekening resmi rumah sakit yang tertera di tagihan",
+      "kartu debit di kasir"
+    ],
+    "poli": [
+      "anak",
+      "penyakit dalam",
+      "gigi",
+      "mata",
+      "kandungan",
+      "jantung",
+      "saraf"
+    ],
+    "data": [
+      "password m-banking",
+      "kode CVV kartu",
+      "PIN ATM",
+      "kode verifikasi"
+    ],
+    "kode": [
+      "kode OTP",
+      "kode verifikasi",
+      "PIN",
+      "kode rahasia",
+      "kode SMS"
+    ],
+    "alasan": [
+      "demi keamanan",
+      "untuk verifikasi",
+      "untuk proses klaim",
+      "biar cepat"
+    ],
+    "jam": [
+      "delapan pagi",
+      "sepuluh pagi",
+      "satu siang",
+      "tiga sore"
+    ],
+    "lantai": [
+      "satu",
+      "dua",
+      "tiga",
+      "empat"
+    ],
+    "nomor": [
+      "dua belas",
+      "dua puluh tiga",
+      "tiga puluh lima",
+      "empat puluh satu"
+    ]
+  },
+  "templates": [
+    {
+      "id": "F:pembayaran_pribadi:1",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "train",
+      "tpl": "Silakan transfer {biaya} ke {rek_pribadi} ya, {sapa}"
+    },
+    {
+      "id": "F:pembayaran_pribadi:2",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "train",
+      "tpl": "Untuk {biaya} bisa langsung dikirim ke {rek_pribadi}, {sapa}"
+    },
+    {
+      "id": "F:pembayaran_pribadi:3",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "train",
+      "tpl": "{sapa}, {biaya} lewat {rek_pribadi} saja biar cepat diproses"
+    },
+    {
+      "id": "F:pembayaran_pribadi:4",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "train",
+      "tpl": "Kirim {biaya} ke {rek_pribadi} dulu ya, nanti saya daftarkan"
+    },
+    {
+      "id": "F:pembayaran_pribadi:5",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "train",
+      "tpl": "Pembayaran {biaya} nggak usah ke kasir, langsung ke {rek_pribadi} saja {sapa}"
+    },
+    {
+      "id": "F:pembayaran_pribadi:6",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "train",
+      "tpl": "Transfernya ke {rek_pribadi} ya {sapa}, nanti buktinya kirim ke {nomor_hp}"
+    },
+    {
+      "id": "F:pembayaran_pribadi:7",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "train",
+      "tpl": "{sapa} tidak perlu bayar di kasir, bayar ke saya saja"
+    },
+    {
+      "id": "F:jalur_cepat:1",
+      "label": true,
+      "cat": "jalur_cepat",
+      "split": "train",
+      "tpl": "Kalau mau {layanan} lebih cepat, {sapa} bisa kasih uang tambahan {nominal} ke saya"
+    },
+    {
+      "id": "F:jalur_cepat:2",
+      "label": true,
+      "cat": "jalur_cepat",
+      "split": "train",
+      "tpl": "Supaya {sapa} tidak perlu mengantri, bayar saja langsung ke saya"
+    },
+    {
+      "id": "F:jalur_cepat:3",
+      "label": true,
+      "cat": "jalur_cepat",
+      "split": "train",
+      "tpl": "Untuk {layanan} lewat jalur cepat ada biaya {nominal} yang diserahkan ke saya langsung"
+    },
+    {
+      "id": "F:jalur_cepat:4",
+      "label": true,
+      "cat": "jalur_cepat",
+      "split": "train",
+      "tpl": "Antriannya panjang {sapa}, tapi kalau ada uang pelicin {nominal} saya masukkan duluan"
+    },
+    {
+      "id": "F:jalur_cepat:5",
+      "label": true,
+      "cat": "jalur_cepat",
+      "split": "train",
+      "tpl": "Biar {layanan} diprioritaskan, {sapa} cukup titip {nominal} ke saya"
+    },
+    {
+      "id": "F:data_sensitif:1",
+      "label": true,
+      "cat": "data_sensitif",
+      "split": "train",
+      "tpl": "Boleh minta {kode} yang baru masuk ke HP {sapa}? untuk saya proses lebih lanjut"
+    },
+    {
+      "id": "F:data_sensitif:2",
+      "label": true,
+      "cat": "data_sensitif",
+      "split": "train",
+      "tpl": "Tolong sebutkan {data} {sapa} ya, untuk verifikasi di komputer saya"
+    },
+    {
+      "id": "F:data_sensitif:3",
+      "label": true,
+      "cat": "data_sensitif",
+      "split": "train",
+      "tpl": "Bagi nomor rekening {sapa} untuk saya simpan secara pribadi, nanti saya kirimi {nominal}"
+    },
+    {
+      "id": "F:data_sensitif:4",
+      "label": true,
+      "cat": "data_sensitif",
+      "split": "train",
+      "tpl": "{sapa}, bacakan {kode} yang barusan masuk, biar saya yang masukkan"
+    },
+    {
+      "id": "F:data_sensitif:5",
+      "label": true,
+      "cat": "data_sensitif",
+      "split": "train",
+      "tpl": "Untuk {layanan} saya butuh {data} {sapa}, kirim lewat WhatsApp pribadi saya saja"
+    },
+    {
+      "id": "F:obat_langsung:1",
+      "label": true,
+      "cat": "obat_langsung",
+      "split": "train",
+      "tpl": "{obat} bisa langsung ditebus ke saya, {sapa}, tidak perlu antri di apotek"
+    },
+    {
+      "id": "F:obat_langsung:2",
+      "label": true,
+      "cat": "obat_langsung",
+      "split": "train",
+      "tpl": "Untuk {obat} bayar ke saya saja {sapa}, nanti saya antar ke rumah"
+    },
+    {
+      "id": "F:obat_langsung:3",
+      "label": true,
+      "cat": "obat_langsung",
+      "split": "train",
+      "tpl": "{obat} lebih murah kalau beli lewat saya, transfer saja ke {rek_pribadi}"
+    },
+    {
+      "id": "F:obat_langsung:4",
+      "label": true,
+      "cat": "obat_langsung",
+      "split": "train",
+      "tpl": "Bisa minta alamat dan nomor rekening {sapa}, nanti saya antar obatnya"
+    },
+    {
+      "id": "F:biaya_tidak_resmi:1",
+      "label": true,
+      "cat": "biaya_tidak_resmi",
+      "split": "train",
+      "tpl": "Ada biaya tambahan {nominal} untuk {layanan}, tidak masuk struk, bayar tunai ke saya saja"
+    },
+    {
+      "id": "F:biaya_tidak_resmi:2",
+      "label": true,
+      "cat": "biaya_tidak_resmi",
+      "split": "train",
+      "tpl": "Biar klaim BPJS-nya cepat cair, {sapa} kasih uang {nominal} ke saya"
+    },
+    {
+      "id": "F:biaya_tidak_resmi:3",
+      "label": true,
+      "cat": "biaya_tidak_resmi",
+      "split": "train",
+      "tpl": "Untuk {layanan} ada biaya di luar tarif, {nominal}, diserahkan ke saya jangan ke kasir ya {sapa}"
+    },
+    {
+      "id": "F:biaya_tidak_resmi:4",
+      "label": true,
+      "cat": "biaya_tidak_resmi",
+      "split": "train",
+      "tpl": "{sapa} mau {layanan} gratis? bisa, asal bayar {nominal} ke saya dulu"
+    },
+    {
+      "id": "F:menyamar_resmi:1",
+      "label": true,
+      "cat": "menyamar_resmi",
+      "split": "train",
+      "tpl": "Rekening resmi rumah sakit sedang diganti, untuk sementara {biaya} dikirim ke {rek_pribadi} {sapa}"
+    },
+    {
+      "id": "F:menyamar_resmi:2",
+      "label": true,
+      "cat": "menyamar_resmi",
+      "split": "train",
+      "tpl": "{alasan}, {biaya} jangan lewat kasir, kirim saja ke {rek_pribadi}"
+    },
+    {
+      "id": "F:menyamar_resmi:3",
+      "label": true,
+      "cat": "menyamar_resmi",
+      "split": "train",
+      "tpl": "Ini prosedur terbaru {sapa}, {biaya} langsung ditransfer ke {rek_pribadi}"
+    },
+    {
+      "id": "F:pembayaran_pribadi:8",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "held",
+      "tpl": "Sistem kasir lagi gangguan {sapa}, jadi {biaya} sementara masuk ke {rek_pribadi} dulu"
+    },
+    {
+      "id": "F:pembayaran_pribadi:9",
+      "label": true,
+      "cat": "pembayaran_pribadi",
+      "split": "held",
+      "tpl": "Ini {rek_pribadi}, tolong {biaya} dikirim ke situ ya {sapa}"
+    },
+    {
+      "id": "F:jalur_cepat:6",
+      "label": true,
+      "cat": "jalur_cepat",
+      "split": "held",
+      "tpl": "Saya bisa selipkan {sapa} di urutan depan untuk {layanan}, asal ada {nominal} buat saya"
+    },
+    {
+      "id": "F:jalur_cepat:7",
+      "label": true,
+      "cat": "jalur_cepat",
+      "split": "held",
+      "tpl": "Dokternya penuh {sapa}, tapi untuk {nominal} saya carikan slot hari ini"
+    },
+    {
+      "id": "F:data_sensitif:6",
+      "label": true,
+      "cat": "data_sensitif",
+      "split": "held",
+      "tpl": "Ada SMS masuk ke HP {sapa}? tolong foto layarnya lalu kirim ke {nomor_hp}, {alasan}"
+    },
+    {
+      "id": "F:data_sensitif:7",
+      "label": true,
+      "cat": "data_sensitif",
+      "split": "held",
+      "tpl": "Supaya akun {sapa} tidak terblokir, sebutkan {kode}-nya sekarang ya"
+    },
+    {
+      "id": "F:obat_langsung:5",
+      "label": true,
+      "cat": "obat_langsung",
+      "split": "held",
+      "tpl": "Daripada nebus di apotek, {obat} saya bawakan saja {sapa}, bayarnya ke {rek_pribadi}"
+    },
+    {
+      "id": "F:biaya_tidak_resmi:5",
+      "label": true,
+      "cat": "biaya_tidak_resmi",
+      "split": "held",
+      "tpl": "{sapa}, {layanan} sebenarnya gratis tapi saya butuh uang rokok {nominal}, serahkan ke saya ya"
+    },
+    {
+      "id": "F:biaya_tidak_resmi:6",
+      "label": true,
+      "cat": "biaya_tidak_resmi",
+      "split": "held",
+      "tpl": "Untuk dapat surat rujukan lebih cepat, selipkan {nominal} di berkas ya {sapa}"
+    },
+    {
+      "id": "F:menyamar_resmi:4",
+      "label": true,
+      "cat": "menyamar_resmi",
+      "split": "held",
+      "tpl": "Ini rekening resmi untuk {biaya}, atas nama saya pribadi, {sapa} transfer ke situ ya"
+    },
+    {
+      "id": "S:pembayaran_resmi:1",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "train",
+      "tpl": "Pembayaran {biaya} bisa di kasir lantai {lantai} atau lewat {kanal_resmi} ya, {sapa}"
+    },
+    {
+      "id": "S:pembayaran_resmi:2",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "train",
+      "tpl": "{sapa}, {biaya} dibayarkan lewat {kanal_resmi}, rinciannya ada di tagihan"
+    },
+    {
+      "id": "S:pembayaran_resmi:3",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "train",
+      "tpl": "Untuk {biaya} silakan ke kasir, jangan transfer ke {rek_pribadi_umum} petugas siapa pun ya {sapa}"
+    },
+    {
+      "id": "S:pembayaran_resmi:4",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "train",
+      "tpl": "Pembayaran hanya melalui {kanal_resmi}, kami tidak menerima pembayaran ke {rek_pribadi_umum}"
+    },
+    {
+      "id": "S:pembayaran_resmi:5",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "train",
+      "tpl": "Tagihan {biaya} sudah tercetak di lembar ini, {sapa} bayar di kasir ya"
+    },
+    {
+      "id": "S:pembayaran_resmi:6",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "train",
+      "tpl": "Kalau ada petugas yang minta transfer ke {rek_pribadi_umum}, tolong laporkan ke kami ya {sapa}"
+    },
+    {
+      "id": "S:pembayaran_resmi:7",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "train",
+      "tpl": "{sapa} bisa bayar langsung di kasir lantai {lantai} atau pakai {kanal_resmi}"
+    },
+    {
+      "id": "S:otp_aman:1",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "train",
+      "tpl": "Kode OTP yang masuk ke HP {sapa} jangan diberikan ke siapa pun, termasuk petugas ya"
+    },
+    {
+      "id": "S:otp_aman:2",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "train",
+      "tpl": "{sapa} masukkan sendiri {kode}-nya di aplikasi resmi rumah sakit ya"
+    },
+    {
+      "id": "S:otp_aman:3",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "train",
+      "tpl": "Kalau ada yang meminta {data} {sapa}, jangan diberikan ya, kami tidak pernah memintanya"
+    },
+    {
+      "id": "S:otp_aman:4",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "train",
+      "tpl": "Untuk {layanan} {sapa} cukup login sendiri di aplikasi, kami tidak perlu kode apa pun"
+    },
+    {
+      "id": "S:otp_aman:5",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "train",
+      "tpl": "Rumah sakit tidak pernah meminta {kode} lewat telepon atau WhatsApp, {sapa}"
+    },
+    {
+      "id": "S:otp_aman:6",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "train",
+      "tpl": "Mohon {sapa} rahasiakan {kode}, bahkan dari kami"
+    },
+    {
+      "id": "S:otp_aman:7",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "train",
+      "tpl": "Setelah {sapa} menerima SMS verifikasi, ketik sendiri di layar ini ya, saya tidak akan melihatnya"
+    },
+    {
+      "id": "S:otp_aman:8",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "train",
+      "tpl": "Kalau ada pesan yang mengaku dari rumah sakit dan minta {kode}, abaikan saja {sapa}"
+    },
+    {
+      "id": "S:antrian_resmi:1",
+      "label": false,
+      "cat": "antrian_resmi",
+      "split": "train",
+      "tpl": "Nomor antrian {sapa} {nomor}, silakan tunggu dipanggil di ruang tunggu"
+    },
+    {
+      "id": "S:antrian_resmi:2",
+      "label": false,
+      "cat": "antrian_resmi",
+      "split": "train",
+      "tpl": "Untuk {layanan} lebih cepat, {sapa} bisa daftar online lewat aplikasi resmi sebelum datang"
+    },
+    {
+      "id": "S:antrian_resmi:3",
+      "label": false,
+      "cat": "antrian_resmi",
+      "split": "train",
+      "tpl": "Antriannya memang panjang {sapa}, mohon menunggu, urutannya sesuai nomor antrian"
+    },
+    {
+      "id": "S:antrian_resmi:4",
+      "label": false,
+      "cat": "antrian_resmi",
+      "split": "train",
+      "tpl": "Kami tidak menerima titipan uang untuk mempercepat antrian ya {sapa}, semua sesuai nomor"
+    },
+    {
+      "id": "S:antrian_resmi:5",
+      "label": false,
+      "cat": "antrian_resmi",
+      "split": "train",
+      "tpl": "{sapa} bisa ambil nomor antrian di mesin dekat pintu masuk untuk {layanan}"
+    },
+    {
+      "id": "S:antrian_resmi:6",
+      "label": false,
+      "cat": "antrian_resmi",
+      "split": "train",
+      "tpl": "Kami tidak bisa mempercepat antrian dengan imbalan apa pun {sapa}"
+    },
+    {
+      "id": "S:obat_resmi:1",
+      "label": false,
+      "cat": "obat_resmi",
+      "split": "train",
+      "tpl": "{obat} bisa ditebus di apotek rumah sakit lantai {lantai}, {sapa}"
+    },
+    {
+      "id": "S:obat_resmi:2",
+      "label": false,
+      "cat": "obat_resmi",
+      "split": "train",
+      "tpl": "{obat} harus ditebus di apotek luar ya, di dalam sini tidak ada apotek"
+    },
+    {
+      "id": "S:obat_resmi:3",
+      "label": false,
+      "cat": "obat_resmi",
+      "split": "train",
+      "tpl": "Untuk {obat} {sapa} bawa resepnya ke apotek, bayar di kasir apotek ya"
+    },
+    {
+      "id": "S:obat_resmi:4",
+      "label": false,
+      "cat": "obat_resmi",
+      "split": "train",
+      "tpl": "{obat} tersedia di apotek depan, bisa pakai BPJS atau bayar langsung di sana"
+    },
+    {
+      "id": "S:obat_resmi:5",
+      "label": false,
+      "cat": "obat_resmi",
+      "split": "train",
+      "tpl": "Kalau ada yang menawarkan {obat} di luar apotek rumah sakit, mohon jangan dibeli {sapa}"
+    },
+    {
+      "id": "S:data_dan_biaya_resmi:1",
+      "label": false,
+      "cat": "data_dan_biaya_resmi",
+      "split": "train",
+      "tpl": "Mohon bawa kartu identitas dan kartu BPJS asli untuk {layanan}, {sapa}"
+    },
+    {
+      "id": "S:data_dan_biaya_resmi:2",
+      "label": false,
+      "cat": "data_dan_biaya_resmi",
+      "split": "train",
+      "tpl": "Kami hanya meminta data di formulir pendaftaran resmi, {sapa}"
+    },
+    {
+      "id": "S:data_dan_biaya_resmi:3",
+      "label": false,
+      "cat": "data_dan_biaya_resmi",
+      "split": "train",
+      "tpl": "{biaya} sesuai tarif resmi, rinciannya ada di struk, {sapa}"
+    },
+    {
+      "id": "S:data_dan_biaya_resmi:4",
+      "label": false,
+      "cat": "data_dan_biaya_resmi",
+      "split": "train",
+      "tpl": "Tidak ada biaya tambahan di luar struk ya {sapa}, semua tercantum di tagihan"
+    },
+    {
+      "id": "S:data_dan_biaya_resmi:5",
+      "label": false,
+      "cat": "data_dan_biaya_resmi",
+      "split": "train",
+      "tpl": "Klaim BPJS diproses langsung oleh rumah sakit, {sapa} tidak perlu membayar apa pun ke petugas"
+    },
+    {
+      "id": "S:info_umum:1",
+      "label": false,
+      "cat": "info_umum",
+      "split": "train",
+      "tpl": "Silakan ke poli {poli} lantai {lantai}, {sapa}"
+    },
+    {
+      "id": "S:info_umum:2",
+      "label": false,
+      "cat": "info_umum",
+      "split": "train",
+      "tpl": "Jadwal dokter poli {poli} hari ini mulai jam {jam}, {sapa}"
+    },
+    {
+      "id": "S:info_umum:3",
+      "label": false,
+      "cat": "info_umum",
+      "split": "train",
+      "tpl": "{sapa}, hasil {layanan} bisa diambil besok jam {jam}"
+    },
+    {
+      "id": "S:info_umum:4",
+      "label": false,
+      "cat": "info_umum",
+      "split": "train",
+      "tpl": "Ruang tunggu poli {poli} ada di sebelah kanan, {sapa} silakan duduk dulu"
+    },
+    {
+      "id": "S:pembayaran_resmi:8",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "held",
+      "tpl": "Mohon waspada, rumah sakit tidak pernah meminta {biaya} ditransfer ke {rek_pribadi_umum}, {sapa}"
+    },
+    {
+      "id": "S:pembayaran_resmi:9",
+      "label": false,
+      "cat": "pembayaran_resmi",
+      "split": "held",
+      "tpl": "Bayarnya langsung saja di kasir depan {sapa}, nanti struknya dicetak"
+    },
+    {
+      "id": "S:otp_aman:9",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "held",
+      "tpl": "{sapa} tenang saja, untuk {layanan} tidak ada kode yang perlu disebutkan ke petugas"
+    },
+    {
+      "id": "S:otp_aman:10",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "held",
+      "tpl": "Dari pihak kami tidak ada yang akan menanyakan {kode} {sapa}, kalau ada segera hubungi satpam"
+    },
+    {
+      "id": "S:otp_aman:11",
+      "label": false,
+      "cat": "otp_aman",
+      "split": "held",
+      "tpl": "Pesan dari bank berisi {kode} itu rahasia {sapa}, jangan dibacakan ke saya maupun orang lain"
+    },
+    {
+      "id": "S:antrian_resmi:7",
+      "label": false,
+      "cat": "antrian_resmi",
+      "split": "held",
+      "tpl": "Soal urutan, semua sama {sapa}, tidak ada yang bisa lompat antrian meskipun membayar lebih"
+    },
+    {
+      "id": "S:antrian_resmi:8",
+      "label": false,
+      "cat": "antrian_resmi",
+      "split": "held",
+      "tpl": "Mau lebih cepat? {sapa} bisa daftar lewat aplikasi, gratis dan tanpa perantara"
+    },
+    {
+      "id": "S:obat_resmi:6",
+      "label": false,
+      "cat": "obat_resmi",
+      "split": "held",
+      "tpl": "Pembelian {obat} hanya di apotek resmi, bayarnya di kasir apotek, bukan ke petugas pendaftaran {sapa}"
+    },
+    {
+      "id": "S:obat_resmi:7",
+      "label": false,
+      "cat": "obat_resmi",
+      "split": "held",
+      "tpl": "{obat} bisa diambil langsung di apotek lantai {lantai} sesuai resep, {sapa}"
+    },
+    {
+      "id": "S:data_dan_biaya_resmi:6",
+      "label": false,
+      "cat": "data_dan_biaya_resmi",
+      "split": "held",
+      "tpl": "Biaya {layanan} sudah termasuk di tagihan, jadi tidak ada pungutan tambahan ke petugas {sapa}"
+    },
+    {
+      "id": "S:data_dan_biaya_resmi:7",
+      "label": false,
+      "cat": "data_dan_biaya_resmi",
+      "split": "held",
+      "tpl": "Kalau ada yang minta uang rokok atau uang pelicin, mohon laporkan ke bagian pengaduan {sapa}"
+    },
+    {
+      "id": "S:info_umum:5",
+      "label": false,
+      "cat": "info_umum",
+      "split": "held",
+      "tpl": "Loket {layanan} ada di lantai {lantai}, buka sampai jam {jam} {sapa}"
+    },
+    {
+      "id": "F:pair_train:1",
+      "label": true,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "Berikan {kode} {sapa} ke saya ya, biar saya yang proses"
+    },
+    {
+      "id": "S:pair_train:1",
+      "label": false,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "Jangan berikan {kode} {sapa} ke siapa pun, termasuk saya"
+    },
+    {
+      "id": "F:pair_train:2",
+      "label": true,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "Bayar {biaya} ke {rek_pribadi} {sapa}"
+    },
+    {
+      "id": "S:pair_train:2",
+      "label": false,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "Bayar {biaya} ke kasir atau {kanal_resmi} {sapa}"
+    },
+    {
+      "id": "F:pair_train:3",
+      "label": true,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "Bayar langsung ke saya saja {sapa}, tidak usah ke kasir"
+    },
+    {
+      "id": "S:pair_train:3",
+      "label": false,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "Bayar langsung di kasir saja {sapa}, tidak usah ke petugas"
+    },
+    {
+      "id": "F:pair_train:4",
+      "label": true,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "Kalau mau cepat, selipkan {nominal} ke saya {sapa}"
+    },
+    {
+      "id": "S:pair_train:4",
+      "label": false,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "Kalau mau cepat, daftar online lewat aplikasi resmi {sapa}"
+    },
+    {
+      "id": "F:pair_train:5",
+      "label": true,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "{obat} ditebus lewat saya saja {sapa}"
+    },
+    {
+      "id": "S:pair_train:5",
+      "label": false,
+      "cat": "pair_train",
+      "split": "train",
+      "tpl": "{obat} ditebus lewat apotek rumah sakit saja {sapa}"
+    },
+    {
+      "id": "F:pair_held:1",
+      "label": true,
+      "cat": "pair_held",
+      "split": "held",
+      "tpl": "Kirimkan {data} {sapa} ke {nomor_hp} sekarang"
+    },
+    {
+      "id": "S:pair_held:1",
+      "label": false,
+      "cat": "pair_held",
+      "split": "held",
+      "tpl": "Jangan kirimkan {data} {sapa} ke nomor mana pun, termasuk nomor kami"
+    },
+    {
+      "id": "F:pair_held:2",
+      "label": true,
+      "cat": "pair_held",
+      "split": "held",
+      "tpl": "Transfer {biaya} ke {rek_pribadi}, {sapa}, jangan lewat kasir"
+    },
+    {
+      "id": "S:pair_held:2",
+      "label": false,
+      "cat": "pair_held",
+      "split": "held",
+      "tpl": "Transfer {biaya} hanya ke rekening resmi di tagihan, {sapa}, bukan {rek_pribadi_umum}"
+    },
+    {
+      "id": "F:pair_held:3",
+      "label": true,
+      "cat": "pair_held",
+      "split": "held",
+      "tpl": "Saya bisa carikan jalur cepat {layanan} kalau {sapa} sedia {nominal}"
+    },
+    {
+      "id": "S:pair_held:3",
+      "label": false,
+      "cat": "pair_held",
+      "split": "held",
+      "tpl": "Tidak ada jalur cepat berbayar untuk {layanan}, {sapa}, semua sesuai antrian"
+    },
+    {
+      "id": "F:dua_giliran_train:1",
+      "label": true,
+      "cat": "dua_giliran_train",
+      "split": "train",
+      "tpl": "Pasien: Bayarnya ke mana ya? Resepsionis: Transfer saja ke {rek_pribadi} ya {sapa}"
+    },
+    {
+      "id": "S:dua_giliran_train:1",
+      "label": false,
+      "cat": "dua_giliran_train",
+      "split": "train",
+      "tpl": "Pasien: Bayarnya ke mana ya? Resepsionis: Ke kasir lantai {lantai} atau {kanal_resmi} ya {sapa}"
+    },
+    {
+      "id": "F:dua_giliran_train:2",
+      "label": true,
+      "cat": "dua_giliran_train",
+      "split": "train",
+      "tpl": "Pasien: Kok antriannya lama sekali? Resepsionis: Kalau {sapa} mau cepat, titip {nominal} ke saya"
+    },
+    {
+      "id": "S:dua_giliran_train:2",
+      "label": false,
+      "cat": "dua_giliran_train",
+      "split": "train",
+      "tpl": "Pasien: Kok antriannya lama sekali? Resepsionis: Mohon bersabar {sapa}, semua sesuai nomor antrian"
+    },
+    {
+      "id": "F:dua_giliran_held:1",
+      "label": true,
+      "cat": "dua_giliran_held",
+      "split": "held",
+      "tpl": "Pasien: Ini verifikasinya bagaimana? Resepsionis: Sebutkan {kode} yang masuk ke HP {sapa}, biar saya masukkan"
+    },
+    {
+      "id": "S:dua_giliran_held:1",
+      "label": false,
+      "cat": "dua_giliran_held",
+      "split": "held",
+      "tpl": "Pasien: Ini verifikasinya bagaimana? Resepsionis: {sapa} masukkan sendiri {kode}-nya di aplikasi, kami tidak boleh mengetahuinya"
+    },
+    {
+      "id": "F:dua_giliran_held:2",
+      "label": true,
+      "cat": "dua_giliran_held",
+      "split": "held",
+      "tpl": "Pasien: Obatnya di mana ya? Resepsionis: Bayar ke saya saja nanti obatnya saya antar {sapa}"
+    },
+    {
+      "id": "S:dua_giliran_held:2",
+      "label": false,
+      "cat": "dua_giliran_held",
+      "split": "held",
+      "tpl": "Pasien: Obatnya di mana ya? Resepsionis: Di apotek rumah sakit lantai {lantai}, bayar di kasir apotek {sapa}"
+    }
+  ],
+  "stress": [
+    [
+      true,
+      "Bu, kalau mau didahulukan, sini lewat saya aja, ada uang administrasinya sedikit, kasih ke saya langsung ya"
+    ],
+    [
+      true,
+      "Gini Pak, sistem pembayaran kami lagi error, jadi sementara bapak transfer ke rekening BRI saya dulu, nanti saya inputkan"
+    ],
+    [
+      true,
+      "Tolong bacakan enam digit angka yang barusan dikirim lewat SMS ya Bu, itu untuk konfirmasi jadwal dokter"
+    ],
+    [
+      true,
+      "Obatnya lagi kosong di apotek rumah sakit, tapi saya punya stok pribadi, harganya lebih murah, bayarnya ke saya aja"
+    ],
+    [
+      true,
+      "Untuk BPJS-nya biar nggak ditolak, ada biaya pengurusan seratus ribu, nggak usah pakai kwitansi ya"
+    ],
+    [
+      true,
+      "Mbak, fotoin kartu ATM-nya depan belakang terus kirim ke WA saya, biar saya bantu proses refund"
+    ],
+    [
+      true,
+      "Kalau Ibu mau lewat jalur khusus, nanti saya antar ke dokter langsung tanpa antri, tapi ada uang terima kasihnya ya"
+    ],
+    [
+      true,
+      "Pak, nomor rekening bapak berapa? Nanti saya kembalikan kelebihan bayarnya, sekalian kasih PIN-nya buat saya cek"
+    ],
+    [
+      true,
+      "Pembayaran lewat QRIS rumah sakit lagi gangguan, kirim aja ke DANA pribadi saya, nomornya 0812 sekian"
+    ],
+    [
+      true,
+      "Kalau mau rawat inap hari ini kamar penuh Bu, tapi bisa saya aturkan kalau ada pelicinnya"
+    ],
+    [
+      true,
+      "Ibu daftar pakai nama saya dulu aja nanti biayanya ibu transfer ke saya, lebih murah dari tarif kasir"
+    ],
+    [
+      true,
+      "Tolong sebutin kode verifikasi yang masuk ke HP Bapak, saya lagi bantu aktifin akun pasiennya"
+    ],
+    [
+      true,
+      "Hasil labnya bisa saya percepat keluar hari ini, tapi administrasinya lewat saya, jangan ke kasir"
+    ],
+    [
+      true,
+      "Ini rekening resmi buat deposit rawat inap ya Bu, atas nama saya, soalnya rekening rumah sakit lagi dibekukan"
+    ],
+    [
+      true,
+      "Saya bisa bantu hapus tagihan tambahan Ibu, asal ada fee dua ratus ribu buat saya"
+    ],
+    [
+      false,
+      "Selamat pagi Ibu, silakan ambil nomor antrian di mesin sebelah kiri, nanti dipanggil sesuai urutan ya"
+    ],
+    [
+      false,
+      "Untuk pembayarannya bisa di kasir lantai satu, atau pakai QRIS yang ada di meja kasir resmi rumah sakit"
+    ],
+    [
+      false,
+      "Mohon maaf Pak, kami tidak bisa menerima pembayaran dalam bentuk apa pun di loket pendaftaran, semuanya ke kasir"
+    ],
+    [
+      false,
+      "Ibu, kalau ada orang yang mengaku dari rumah sakit lalu minta kode OTP, jangan dikasih ya, kami tidak pernah minta"
+    ],
+    [
+      false,
+      "Obatnya ditebus di apotek lantai dua, bayarnya di kasir apotek, BPJS juga bisa kalau ada rujukan"
+    ],
+    [
+      false,
+      "Kartu BPJS dan KTP asli dibawa ya Bu, fotokopinya sudah kami sediakan di loket sebelah"
+    ],
+    [
+      false,
+      "Hasil lab Bapak sudah bisa diambil besok jam sembilan di loket tiga, tidak ada biaya tambahan"
+    ],
+    [
+      false,
+      "Sistem pembayaran online lagi gangguan, jadi silakan bayar tunai di kasir ya Bu, nanti struknya langsung dicetak"
+    ],
+    [
+      false,
+      "Untuk transfer, pastikan tujuannya rekening atas nama rumah sakit yang tertera di tagihan, jangan ke rekening perorangan"
+    ],
+    [
+      false,
+      "Mohon maaf antriannya cukup panjang hari ini, kami usahakan secepatnya, mohon menunggu di ruang tunggu ya Pak"
+    ],
+    [
+      false,
+      "Kalau Ibu ingin lebih cepat besok, bisa daftar lewat aplikasi, pilih jadwal dokternya, tanpa biaya tambahan"
+    ],
+    [
+      false,
+      "Ibu bisa menyerahkan berkas rujukan ke loket dua, nanti petugas akan mengecek dan memberi nomor antrian"
+    ],
+    [
+      false,
+      "Kode booking Ibu sudah terkirim ke HP, tinggal tunjukkan di mesin check-in, jangan dibagikan ke orang lain ya"
+    ],
+    [
+      false,
+      "Jam besuk rawat inap mulai pukul empat sore sampai tujuh malam, maksimal dua orang per pasien"
+    ],
+    [
+      false,
+      "Bapak bisa mengajukan keluhan layanan ke bagian pengaduan kalau ada petugas yang meminta uang di luar tagihan"
+    ]
+  ]
+}

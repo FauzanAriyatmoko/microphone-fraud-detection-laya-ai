@@ -1,0 +1,63 @@
+# Config system for Hermina Receptionist Fraud Detection Daemon
+app:
+  name: "hermina-fraud-detector"
+  environment: "shadow"  # Synthetic pilot; not approved for production
+  counter_id: "loket-01"
+  log_level: "INFO"
+
+# MQTT Configuration
+MQTT:
+  host: "192.168.100.2"
+  port: 1883
+  client_id: "hermina-fraud-loket-01"
+  username: "nba"
+  password: "137450"
+  clean_session: true
+  keep_alive: 60
+  base_topic: "hermina/1/hydrant"
+  qos: 1  # 0=AtMostOnce, 1=AtLeastOnce, 2=ExactlyOnce
+  retain: false
+  use_tls: false
+  tls_insecure: false
+  enabled: true
+  outbox_path: "./log/outbox.sqlite3"
+  outbox_max_rows: 10000
+  outbox_max_bytes: 16777216
+  transcription_ttl: 300
+  alert_ttl: 604800
+  ack_timeout: 5.0
+  drain_timeout: 5.0
+
+# Model Inference Configuration
+model:
+  whisper:
+    model_size: "large-v3"
+    device: "cuda"
+    compute_type: "float16"
+    language: "id"
+    beam_size: 2
+  laya:
+    checkpoint_dir: "./model/laya-fraud-rs-best"
+    # Load learned thresholds and calibration from the same versioned bundle.
+    # Shared by the daemon and text CLI.
+    decision_policy_file: "./model/laya-fraud-rs-best/decision_policy.json"
+    calibration_file: "./model/laya-fraud-rs-best/calibration.json"
+
+# Logging Storage
+storage:
+  log_dir: "./log"
+  retention_days: 30
+  # omit: no transcript text on disk/MQTT; masked: numeric/contact masking; raw: full text.
+  transcript_mode: "omit"
+
+# Bounded worker queues; single utterance context is the default.
+runtime:
+  audio_queue_seconds: 5.0
+  utterance_queue_size: 8
+  text_queue_size: 16
+  telemetry_interval: 15.0
+  shutdown_timeout: 25.0
+  inference_timeout: 120.0
+  context_utterances: 1
+  context_window_seconds: 30.0
+  session_idle_seconds: 30.0
