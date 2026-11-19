@@ -41,7 +41,7 @@ class GPUPipelineTests(unittest.TestCase):
                 time.sleep(.05)
             with tempfile.TemporaryDirectory() as directory:
                 cfg=yaml.safe_load((ROOT/'config/config.yaml').read_text())
-                cfg['MQTT'].update(host='127.0.0.1',port=port,username='',password='',base_topic='laya-e2e',outbox_path=directory+'/outbox.db')
+                cfg['MQTT'].update(enabled=True,host='127.0.0.1',port=port,username='',password='',base_topic='laya-e2e',outbox_path=directory+'/outbox.db')
                 cfg['storage'].update(log_dir=directory+'/audit',transcript_mode='omit')
                 config=Path(directory)/'config.yaml';config.write_text(yaml.safe_dump(cfg))
                 env=os.environ.copy()

@@ -13,7 +13,7 @@ DEFAULTS = {
     'runtime': {'audio_queue_seconds':5.0,'utterance_queue_size':8,'text_queue_size':16,
                 'telemetry_interval':15.0,'shutdown_timeout':25.0,'context_utterances':1,
                 'context_window_seconds':30.0,'session_idle_seconds':30.0,'inference_timeout':120.0},
-    'storage': {'log_dir':'./log','retention_days':30,'transcript_mode':'omit'},
+    'storage': {'log_dir':'./log','retention_days':30,'transcript_mode':'omit','decision_csv_enabled':True},
     'MQTT': {'enabled':True,'port':1883,'qos':1,'keep_alive':60,'clean_session':True,
              'use_tls':False,'tls_insecure':False,'outbox_path':'./log/outbox.sqlite3',
              'outbox_max_rows':10000,'outbox_max_bytes':16777216,'transcription_ttl':300,
@@ -61,6 +61,7 @@ def load_config(config_path=None, microphone_path=None, *, root=ROOT, verify_wei
     st=cfg['storage']
     _positive(st['retention_days'],'retention_days',True)
     if st['transcript_mode'] not in ['omit','masked','raw']: raise ValueError('Invalid transcript_mode')
+    if not isinstance(st['decision_csv_enabled'],bool):raise ValueError('storage.decision_csv_enabled must be boolean')
     st['log_dir']=_path(root,st['log_dir'])
     mq=cfg['MQTT']
     for field,env in [('host','LAYA_MQTT_HOST'),('username','LAYA_MQTT_USERNAME'),('password','LAYA_MQTT_PASSWORD'),('client_id','LAYA_MQTT_CLIENT_ID')]:

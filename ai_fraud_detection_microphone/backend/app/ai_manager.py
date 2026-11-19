@@ -28,7 +28,8 @@ class AIManager:
         self.reset_requested=threading.Event();self.stats_lock=threading.Lock();self.health=HostHealth();self.active_inference={'stt':None,'laya':None}
         self.counters={'utterances':0,'transcripts':0,'decisions':0,'audio_gaps':0,'stt_errors':0,'laya_errors':0,
                        'asr_ms':0.,'laya_ms':0.,'queue_ms':0.,'end_to_decision_ms':None}
-        self.audit=AuditLogger(cfg['storage']['log_dir'],cfg['storage']['retention_days'])
+        self.audit=AuditLogger(cfg['storage']['log_dir'],cfg['storage']['retention_days'],
+                               decision_csv_enabled=cfg['storage']['decision_csv_enabled'])
         source_type=ReplaySource if replay else MicrophoneSource
         args=(replay,mic,self.frames,self.stop_source) if replay else (mic,self.frames,self.stop_source)
         self.source=source_type(*args)
@@ -168,6 +169,9 @@ class AIManager:
             if self.publisher is None:
                 self.publisher=LocalPublisher(echo=self.dry_run) if self.dry_run or not self.cfg['MQTT']['enabled'] else MQTTPublisher(self.cfg['MQTT'],self.event)
             self.publisher.start();publisher_started=True
+            LOG.info('output_mode mqtt=%s decision_csv=%s log_dir=%s',
+                     not (self.dry_run or not self.cfg['MQTT']['enabled']),
+                     self.cfg['storage']['decision_csv_enabled'],self.cfg['storage']['log_dir'])
             for name,target in [('laya',self._decide),('stt',self._speech),('segment',self._segment),('source',self.source.run)]:
                 thread=threading.Thread(target=self._guard,args=(name,target),name=name,daemon=True)
                 thread.start();self.threads.append(thread)

@@ -1,4 +1,5 @@
 """Structured journal output and dated audit files. No implicit raw transcript logging."""
+import csv
 import json
 import logging
 import os
@@ -32,9 +33,26 @@ def public_text(text, mode):
     text=re.sub(r'(?i)\b(otp|pin|password|sandi|cvv)\s*[:=]\s*\S+',r'\1 [SECRET]',text)
     return text
 
+CSV_FIELDS = [
+    'schema_version', 'event_id', 'timestamp', 'counter_id', 'session_id', 'utterance_id',
+    'model_version', 'policy_version', 'captured_at', 'transcript', 'speech_duration_sec',
+    'audio_gap', 'level', 'fraud_score', 'context_status', 'context_confidence', 'reason',
+    'action_recommendation', 'mode', 'production_ready', 'evidence_utterance_ids',
+    'asr_ms', 'laya_ms', 'queue_ms', 'laya_queue_ms', 'endpointing_ms', 'end_to_decision_ms',
+]
+
+
+def csv_value(value):
+    # Prevent speech/config strings from becoming spreadsheet formulas on opening CSV.
+    if isinstance(value, str) and value.lstrip().startswith(('=', '+', '-', '@')):
+        return "'" + value
+    return value
+
+
 class AuditLogger:
-    def __init__(self, directory, retention_days=30):
+    def __init__(self, directory, retention_days=30, decision_csv_enabled=False):
         self.root=Path(directory).resolve();self.root.mkdir(parents=True,exist_ok=True,mode=0o700)
+        self.decision_csv_enabled=decision_csv_enabled
         self.retention=retention_days;self.lock=threading.Lock();self.last_cleanup=None
 
     def write(self,kind,event):
@@ -50,8 +68,25 @@ class AuditLogger:
                 f.write(json.dumps(event,ensure_ascii=False,allow_nan=False)+'\n')
                 f.flush()
                 if kind=='fraud_incidents':os.fsync(f.fileno())
+            if self.decision_csv_enabled and event.get('kind')=='decision':
+                self._write_decision_csv(folder, now, event)
             if self.last_cleanup!=day:
                 self.cleanup(now);self.last_cleanup=day
+
+    def _write_decision_csv(self, folder, now, event):
+        path=folder/f'decisions_{now:%Y%m%d}.csv'
+        fd=os.open(path,os.O_WRONLY|os.O_CREAT|os.O_APPEND|os.O_NOFOLLOW,0o600)
+        with os.fdopen(fd,'a',encoding='utf-8',newline='') as file:
+            writer=csv.DictWriter(file,fieldnames=CSV_FIELDS)
+            if os.fstat(file.fileno()).st_size==0:
+                writer.writeheader()
+            row={key:event.get(key) for key in CSV_FIELDS}
+            row['evidence_utterance_ids']=json.dumps(event.get('evidence_utterance_ids',[]),ensure_ascii=False)
+            for key,value in event.get('latency_ms',{}).items():
+                if key+'_ms' in CSV_FIELDS:row[key+'_ms']=value
+            writer.writerow({key:csv_value(value) for key,value in row.items()})
+            file.flush()
+            os.fsync(file.fileno())
 
     def cleanup(self,now=None):
         cutoff=(now or datetime.now(ZONE)).date()-timedelta(days=self.retention)
@@ -61,6 +96,6 @@ class AuditLogger:
             except ValueError:continue
             if date>=cutoff:continue
             for file in folder.iterdir():
-                if not file.is_symlink() and re.fullmatch(r'(transcripts|fraud_incidents|events)_\d{8}\.jsonl',file.name):file.unlink()
+                if not file.is_symlink() and re.fullmatch(r'(?:(transcripts|fraud_incidents|events)_\d{8}\.jsonl|decisions_\d{8}\.csv)',file.name):file.unlink()
             try:folder.rmdir()
             except OSError:pass  # Unknown files are never deleted by retention.

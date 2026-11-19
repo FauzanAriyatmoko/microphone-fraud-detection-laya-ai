@@ -77,3 +77,9 @@ Batas deployment yang belum diverifikasi:
 - Masking mode masked hanya best effort angka/kontak. Mode omit adalah default yang digunakan dalam pengujian.
 
 Langkah deployment dan seluruh perintah reproduksi tersedia di [README.md](README.md). Tidak ada training tambahan atau perubahan bobot model pada kelanjutan runtime ini.
+
+## Pembaruan mode lokal — 19 November 2026
+
+Konfigurasi bawaan sekarang `MQTT.enabled=false` dan `storage.decision_csv_enabled=true`. Seluruh keputusan diekspor ke CSV harian pada direktori log, termasuk keputusan normal dan fallback kualitas audio. Audit JSONL tetap berjalan; aturan transkrip dan retensi juga berlaku pada CSV. Mode MQTT dapat diaktifkan bersamaan dengan ekspor lokal. README memuat konfigurasi, struktur proyek dan logic flow terbaru.
+
+Verifikasi: 26 pengujian runtime/broker lulus (GPU opt-in dilewati pada discovery biasa), replay GPU tanpa MQTT menghasilkan dua baris CSV, dan pengujian GPU end-to-end dengan broker lokal dijalankan terpisah. Test khusus memastikan tidak ada konstruksi client MQTT/outbox dalam mode lokal, header CSV tidak berulang setelah restart, kolom teks Unicode/multiline terbaca benar, serta retensi dan pengaturan ekspor bekerja.

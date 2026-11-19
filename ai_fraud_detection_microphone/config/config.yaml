@@ -19,7 +19,8 @@ MQTT:
   retain: false
   use_tls: false
   tls_insecure: false
-  enabled: true
+  # false: local testing only; true: also publish events to the broker.
+  enabled: false
   outbox_path: "./log/outbox.sqlite3"
   outbox_max_rows: 10000
   outbox_max_bytes: 16777216
@@ -47,6 +48,8 @@ model:
 storage:
   log_dir: "./log"
   retention_days: 30
+  # One row for every decision, including normal/review/escalation.
+  decision_csv_enabled: true
   # omit: no transcript text on disk/MQTT; masked: numeric/contact masking; raw: full text.
   transcript_mode: "omit"
 
