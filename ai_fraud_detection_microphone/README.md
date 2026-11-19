@@ -1,72 +1,101 @@
-# Laya AI Voice Fraud Pipeline
+# AI Fraud Detection — Laya AI Voice Pipeline
 
-Daemon Ubuntu untuk audio loket → segmentasi → Faster-Whisper → Laya → policy → audit JSONL/CSV → MQTT opsional. Setiap tahap memakai worker terpisah dan antrean terbatas. Mode replay memakai jalur yang sama. Model dimuat sekali saat startup.
+Sistem lokal untuk mengubah percakapan resepsionis rumah sakit menjadi transkrip, menilai skor fraud dengan Laya, lalu menyimpan keputusan ke CSV/JSONL. Input dapat berasal dari mikrofon komputer server, replay WAV, atau rekaman yang diunggah melalui dashboard. MQTT bersifat opsional.
 
-## Entrypoint langsung dan dashboard lokal
+Dokumentasi ini diselaraskan dengan kode dan konfigurasi pada **19 November 2026**. Semua perintah berikut dijalankan dari root workspace `/home/ojan/laya_ai`, kecuali jika disebutkan berbeda.
 
-Bisa menjalankan pipeline langsung dari root workspace menggunakan:
+## Kondisi proyek saat ini
 
-```bash
-python3 ai_fraud_detection_microphone/backend/app/main.py
-```
+| Bagian | Konfigurasi/perilaku saat ini |
+|---|---|
+| Keputusan | `decision_mode: binary` — `FRAUD` atau `TIDAK_FRAUD` untuk input valid |
+| Threshold fraud | **`threshold_fraud: 0.65` (65%)**, sesuai nilai numerik di `config/config.yaml` |
+| Model | Faster-Whisper `large-v3`, CUDA `float16`; Laya dari `model/laya-fraud-rs-best/` |
+| Output | CSV keputusan dan audit JSONL lokal; retensi 30 hari |
+| Teks tersimpan | `transcript_mode: omit`; teks disembunyikan kecuali diubah melalui konfigurasi atau pilihan dashboard |
+| MQTT | `enabled: false`; dashboard juga selalu mematikan MQTT untuk run pengujian |
+| Dashboard | HTTP loopback `127.0.0.1:8765`, dengan start/stop, pilihan perangkat, upload, hasil, dan unduhan CSV |
+| Mikrofon | Index `9`, 16 kHz mono dalam `config/microphone.json`; ketersediaannya harus diperiksa pada host |
+| Status model | Pilot sintetis, mode `shadow`, `production_ready: false`; mengganti threshold tidak melatih ulang model |
 
-Entrypoint meneruskan eksekusi ke launcher yang sama dengan service agar package import, interpreter `.env_laya`, CUDA, dan PortAudio konsisten. Gunakan `LAYA_PYTHON=/path/to/python` jika ingin memilih interpreter lain. Mikrofon tetap mengikuti `config/microphone.json`; jalankan `--list-devices` atau `--check-device` untuk memeriksa konfigurasi.
+File konfigurasi adalah sumber nilai aktif. Contoh maupun log lama dapat memakai threshold/policy berbeda. Jalankan `--check-config` untuk melihat nilai efektif sebelum pengujian.
 
-Untuk mengoperasikan pengujian lewat dashboard:
+## Menjalankan program
+
+### Dashboard lokal
 
 ```bash
 python3 ai_fraud_detection_microphone/backend/app/main.py --dashboard
 ```
 
-Buka **http://127.0.0.1:8765/dashboard.html** di browser. Port bisa diubah dengan `--port 8766`. Server tetap berjalan sampai dihentikan dengan Ctrl+C; capture baru dimulai setelah tombol **Mulai pengujian** ditekan. Pemuatan model dilakukan pada setiap run, dengan tahap Whisper/Laya ditampilkan di monitor.
+Buka **http://127.0.0.1:8765/dashboard.html**. Gunakan `--port 8766` jika port tersebut sudah dipakai. Server belum menangkap audio sampai tombol **Mulai pengujian** ditekan.
 
-Fitur dashboard:
+1. Pilih sumber: mikrofon komputer server, rekaman contoh legacy, atau upload rekaman.
+2. Untuk mikrofon, pilih perangkat dan durasi 5–3.600 detik.
+3. Pilih mode teks: `omit`, `masked`, atau `raw`.
+4. Mulai pengujian, tunggu tahap pemuatan Whisper/Laya, lalu lihat transkripsi dan keputusan.
+5. Hentikan bila diperlukan; gunakan **Unduh CSV** untuk hasil run aktif/terakhir.
 
-- Pilih perangkat input mikrofon, rekaman contoh `legacy/test_output_new.wav`, atau upload rekaman sendiri.
-- Pilih durasi 5–3.600 detik dan mode teks omit/masked/raw untuk run tersebut.
-- Mulai/hentikan pipeline, lihat transkripsi dan keputusan beserta skor, konteks, alasan, rekomendasi, serta telemetry audio/GPU/antrean.
-- Unduh CSV run aktif/terakhir. Seluruh hasil harian tetap mengikuti konfigurasi pencatatan di direktori log.
+**Mikrofon yang digunakan adalah mikrofon komputer tempat Python berjalan**, bukan mikrofon browser. Dashboard tidak mengirim audio mikrofon dari komputer browser lain ke server. File upload, sebaliknya, dikirim dari browser ke server lokal untuk dianalisis.
 
-### Menguji file rekaman sendiri
+Pilihan dashboard berlaku untuk satu run dan tidak menulis ulang YAML/JSON. Setiap run menjalankan child pipeline sendiri; model dimuat sekali pada startup child tersebut. Dashboard selalu memakai `--dry-run-output`: MQTT mati, audit lokal tetap berjalan, dan event diteruskan ke layar. Menutup tab tidak menghentikan capture; gunakan Hentikan, tunggu durasi mikrofon berakhir, atau tutup server dengan Ctrl+C.
 
-1. Pilih **Upload rekaman** pada Sumber audio.
-2. Pilih file, lalu klik **Unggah rekaman**. Tunggu nama file, durasi, dan status **siap diuji** tampil.
-3. Pilih mode teks. Gunakan **Teks lengkap untuk uji sintetis** jika ingin melihat transkripsi.
-4. Klik **Mulai pengujian**. Hasil tampil pada panel percakapan dan tersimpan ke CSV/JSONL; tombol **Unduh CSV** mengekspor keputusan run tersebut.
+`dashboard.html` harus dibuka melalui HTTP, bukan `file://`. URL `/tests/testing_fraud_detection.html` menampilkan dashboard yang sama; file HTML lama yang dibuka langsung berisi petunjuk menuju dashboard.
 
-Format umum: WAV, MP3, M4A, FLAC, OGG, WebM (sesuai codec yang dapat dibaca PyAV). Batas upload **50 MB** dan durasi audio **60 menit**. Server memeriksa isi audio, bukan hanya ekstensi, lalu mengonversi secara streaming ke WAV PCM mono 16 kHz. File rusak, upload tidak lengkap, atau audio yang melewati batas ditolak sebelum model dijalankan.
+### Upload rekaman
 
-Rekaman contoh dan upload diproses **hingga akhir file**; pengaturan durasi hanya berlaku untuk capture mikrofon. Tombol Hentikan tetap dapat menghentikan pemrosesan rekaman. Satu rekaman unggahan disimpan sementara agar bisa diuji ulang; file sementara diganti/dihapus ketika unggahan baru berhasil atau server ditutup normal. CSV/JSONL hasil analisis mengikuti retensi log. Setelah server restart, unggah ulang file. Upload baru ditolak ketika pipeline masih aktif.
+1. Pilih **Upload rekaman**.
+2. Pilih file dan klik **Unggah rekaman**.
+3. Tunggu nama file, durasi, dan status **siap diuji**.
+4. Klik **Mulai pengujian**; hasil muncul pada panel percakapan dan file log.
 
-Dashboard menggunakan **mikrofon komputer tempat Python dijalankan**, melalui sounddevice; tidak meminta izin mikrofon browser. Jika browser dan Python berjalan pada komputer yang berbeda, mikrofon browser tidak dikirim ke server. Jalur mikrofon tetap melewati segmenter, Whisper, Laya, policy, dan audit yang sama dengan daemon.
+Format umum: **WAV, MP3, M4A, FLAC, OGG, WebM**, sesuai codec yang dapat dibaca PyAV. Batasnya **50 MB** (`50 × 1024 × 1024` byte) dan **60 menit audio**. Server memeriksa isi audio lalu mengonversinya secara streaming ke WAV PCM mono 16 kHz. File rusak, tanpa track audio, upload tidak lengkap, atau durasi berlebih ditolak sebelum inference.
 
-Dashboard selalu mematikan MQTT untuk run pengujian, melalui `--dry-run-output`, dan tetap menyimpan output lokal. Pilihan teks/perangkat/durasi tidak menulis ulang konfigurasi. `transcript_mode: omit` berarti teks juga disembunyikan di layar; pilih raw untuk kalimat sintetis jika ingin membaca hasil transkripsi. Model yang sedang dipakai dapat mengeluarkan review untuk semua ucapan tergantung threshold dan confidence konteks; dashboard menampilkan hasil sebenarnya.
+Rekaman contoh dan upload diproses **hingga akhir file**; durasi pada dashboard hanya membatasi mikrofon. Hentikan tetap dapat menghentikan pemrosesan rekaman. Satu rekaman valid disimpan sementara untuk pengujian ulang, diganti setelah upload baru berhasil, dan dibersihkan saat server ditutup normal. Setelah server restart, unggah ulang file. Upload baru ditolak selama pipeline aktif.
 
-`dashboard.html` adalah antarmuka utama. File lama `tests/testing_fraud_detection.html` sekarang menjadi halaman petunjuk ketika dibuka langsung; jika diakses melalui server di `/tests/testing_fraud_detection.html`, alamat itu menampilkan dashboard yang sama. HTML yang dibuka dengan `file://` tidak bisa menjalankan pipeline: gunakan URL server lokal di atas.
+### CLI mikrofon dan replay
 
-HTTP server hanya bind ke loopback. API tidak memakai kredensial MQTT, tidak mengembalikan password konfigurasi, dan memeriksa Host/origin serta token sesi untuk permintaan API. Menutup tab browser tidak menghentikan capture; gunakan tombol Hentikan, tunggu durasi berakhir, atau hentikan server dengan Ctrl+C. Server menghentikan child pipeline saat keluar.
+```bash
+# Memeriksa konfigurasi dan integritas bobot tanpa memuat model ke GPU
+python3 ai_fraud_detection_microphone/backend/app/main.py --check-config --verify-weights
 
-Riwayat API/unduhan dibatasi 2.000 event/keputusan terbaru dan kartu layar dibatasi 100 utterance. Untuk seluruh data dari sesi panjang, gunakan file CSV/JSONL harian. Error perangkat, proses yang gagal, dan pemuatan model ditampilkan di dashboard; detail operasional juga tersedia di terminal Python.
+# Menemukan dan memeriksa perangkat
+python3 ai_fraud_detection_microphone/backend/app/main.py --list-devices
+python3 ai_fraud_detection_microphone/backend/app/main.py --check-device
 
-```mermaid
-flowchart LR
-    UI[dashboard.html di browser] -->|Start / Stop| API[API loopback Python]
-    API --> CHILD[Child CLI pipeline]
-    MIC[Mikrofon server / WAV] --> CHILD
-    CHILD --> FLOW[Segmenter → Whisper → Laya → policy]
-    FLOW --> FILE[CSV dan JSONL lokal]
-    FLOW -->|Event JSON stdout| API
-    API -->|Polling status/event| UI
-    API -->|Unduh CSV run| UI
+# Menjalankan mikrofon sesuai konfigurasi
+python3 ai_fraud_detection_microphone/backend/app/main.py
+
+# Membatasi capture mikrofon menjadi 60 detik setelah siap
+python3 ai_fraud_detection_microphone/backend/app/main.py --duration 60
+
+# Replay WAV lokal tanpa mikrofon
+python3 ai_fraud_detection_microphone/backend/app/main.py --replay legacy/test_output_new.wav
 ```
 
-## Mode lokal tanpa MQTT
+Input replay CLI menggunakan jalur pembaca WAV/SoundFile; gunakan upload dashboard untuk decoding format terkompresi melalui PyAV. Sample rate WAV diambil dari file dan audio dikonversi ke 16 kHz sebelum Whisper. Contoh legacy hanya dapat dijalankan jika file WAV tersebut tersedia secara lokal.
 
-Konfigurasi bawaan sekarang menjalankan **mode lokal**. Tidak perlu broker, koneksi MQTT, atau flag tambahan:
+Entrypoint langsung meneruskan eksekusi ke `scripts/run_standalone.sh` agar import paket, interpreter, serta library CUDA/PortAudio konsisten. Launcher juga dapat dipanggil langsung dengan argumen yang sama. Default interpreter launcher adalah `../.env_laya/bin/python`; gunakan `LAYA_PYTHON=/path/to/python` untuk menggantinya.
+
+Path argumen CLI relatif terhadap direktori shell. Path model/log pada YAML relatif terhadap root `ai_fraud_detection_microphone/`, bukan direktori tempat YAML alternatif disimpan.
+
+## Konfigurasi
+
+### Mode lokal dan penyimpanan
+
+Cuplikan berikut sesuai pengaturan saat dokumentasi diperbarui:
 
 ```yaml
 MQTT:
   enabled: false
+
+model:
+  laya:
+    decision_mode: "binary"
+    threshold_fraud: 0.65
+    threshold_review: 0.50
+    threshold_escalate: 0.85
+    context_min_confidence: 0.70
 
 storage:
   log_dir: "./log"
@@ -75,360 +104,221 @@ storage:
   transcript_mode: "omit"
 ```
 
-Jalankan dari root workspace untuk menguji rekaman yang sudah tersedia:
+Ini cuplikan pengaturan, bukan pengganti seluruh konfigurasi yang juga memuat path model, Whisper, dan broker. Nilai numerik YAML `0.65` berarti 65%; komentar di YAML tidak memengaruhi threshold yang dijalankan.
 
-```bash
-ai_fraud_detection_microphone/scripts/run_standalone.sh --check-config
-ai_fraud_detection_microphone/scripts/run_standalone.sh --replay legacy/test_output_new.wav
-```
+| `transcript_mode` | Teks pada dashboard, CSV, JSONL, dan MQTT |
+|---|---|
+| `omit` | Diganti `[TRANSCRIPT_OMITTED]`; inference tetap memakai teks asli di memori |
+| `masked` | Masking angka, email, dan secret sederhana; bukan anonimisasi nama/diagnosis yang lengkap |
+| `raw` | Teks lengkap; berguna untuk membandingkan kalimat sintetis dengan prediksi |
 
-Untuk mikrofon yang telah dikonfigurasi:
+`decision_csv_enabled: false` hanya mematikan CSV harian; JSONL tetap dicatat dan ekspor sesi dashboard tetap tersedia. Pada mode tanpa MQTT tidak dibuat client/koneksi/outbox baru. Mematikan MQTT tidak menghapus atau mengirim antrean lama.
 
-```bash
-ai_fraud_detection_microphone/scripts/run_standalone.sh --duration 60
-```
+### Threshold biner: penilaian fraud atau tidak
 
-Output tersimpan otomatis pada root proyek:
+Logic berada di [`ai_fraud_detection.py`](backend/internal/ai_runtime/ai_fraud_detection.py). Untuk `decision_mode: binary`, **hanya `fraud_score` dan `threshold_fraud` menentukan klasifikasi**:
+
+| Kondisi | `level` | `is_fraud` pada event JSON |
+|---|---|---|
+| `fraud_score >= threshold_fraud` | `FRAUD` | `true` |
+| `fraud_score < threshold_fraud` | `TIDAK_FRAUD` | `false` |
+
+Dengan **threshold aktif 0,65**, skor 64,9% menjadi `TIDAK_FRAUD`; tepat 65% atau 85% menjadi `FRAUD`. Menaikkan threshold membuat klasifikasi FRAUD lebih sulit tercapai; menurunkannya membuat klasifikasi tersebut lebih mudah tercapai.
+
+Kelas konteks dan confidence tetap tersedia sebagai diagnostik, tetapi tidak mengubah keputusan biner. Karena itu, `risiko_aktif` dengan skor 11,3% tetap `TIDAK_FRAUD` pada threshold 65%; `layanan_normal` dengan skor 95% tetap `FRAUD`. Threshold review/eskalasi tidak menjadi kondisi keputusan dalam mode ini.
+
+Jika gap audio, penolakan sebagian segmen STT, atau teks kosong membuat input tidak lengkap, hasilnya **`TIDAK_DAPAT_DINILAI`**, `is_fraud: null`. Teks yang melebihi budget token juga menghasilkan status tersebut. Ini status input yang belum dapat dianalisis, bukan prediksi tidak fraud. Kegagalan model atau skor tidak valid menghentikan pipeline dengan error.
+
+Skor harus finite dan berada di rentang 0–1. `threshold_fraud` tidak menerima `null`, boolean, atau angka di luar rentang. Pengaturan mode, threshold review/eskalasi, dan confidence juga tetap divalidasi ketika konfigurasi dimuat, walaupun tidak semuanya memengaruhi keputusan biner.
+
+### Maksud persentase skor risiko
+
+`fraud_score` berasal dari jawaban noul `is_fraud`: apakah percakapan memuat **permintaan atau penawaran aktif yang jelas untuk fraud di layanan resepsionis RS**? Inference memuat kalibrasi dari bundle model. Dashboard menampilkan:
 
 ```text
-log/YYYY-MM-DD/
-├── decisions_YYYYMMDD.csv          # Semua keputusan: normal, review, eskalasi
-├── transcripts_YYYYMMDD.jsonl      # Transkrip + metadata kualitas ASR
-├── fraud_incidents_YYYYMMDD.jsonl  # Keputusan review/eskalasi
-└── events_YYYYMMDD.jsonl           # Telemetry dan keputusan normal
+persentase skor = fraud_score × 100
+0.113 → 11.3%
+0.650 → 65.0%
 ```
 
-**CSV disarankan untuk inspeksi di spreadsheet; JSONL untuk detail lengkap dan analisis program.** Satu baris CSV mewakili satu keputusan, bukan bukti fraud yang sudah dikonfirmasi. Kolomnya mencakup timestamp, session/utterance/event ID, versi model/policy, transkrip, durasi audio, level, skor fraud, kelas/confidence konteks, alasan, rekomendasi, evidence IDs, dan latency tiap tahap. `evidence_utterance_ids` disimpan sebagai JSON dalam satu sel. Skor yang tidak tersedia ditulis sebagai sel kosong; misalnya ketika audio bermasalah dan model tidak dipanggil.
+Skor tinggi berarti dukungan model lebih besar terhadap jawaban “ada indikasi fraud aktif”. Skor bukan persentase kata mencurigakan, jumlah kerugian, akurasi model, atau bukti kesalahan petugas. Angka 85% belum membuktikan bahwa 85 dari 100 kejadian serupa benar-benar fraud; kesesuaian probabilitas perlu dinilai pada data penggunaan nyata.
 
-`transcript_mode: omit` menyembunyikan teks pada **CSV, JSONL, dan MQTT**, sementara inference tetap memakai teks asli di memori. Untuk membandingkan kalimat sintetis dengan hasil deteksi, ubah menjadi `transcript_mode: raw`; gunakan `masked` bila hanya memerlukan masking angka/kontak. Mode masked belum menghapus nama/diagnosis. Nilai teks yang dapat dianggap formula spreadsheet diberi awalan apostrof pada CSV; JSONL mempertahankan teks sesuai mode transkrip.
+`context_confidence` berbeda dari skor fraud: nilainya menunjukkan dukungan terhadap kelas konteks terpilih melalui `answer_confidence` Laya. Confidence 89% untuk `layanan_normal` bukan risiko fraud 89%. Program tidak merata-ratakan keduanya.
 
-File dibuat per tanggal Asia/Jakarta, ditambahkan saat proses berjalan, dan melanjutkan file hari yang sama setelah restart tanpa mengulang header CSV. Retensi mengikuti `storage.retention_days`. `decision_csv_enabled: false` mematikan CSV sambil tetap menyimpan JSONL. CSV dan JSONL merupakan dua penulisan terpisah; jika proses/disk gagal di antaranya, gunakan `event_id` untuk rekonsiliasi dengan JSONL.
+| `context_status` | Target interpretasi |
+|---|---|
+| `risiko_aktif` | Permintaan pembayaran pribadi, pungli, rahasia autentikasi, atau pemalsuan |
+| `layanan_normal` | Layanan resmi, pertanyaan biasa, penolakan, atau edukasi anti-fraud |
+| `laporan_kejadian` | Laporan/kutipan dugaan kejadian sebelumnya; bukan permintaan aktif oleh pelapor |
+| `konteks_kurang` | Tujuan atau maksud belum cukup jelas |
 
-Untuk mengaktifkan pengiriman broker, ubah **`MQTT.enabled: true`**. CSV/JSONL tetap tersimpan pada mode MQTT; pengiriman ini adalah tambahan pada pencatatan lokal. `--no-mqtt` dapat mematikan MQTT hanya untuk satu eksekusi, sedangkan `--dry-run-output` juga mencetak event JSON ke terminal. Pada mode lokal tidak dibuat koneksi, client MQTT, atau outbox baru. Menonaktifkan MQTT tidak menghapus atau mengirim antrean outbox dari eksekusi sebelumnya.
+Dalam mode binary kelas tersebut hanya informasi tambahan. Tidak ada keputusan berbasis keyword atau kategori rinci/lima sinyal legacy yang ditambahkan secara otomatis. Threshold manual tidak meningkatkan akurasi atau mengubah bobot model. Model tetap berstatus pilot `shadow`, dengan `production_ready: false`.
 
-Mode tanpa MQTT tidak otomatis berarti semua dependensi offline: model Whisper harus sudah tersedia di cache/direktori lokal. Jika belum tersedia, pemuatan pertama masih memerlukan unduhan model. `model.whisper.model_size` dapat diisi path checkpoint Whisper lokal.
+### Mode alternatif: `tiered`
+
+Untuk kembali ke keputusan berbasis konteks, ubah `decision_mode: "tiered"`. Dengan konfigurasi saat ini, ambang mode tersebut adalah review 0,50, eskalasi 0,85, dan confidence minimum 0,70. Kondisi dievaluasi dari atas; kondisi pertama yang terpenuhi menentukan hasil:
+
+| Urutan | Kondisi | Level dan alasan |
+|---|---|---|
+| 1 | Confidence konteks < minimum | `PERLU_DICEK`: `confidence_konteks_rendah` |
+| 2 | Konteks `laporan_kejadian` | `PERLU_DICEK`: `tindak_lanjut_pengaduan` |
+| 3 | Konteks `konteks_kurang` | `PERLU_DICEK`: `minta_klarifikasi` |
+| 4 | Threshold review `null` | `PERLU_DICEK`: `ambang_belum_memenuhi_target` |
+| 5 | Konteks normal dan skor ≥ review | `PERLU_DICEK`: `keluaran_model_bertentangan` |
+| 6 | Konteks aktif, threshold eskalasi tersedia, skor ≥ eskalasi | `ESKALASI`: `indikasi_aktif_untuk_supervisor` |
+| 7 | Konteks aktif, kondisi eskalasi tidak terpenuhi | `PERLU_DICEK`: `indikasi_aktif_perlu_verifikasi` |
+| 8 | Konteks normal dan kondisi sebelumnya tidak terpenuhi | `TIDAK_ADA_INDIKASI`: `layanan_normal` |
+
+Pada mode tiered, risiko aktif berskor rendah tetap direview. Skor tinggi saja tidak menjamin eskalasi jika konteks berbeda atau kondisi sebelumnya sudah terpenuhi. Audio tidak lengkap/token overflow masuk `PERLU_DICEK`. `PERLU_DICEK` dan `ESKALASI` adalah level tindak lanjut, bukan bukti fraud.
+
+### Prioritas policy dan penerapan perubahan
+
+Program membaca `decision_policy_file`, kemudian menimpa key yang tersedia di `model.laya`: `decision_mode`, `threshold_fraud`, `threshold_review`, `threshold_escalate`, dan `context_min_confidence`.
+
+- Hapus key YAML untuk mengikuti nilai bundle, atau default fungsi jika bundle tidak memuatnya. Bundle saat ini tidak memuat mode binary/threshold fraud; tanpa key terkait, default kode adalah mode tiered dan threshold fraud 0,50 bila binary dipilih.
+- `null` hanya menonaktifkan threshold review/eskalasi. Untuk memaksa review pada mode tiered, set keduanya ke null. Confidence konteks dan threshold fraud harus numerik.
+- Jika eskalasi tersedia, review juga harus tersedia dan `0 <= review <= escalate <= 1`.
+- Bobot, kalibrasi, dan policy bundle tidak ditulis ulang. `policy_version` dihitung dari policy efektif, sehingga perubahan konfigurasi dapat ditelusuri pada event/CSV.
+
+Setelah mengubah konfigurasi, restart daemon/CLI. Pada dashboard, hentikan run lalu mulai run baru; child membaca konfigurasi lagi. Tidak ada perubahan threshold di tengah run. Gunakan `--check-config` untuk memeriksa mode dan `effective_thresholds`.
+
+CLI teks juga mendukung YAML. Jalankan **dari root proyek** `ai_fraud_detection_microphone/`:
+
+```bash
+../.env_laya/bin/python -m backend.internal.ai_runtime.background_process.laya_ai_process \
+  --config config/config.yaml --text "Jangan transfer ke rekening pribadi petugas, bayar di kasir resmi."
+```
+
+Mode `--checkpoint model/laya-fraud-rs-best` memakai policy bundle tanpa override YAML. Policy bundle asli masih menyimpan review/eskalasi null; hasilnya dapat berbeda dari daemon/dashboard yang memakai konfigurasi binary 65%.
+
+## Output CSV dan JSONL
+
+Lokasi saat ini: `ai_fraud_detection_microphone/log/YYYY-MM-DD/`, dengan timezone **Asia/Jakarta**.
+
+| File | Isi |
+|---|---|
+| `decisions_YYYYMMDD.csv` | Semua keputusan: FRAUD, TIDAK_FRAUD, status tidak dapat dinilai, maupun level tiered |
+| `transcripts_YYYYMMDD.jsonl` | Event transkripsi, durasi/ID audio, dan metadata kualitas ASR |
+| `fraud_incidents_YYYYMMDD.jsonl` | Keputusan selain TIDAK_FRAUD/TIDAK_ADA_INDIKASI; mencakup status tidak dapat dinilai/review, bukan hanya fraud terkonfirmasi |
+| `events_YYYYMMDD.jsonl` | Telemetry dan keputusan negatif/normal |
+
+**CSV untuk inspeksi spreadsheet; JSONL untuk detail event lengkap.** CSV memuat ID event/sesi/utterance, timestamp, versi model/policy, transkrip, durasi, audio gap, `level`, `fraud_score`, konteks/confidence, alasan, rekomendasi, evidence IDs dan latency. `evidence_utterance_ids` berupa JSON dalam satu sel.
+
+Field binary `is_fraud`, `decision_mode`, dan `threshold_fraud` tersedia pada event keputusan JSONL/API, tetapi **belum menjadi kolom tersendiri pada CSV**. Klasifikasi CSV dibaca dari `level`. Skor tak tersedia ditulis sebagai sel kosong, bukan 0%. Field `asr_ms`, `laya_ms`, `queue_ms`, `laya_queue_ms`, `endpointing_ms` dan `end_to_decision_ms` merangkum latency; `end_to_decision_ms` pada replay offline kosong karena waktu audio dipercepat.
+
+Contoh event keputusan berikut bersifat ilustrasi:
+
+```json
+{
+  "kind": "decision",
+  "level": "FRAUD",
+  "is_fraud": true,
+  "decision_mode": "binary",
+  "fraud_score": 0.82,
+  "threshold_fraud": 0.65,
+  "reason": "skor_mencapai_threshold_fraud",
+  "mode": "shadow",
+  "production_ready": false
+}
+```
+
+File hari yang sama ditambahkan setelah restart tanpa mengulang header CSV. Retensi 30 hari dijalankan saat penulisan audit pertama per tanggal; file tak terkait tidak dihapus. Teks yang berpotensi dianggap formula spreadsheet diberi awalan apostrof pada CSV. CSV dan JSONL ditulis terpisah; jika proses/disk gagal di antaranya, cocokkan menggunakan `event_id`.
+
+**Log lama tidak dihitung ulang** saat threshold/mode berubah. Satu file harian dapat memuat hasil tiered, binary 50%, dan binary 65% dari run berbeda. Gunakan `session_id`, `model_version`, `policy_version`, serta metadata keputusan JSONL untuk menelusuri hasil yang sedang dibandingkan.
+
+## Dashboard dan API lokal
+
+Dashboard menampilkan tahap pemuatan model, transkripsi/keputusan, rekomendasi, RMS audio, latency, GPU dan antrean. Hasil biasanya muncul setelah segmen ucapan selesai; ini bukan streaming teks per kata. RMS mengikuti interval telemetry, bukan waveform realtime.
+
+Batas riwayat: API menahan 2.000 event terbaru, unduhan menahan 2.000 keputusan terbaru, dan layar menahan 100 utterance. Gunakan CSV/JSONL harian untuk sesi panjang. HTTP hanya bind ke loopback, memeriksa Host/origin dan token API, serta tidak mengirim kredensial broker ke browser.
+
+| Endpoint | Fungsi |
+|---|---|
+| `GET /dashboard.html` | Antarmuka utama |
+| `GET /api/config` | Ringkasan konfigurasi untuk UI |
+| `GET /api/devices` | Daftar input audio server |
+| `GET /api/status?after=...` | Status run dan event bertahap |
+| `POST /api/upload` | Upload audio biner dengan batas ukuran/durasi |
+| `POST /api/start`, `POST /api/stop` | Lifecycle child pipeline |
+| `GET /api/export.csv` | CSV keputusan run aktif/terakhir |
+
+Permintaan API memerlukan token sesi dari halaman dashboard; UI memasang header tersebut secara otomatis. Perubahan mode/perangkat/teks dilakukan melalui opsi run yang diizinkan, bukan path atau perintah shell dari browser.
 
 ## Logic flow
 
 ```mermaid
 flowchart TD
-    CONFIG[Load config dan validasi model] --> INPUT[Mikrofon atau replay WAV]
-    INPUT --> SEG[Queue audio dan segmenter
-prebuffer, RMS, endpoint, gap detection]
-    SEG --> STT[Whisper worker
-resample 16 kHz dan VAD]
-    STT --> QUALITY{Teks cukup lengkap?}
-    QUALITY -->|Ya| LAYA[Laya worker
-konteks, skor dan policy]
-    QUALITY -->|Tidak| REVIEW[PERLU_DICEK
-alasan kualitas audio atau teks]
-    LAYA --> DECISION[Event keputusan dan rekomendasi]
-    REVIEW --> DECISION
-    STT --> TRANSCRIPT[Audit transkrip JSONL]
-    DECISION --> AUDIT[Audit keputusan JSONL]
-    AUDIT --> CSV{decision_csv_enabled?}
-    CSV -->|Ya| FILE[Tambahkan baris CSV harian]
-    CSV -->|Tidak| OUTPUT{MQTT.enabled?}
-    FILE --> OUTPUT
-    OUTPUT -->|Ya| OUTBOX[SQLite outbox → broker → ACK]
-    OUTPUT -->|Tidak| LOCAL[Selesai secara lokal]
+    UI["Dashboard lokal (opsional)"] --> CONTROL["Start / Stop child CLI"]
+    UPLOAD["Upload rekaman"] --> CONVERT["Validasi dan konversi WAV mono 16 kHz"]
+    CONVERT --> INPUT["Mikrofon / replay WAV"]
+    CONTROL --> INPUT
+    INPUT --> QUEUE["Queue audio terbatas dan segmenter"]
+    QUEUE --> STT["Worker Whisper: resample, VAD, kualitas segmen"]
+    STT --> QUALITY{"Input lengkap?"}
+    QUALITY -->|Tidak| UNKNOWN["Binary: TIDAK_DAPAT_DINILAI; tiered: PERLU_DICEK"]
+    QUALITY -->|Ya| LAYA["Worker Laya: skor dan konteks"]
+    LAYA --> POLICY["Policy efektif: binary atau tiered"]
+    UNKNOWN --> AUDIT["Audit JSONL dan CSV keputusan opsional"]
+    POLICY --> AUDIT
+    AUDIT --> OUTPUT{"MQTT aktif?"}
+    OUTPUT -->|Ya, CLI biasa| OUTBOX["SQLite outbox → broker → ACK"]
+    OUTPUT -->|Tidak / dashboard| LOCAL["Output lokal; event dashboard bila digunakan"]
 ```
 
-Capture, segmentasi, STT dan Laya berjalan di worker berbeda dengan antrean terbatas. STT mengubah audio menjadi teks; Laya menilai konteks dan policy menentukan level/rekomendasi. Audio atau teks yang tidak lengkap masuk status tidak dapat dinilai pada mode binary, atau review pada mode tiered. Setelah pencatatan lokal, MQTT hanya dipakai jika diaktifkan. Semua event membawa ID yang menghubungkan transkrip, keputusan, dan evidence; kegagalan output lokal menyebabkan proses keluar dengan status error agar hasil tidak hilang tanpa terdeteksi.
+Capture, segmenter, STT dan Laya berjalan pada worker terpisah dengan antrean terbatas. Frame hilang menyebabkan reset segmen/konteks. Kegagalan worker, audit, atau inference timeout membuat proses keluar nonzero; shutdown menghentikan sumber kemudian menguras antrean sampai batas waktu.
 
-## Kondisi keputusan: apakah ucapan ini fraud?
+Nilai `runtime` saat ini: queue audio 5 detik, queue utterance 8, queue teks 16, telemetry 15 detik, drain 25 detik, dan inference timeout 120 detik. Konteks default satu utterance, dengan batas konfigurasi maksimal tiga. `SIGUSR1` mereset sesi; identitas pembicara tetap `unknown`, tidak ada diarization otomatis.
 
-Sumber logic adalah [`assess()` pada ai_fraud_detection.py](backend/internal/ai_runtime/ai_fraud_detection.py). Fungsi ini menggabungkan **skor indikasi fraud aktif**, **kelas konteks**, dan **confidence kelas konteks** dengan ambang dasar dari `model/laya-fraud-rs-best/decision_policy.json` yang dapat ditimpa melalui `model.laya` pada `config/config.yaml`. Hasilnya adalah level tindak lanjut, bukan pembuktian bahwa pembicara melakukan fraud.
+## Mikrofon dan audio
 
-### Mode biner: hanya fraud atau tidak fraud (default)
+`config/microphone.json` saat ini berisi index 9, sample rate 16.000 Hz, mono, blok 100 ms, ambang RMS 0,025, silence timeout 0,6 detik, minimum speech 0,5 detik, maksimum segmen 15 detik, serta prebuffer 0,4 detik. Batas maksimum segmen mencakup jeda/buffer; ucapan panjang diberi continuation ID.
 
-Untuk penilaian langsung, gunakan **`threshold_fraud`** pada `config/config.yaml`:
+Periksa perangkat pada host saat digunakan. Selain index, loader mendukung `device_name` dan `host_api`; jika nama diisi, pencarian nama/host API digunakan. CLI `--device-index` menggantinya untuk satu run. Pilihan dashboard juga berlaku untuk satu run. `--sample-rate` dapat dipakai bila perangkat memerlukan laju capture lain yang didukung.
 
-```yaml
-model:
-  laya:
-    decision_mode: "binary"
-    threshold_fraud: 0.50
-```
+Whisper memakai VAD dan metadata no-speech/logprob/repetisi untuk menyaring hasil. `language_probability` tidak dipakai sebagai confidence transkripsi. Jangan menyamakan confidence konteks Laya dengan kualitas ASR.
 
-| Perbandingan skor | Label (`level`) | `is_fraud` pada event JSON |
-|---|---|---|
-| `fraud_score >= threshold_fraud` | `FRAUD` | `true` |
-| `fraud_score < threshold_fraud` | `TIDAK_FRAUD` | `false` |
+## MQTT opsional
 
-Dengan threshold 0,50: skor 49,9% → `TIDAK_FRAUD`; tepat 50% atau 85% → `FRAUD`. Menaikkan threshold membuat label FRAUD lebih sulit tercapai; menurunkannya membuat label tersebut lebih mudah tercapai. Angka 0,50 adalah nilai manual pengujian, bukan hasil validasi produksi.
-
-**Pada mode binary hanya skor fraud menentukan klasifikasi.** Kelas konteks dan confidence tetap ditampilkan sebagai informasi tambahan, tetapi tidak mengubah label. `threshold_review`, `threshold_escalate`, dan `context_min_confidence` tidak menjadi kondisi keputusan biner. Jadi konteks `laporan_kejadian` atau `risiko_aktif` tidak lagi otomatis memaksa review: hasil mengikuti skor. Ini menyederhanakan keputusan, bukan melatih ulang atau meningkatkan akurasi model.
-
-Dashboard, CSV harian dan unduhan menggunakan label `FRAUD`/`TIDAK_FRAUD`. Event JSON juga memuat `is_fraud`, `decision_mode`, dan `threshold_fraud`. Keluaran positif tetap berarti **klasifikasi model**, bukan pembuktian fraud. Prediksi negatif dicatat pada log umum/CSV; prediksi positif dikirim ke topic fraud_alert jika MQTT diaktifkan.
-
-Jika audio/transkrip tidak lengkap atau konteks melewati batas token, labelnya **`TIDAK_DAPAT_DINILAI`** dengan `is_fraud: null`, bukan `TIDAK_FRAUD`. Itu status kegagalan input, bukan kelas fraud ketiga. Kegagalan inference/score tidak valid tetap menghasilkan error pipeline, tanpa mengarang prediksi negatif.
-
-Untuk kembali ke penilaian konteks, review dan eskalasi sebelumnya, gunakan `decision_mode: "tiered"`. Penjelasan urutan kondisi dan level review/eskalasi di bawah khusus untuk mode tersebut. Setelah mengganti mode atau threshold, restart daemon atau hentikan dan mulai run baru di dashboard.
-
-### Mengatur threshold melalui `config.yaml`
-
-Threshold mode bertingkat (`tiered`) dapat diubah pada `model.laya`:
-
-```yaml
-model:
-  laya:
-    # Path bundle, decision_policy_file dan calibration_file tetap digunakan.
-    decision_mode: "tiered"
-    threshold_review: 0.50
-    threshold_escalate: 0.85
-    context_min_confidence: 0.70
-```
-
-Nilai tersebut sekarang aktif sebagai **pengaturan manual untuk pengujian lokal**, bukan threshold yang sudah lolos validasi produksi. `0.50` berarti 50%, bukan angka `50`. Ketiganya harus berupa angka finite dalam rentang 0–1; jika eskalasi diaktifkan, threshold review harus tersedia dan `threshold_review <= threshold_escalate`.
-
-| Pengaturan | Pengaruh ketika disesuaikan |
-|---|---|
-| `threshold_review` | Pada konteks `layanan_normal`, skor di atas/sama dengan ambang menyebabkan review karena konflik. Menurunkan nilai ini membuat lebih banyak prediksi normal masuk review. Kelas `risiko_aktif` tetap direview meskipun skornya di bawah ambang ini |
-| `threshold_escalate` | Pada konteks `risiko_aktif` dengan confidence cukup, skor di atas/sama dengan ambang menyebabkan eskalasi. Menurunkannya membuat eskalasi lebih mudah dicapai |
-| `context_min_confidence` | Confidence konteks di bawah ambang selalu masuk review sebelum kondisi lainnya. Menaikkannya memperbanyak hasil yang perlu diperiksa karena ketidakpastian konteks |
-
-Prioritas konfigurasi: baca policy bundle, lalu timpa tiga key tersebut jika ada pada YAML. **Hapus key** untuk memakai nilai bundle; **`null` eksplisit** menonaktifkan threshold review/eskalasi. Untuk memaksa semua keluaran valid ke review, pilih `decision_mode: tiered`, lalu set **kedua threshold review/eskalasi** ke null:
-
-```yaml
-threshold_review: null
-threshold_escalate: null
-context_min_confidence: 0.70
-```
-
-Untuk mematikan eskalasi saja, pertahankan `threshold_review` numerik dan set `threshold_escalate: null`. Confidence konteks dan `threshold_fraud` tidak boleh null. File policy model, bobot, dan kalibrasi tidak ditulis ulang. `policy_version` pada event/CSV dihitung dari policy efektif, sehingga perubahan threshold menghasilkan versi yang dapat ditelusuri.
-
-Setelah mengedit YAML, restart proses daemon/CLI yang sedang berjalan. Pada dashboard, hentikan run lalu mulai run baru; controller membaca ulang konfigurasi saat memulai child pipeline. Nilai tidak berubah di tengah run. Verifikasi threshold yang sedang dikonfigurasi dengan:
+Aktifkan `MQTT.enabled: true` dan isi host, port, client ID unik, serta kredensial yang sesuai. Nilai broker tetap berada di konfigurasi/environment dan tidak disalin ke README. Jalankan subscriber untuk memeriksa payload:
 
 ```bash
-python3 ai_fraud_detection_microphone/backend/app/main.py --check-config
-```
-
-Output mencantumkan `effective_thresholds`. Daemon, replay, upload, dan run dashboard memakai override YAML ini. CLI teks `laya_ai_process` memakai override jika dijalankan dengan `--config config/config.yaml`; mode `--checkpoint` tetap memakai policy dari bundle yang dipilih.
-
-### Arti kelas konteks
-
-| `context_status` | Makna | Contoh ucapan dan interpretasi |
-|---|---|---|
-| `risiko_aktif` | Ada permintaan/penawaran aktif yang dinilai mencurigakan oleh model | “Transfer biaya pendaftaran ke rekening pribadi saya, tidak perlu ke kasir.” → indikasi pengalihan pembayaran yang perlu diverifikasi |
-| `layanan_normal` | Layanan resmi, pertanyaan biasa, penolakan, atau edukasi anti-fraud | “Jangan transfer ke rekening pribadi petugas; bayar di kasir resmi.” → larangan melakukan transfer pribadi, bukan permintaan fraud |
-| `laporan_kejadian` | Melaporkan atau mengutip dugaan kejadian sebelumnya | “Kemarin petugas meminta saya mentransfer ke rekening pribadinya, saya ingin mengadu.” → tindak lanjuti laporan; pelapor tidak dianggap sedang meminta fraud |
-| `konteks_kurang` | Bukti percakapan belum cukup untuk menentukan maksud atau kanal | “Pembayarannya nanti lewat sana.” → minta klarifikasi; jangan langsung menyimpulkan aman atau fraud |
-
-Contoh tersebut menjelaskan target interpretasi model. Output aktual dapat berbeda karena kesalahan STT atau prediksi model. Permintaan identitas untuk pendaftaran, refund resmi, dan urgensi medis perlu dinilai sesuai konteks/SOP; kemunculan kata “rekening”, “OTP”, atau “cepat” sendiri bukan keputusan fraud.
-
-### Urutan kondisi mode `tiered` di `assess()`
-
-**Kondisi diperiksa dari atas ke bawah; kondisi pertama yang terpenuhi menentukan hasil.** `score` adalah `fraud_score`, `confidence` adalah `context_confidence`, `review` adalah `threshold_review`, dan `escalate` adalah `threshold_escalate`.
-
-| Urutan | Kondisi | `level` | `reason` dan maksudnya |
-|---|---|---|---|
-| 1 | `confidence < context_min_confidence` (default 0,70) | `PERLU_DICEK` | `confidence_konteks_rendah`: model belum cukup yakin atas kelas konteks yang dipilih |
-| 2 | `context == laporan_kejadian` | `PERLU_DICEK` | `tindak_lanjut_pengaduan`: teruskan pengaduan untuk diperiksa |
-| 3 | `context == konteks_kurang` | `PERLU_DICEK` | `minta_klarifikasi`: tujuan/maksud percakapan belum jelas |
-| 4 | `review is None` (`null` di JSON) | `PERLU_DICEK` | `ambang_belum_memenuhi_target`: belum tersedia ambang review yang diterima dari evaluasi |
-| 5 | `context == layanan_normal` dan `score >= review` | `PERLU_DICEK` | `keluaran_model_bertentangan`: kelas konteks menyebut normal, tetapi skor risiko melewati ambang review |
-| 6a | `context == risiko_aktif`, `escalate` tersedia, dan `score >= escalate` | `ESKALASI` | `indikasi_aktif_untuk_supervisor`: ada indikasi aktif dan skor cukup tinggi menurut policy; minta supervisor memverifikasi |
-| 6b | `context == risiko_aktif`, tetapi kondisi 6a tidak terpenuhi | `PERLU_DICEK` | `indikasi_aktif_perlu_verifikasi`: kelas konteks masih menunjukkan risiko meskipun skor belum mencapai ambang eskalasi |
-| 7 | Tidak ada kondisi di atas yang terpenuhi | `TIDAK_ADA_INDIKASI` | `layanan_normal`: konteks normal, confidence mencukupi, ambang review tersedia, dan skor berada di bawah ambang review |
-
-Batas bersifat eksplisit: confidence **tepat 0,70** tidak terkena kondisi `< 0,70`, dan skor **tepat pada ambang** sudah memenuhi `>=`. Kelas `risiko_aktif` dengan skor di bawah `threshold_review` tetap masuk review pada kondisi 6b. Skor tinggi saja tidak menghasilkan eskalasi jika konteks bukan `risiko_aktif` atau ada kondisi sebelumnya yang sudah terpenuhi.
-
-Sebelum kondisi tersebut, fungsi memvalidasi skor/confidence agar finite dan berada di rentang 0–1, kelas konteks harus dikenal, serta urutan ambang harus benar (`review <= escalate` jika eskalasi tersedia). Nilai yang tidak valid memicu `ValueError`; pada pipeline, kegagalan ini menghentikan worker/proses dengan status error, bukan menghasilkan label “aman”. `null` berarti **ambang tidak tersedia**, berbeda dengan ambang numerik `0`.
-
-### Arti level hasil
-
-| Level | Apakah tindakan dinyatakan fraud? | Tindak lanjut |
-|---|---|---|
-| `TIDAK_ADA_INDIKASI` | Tidak ditemukan indikasi pada bukti yang dianalisis; bukan jaminan bahwa seluruh transaksi/percakapan aman | Lanjutkan layanan sesuai prosedur |
-| `PERLU_DICEK` | Belum ada keputusan pasti. Bisa karena indikasi aktif, laporan, konteks kurang, confidence rendah, konflik output, atau ambang belum tersedia | Periksa `reason`, klarifikasi/verifikasi, atau tindak lanjuti pengaduan |
-| `ESKALASI` | Indikasi aktif memenuhi kondisi eskalasi policy; tetap bukan vonis fraud terkonfirmasi | Minta supervisor memeriksa melalui prosedur resmi |
-
-Karena itu, **`PERLU_DICEK` tidak sama dengan “fraud”**, dan **`ESKALASI` tidak sama dengan “fraud terbukti”**. Dashboard/CSV menampilkan `context_status`, `level`, dan `reason` agar penyebab keputusan dapat ditelusuri. `action_recommendation` ditambahkan oleh `ai_manager.py` setelah hasil `assess()` diterima.
-
-### Maksud persentase skor risiko
-
-`fraud_score` berasal dari `answers['is_fraud']['noul']`, keluaran model untuk pertanyaan: **apakah percakapan memuat permintaan/penawaran aktif yang jelas untuk fraud di layanan resepsionis RS?** Inference memuat `calibration.json` dari bundle model. Nilainya berada di rentang 0–1 dan dashboard mengubahnya menjadi persen:
-
-```text
-Persentase yang ditampilkan = fraud_score × 100
-fraud_score = 0.113 → Skor risiko: 11.3%
-fraud_score = 0.850 → Skor risiko: 85.0%
-```
-
-Skor yang lebih tinggi menunjukkan model memberi dukungan lebih kuat terhadap jawaban “ada indikasi fraud aktif”. Skor tersebut **bukan** persentase jumlah kata mencurigakan, tingkat kerugian, persentase akurasi model, atau persentase kesalahan petugas. Angka **85% tidak membuktikan bahwa 85 dari 100 kejadian serupa benar-benar fraud**; interpretasi probabilitas operasional memerlukan evaluasi kalibrasi pada percakapan nyata yang mewakili penggunaan. Model saat ini masih pilot berbasis data sintetis, sehingga skor dibaca bersama konteks dan alasan keputusan.
-
-`context_confidence` merupakan angka yang berbeda: dukungan model terhadap **kelas konteks terpilih**, memakai `answer_confidence` dari Laya. Contohnya, `context_confidence = 0.89` untuk `layanan_normal` berarti model cukup yakin memilih kelas normal; itu bukan skor risiko fraud 89%. Tidak ada perhitungan rata-rata antara confidence konteks dan skor fraud dalam `assess()`.
-
-**Tidak ada rentang rendah/sedang/tinggi universal yang dikodekan pada program ini.** Pengambilan keputusan memakai ambang bundle dan urutan kondisi di atas. Skor rendah tidak otomatis menjadi `TIDAK_ADA_INDIKASI`; skor tinggi juga tidak otomatis menjadi `ESKALASI`.
-
-### Policy bundle dan konfigurasi mode `tiered`
-
-Bundle `model/laya-fraud-rs-best/decision_policy.json` tetap menyimpan threshold review/eskalasi `null`, confidence minimum 0,70, `production_ready=false`, dan mode `shadow`. Ini mencatat hasil eksperimen model sebelumnya. Jika seluruh override YAML dihapus, nilai bundle berlaku dan seluruh keluaran valid `assess()` kembali masuk `PERLU_DICEK` melalui kondisi 1–4.
-
-Pada konfigurasi `decision_mode: tiered`, YAML menimpa threshold menjadi review 0,50, eskalasi 0,85, dan confidence minimum 0,70. Dengan nilai manual ini dan `context_confidence >= 0.70`, hasilnya mengikuti tabel berikut:
-
-| Skor | Kelas konteks | Level | Alasan |
-|---|---|---|---|
-| 8,0% | `layanan_normal` | `TIDAK_ADA_INDIKASI` | Konteks normal dan skor di bawah 50% |
-| 11,3% | `risiko_aktif` | `PERLU_DICEK` | `indikasi_aktif_perlu_verifikasi`: kelas konteks menunjukkan risiko meskipun skornya rendah |
-| 95,0% | `risiko_aktif` | `ESKALASI` | `indikasi_aktif_untuk_supervisor`: skor melewati ambang 85% |
-| 95,0% | `layanan_normal` | `PERLU_DICEK` | `keluaran_model_bertentangan`: skor tinggi bertentangan dengan kelas normal |
-| 5,0% | `laporan_kejadian` | `PERLU_DICEK` | `tindak_lanjut_pengaduan`: laporan tetap perlu ditindaklanjuti |
-
-Jika confidence konteks di bawah 70%, semua contoh tersebut lebih dahulu masuk `PERLU_DICEK` dengan alasan `confidence_konteks_rendah`. Nilai tepat 85% dapat menjadi eskalasi hanya ketika konteks aktif dan tidak ada kondisi sebelumnya yang terpenuhi. `production_ready` tetap false; pengaturan threshold manual tidak mengubah kualitas prediksi atau status validasi model.
-
-### Review sebelum atau di luar `assess()`
-
-Ada hasil review yang berasal dari komponen lain:
-
-- `kualitas_audio_atau_transkrip_tidak_lengkap`: `ai_manager.py` menemukan gap audio, penolakan sebagian segmen STT, atau teks kosong; model tidak dipanggil untuk keputusan tersebut.
-- `konteks_melebihi_batas_token`: `LayaEngine` mendeteksi teks melampaui budget token; model tidak dipanggil agar konteks tidak dipotong diam-diam.
-
-Pada kedua kasus, skor fraud dapat **tidak tersedia**. Dashboard menampilkan “Tidak tersedia” dan kolom CSV kosong; ini bukan skor 0% dan bukan keputusan tidak fraud.
-
-## Struktur proyek dan fungsi
-
-```text
-ai_fraud_detection_microphone/
-├── README.md                         # Setup, mode lokal/MQTT, alur, pengujian
-├── dashboard.html                    # Antarmuka pengujian lokal tanpa dependency CDN
-├── PLAN_PROJECT.md                   # Arsitektur dan tahapan proyek
-├── IMPLEMENTATION_REVIEW.md          # Audit implementasi dan perbandingan rencana
-├── backend/
-│   ├── requirements.txt              # Dependency runtime langsung
-│   ├── requirements.lock.txt         # Versi dependency environment yang diuji
-│   ├── app/
-│   │   ├── main.py                   # CLI, override konfigurasi dan signal handler
-│   │   └── ai_manager.py             # Lifecycle worker, sesi, keputusan, output
-│   └── internal/
-│       ├── ai_runtime/
-│       │   ├── ai_fraud_detection.py  # Policy level dan ketidakpastian
-│       │   └── background_process/
-│       │       ├── speech_to_text.py # Adapter Whisper, VAD, kualitas dan latency
-│       │       └── laya_ai_process.py # Adapter Laya, schema, kalibrasi dan token limit
-│       ├── client/mqtt_client.py     # Publisher opsional, outbox SQLite, ACK/reconnect
-│       ├── utils/
-│       │   ├── config_loader.py      # Baca YAML/JSON, validasi, resolve path/env
-│       │   ├── audio.py              # Capture/replay, PCM, resample dan segmenter
-│       │   ├── logger.py             # Journal JSON, audit JSONL, CSV dan retensi
-│       │   ├── recording.py           # Validasi upload dan normalisasi audio untuk replay
-│       │   └── health.py             # Telemetry GPU dan usia antrean
-│       └── delivery/rest_handler.py  # API dashboard, supervisor child process, ekspor CSV
-├── config/
-│   ├── config.yaml                   # MQTT opsional, CSV, model, queue dan timeout
-│   ├── microphone.json               # Perangkat dan parameter segmentasi
-│   └── service.env.example           # Contoh override environment systemd
-├── model/laya-fraud-rs-best/          # Weights, tokenizer, schema, kalibrasi, policy
-├── scripts/
-│   ├── run_standalone.sh             # Launcher manual/systemd dengan library native
-│   ├── setup_runtime.sh              # Setup Python dan opsi CUDA/PortAudio lokal
-│   ├── install_service.sh            # Render/install service secara idempotent
-│   └── test_mqtt_sub.py               # Subscriber pemeriksa payload broker
-├── systemd/hermina-fraud-detector.service
-├── log/                              # Output harian lokal dan outbox saat MQTT aktif
-├── tests/
-│   ├── test_runtime.py               # Audio, config, audit, lifecycle dan watchdog
-│   ├── test_recording_upload.py      # Validasi, konversi dan lifecycle rekaman upload
-│   ├── test_dashboard.py             # API, keamanan loopback, lifecycle dan entrypoint
-│   ├── browser/                      # Playwright smoke test dashboard, opsional
-│   ├── testing_fraud_detection.html   # Petunjuk/alias dashboard pengujian lama
-│   ├── test_local_outputs.py         # CSV dan mode tanpa client/koneksi MQTT
-│   ├── test_mqtt_integration.py       # Integrasi broker loopback
-│   ├── test_gpu_e2e.py               # Integrasi model GPU + broker, opt-in
-│   ├── broker/                       # Fixture broker dan dependency terisolasi
-│   └── artifacts/                    # Bukti uji lokal yang dihasilkan
-└── training/
-    ├── datasets/                     # Bank template, split dan manifest dataset
-    ├── scripts/                      # Generator dan runner training
-    ├── checkpoints/                  # Hasil per seed
-    ├── evaluation/                   # Kalibrasi, evaluasi, seleksi dan RESULTS.md
-    └── tests/                        # Invariant dataset dan policy
-```
-
-Folder `log/`, cache native, dan artifact pengujian sudah diabaikan oleh `.gitignore`. File `__init__.py` menandai paket Python dan tidak ditampilkan satu per satu pada struktur di atas.
-
-## Dashboard AI Fraud Detection - Test View
-### Tampilan Dashboard
-![Hasil Pengujian Dashboard](./docs/dashboard_test_view.png)
-
-### Hasil Test dengan data Fraud
-![Hasil Pengujian dengan data Fraud 1](./docs/test_fraud.png)
-![Hasil Pengujian dengan data Fraud 2](./docs/test_fraud_2.png)
-
-### Hasil Test dengan data No Fraud
-![Hasil Pengujian dengan data No Fraud 1](./docs/test_no_fraud.png)
-![Hasil Pengujian dengan data No Fraud 2](./docs/test_no_fraud_2.png)
-
-## Jalankan
-
-Dari root workspace:
-
-```bash
-ai_fraud_detection_microphone/scripts/run_standalone.sh --check-config --verify-weights
-ai_fraud_detection_microphone/scripts/run_standalone.sh --list-devices
-ai_fraud_detection_microphone/scripts/run_standalone.sh --check-device
-ai_fraud_detection_microphone/scripts/run_standalone.sh --dry-run-output --duration 60
-```
-
-`config/microphone.json` harus menunjuk perangkat yang tersedia. Gunakan `device_name` dan `host_api` untuk pemilihan berdasarkan nama, atau `device_index` sebagai override. Pada host audit 19 November, index 9/C270 tidak tersedia; yang terdaftar hanya `pulse` dan `default`. Jangan menganggap keduanya adalah USB microphone yang dimaksud.
-
-Uji WAV tanpa mikrofon dan tanpa broker:
-
-```bash
-ai_fraud_detection_microphone/scripts/run_standalone.sh \
-  --replay legacy/test_output_new.wav --dry-run-output
-```
-
-Sample rate replay diambil dari WAV dan dikonversi ke 16 kHz untuk Whisper. Path argumen CLI relatif terhadap direktori shell; path model/log pada konfigurasi relatif terhadap root proyek. Setelah mengubah `MQTT.enabled: true`, untuk penggunaan broker yang sudah dikonfigurasi:
-
-```bash
-ai_fraud_detection_microphone/scripts/run_standalone.sh
 .env_laya/bin/python ai_fraud_detection_microphone/scripts/test_mqtt_sub.py
 ```
 
-`--duration` dihitung setelah capture siap. `SIGTERM`/`SIGINT` menghentikan capture kemudian menguras antrean sampai timeout. `SIGUSR1` mereset sesi sebelum utterance berikutnya dianalisis. `runtime.context_utterances` default 1; jika diperbesar, pastikan batas sesi pasien sesuai operasi loket.
+Topic mengikuti `base_topic`:
 
-## Dependensi
+| Suffix | Isi |
+|---|---|
+| `/status` | starting/online/degraded/offline; retained, dengan LWT |
+| `/transcription` | Transkripsi sesuai mode teks, ID dan metadata |
+| `/fraud_alert` | FRAUD, status tidak dapat dinilai, serta review/eskalasi pada mode tiered |
+| `/telemetry` | Kesehatan audio, GPU, antrean dan outbox |
 
-Environment lokal sudah memakai `.env_laya`. Python 3.12 dan PyTorch yang cocok untuk GPU diperlukan. Daftar dependency langsung: `backend/requirements.txt`; versi closure environment yang diuji: `backend/requirements.lock.txt`.
+Keputusan TIDAK_FRAUD/TIDAK_ADA_INDIKASI tetap masuk CSV/JSONL, tetapi tidak diterbitkan ke topic fraud_alert. MQTT menggunakan QoS 1/2, outbox SQLite persisten, reconnect/backoff, TTL, serta kuota jumlah dan payload. Event dihapus dari outbox setelah ACK. Jika kuota penuh, audit lokal tetap mencatat hasil dan enqueue ditolak dengan drop count. Consumer perlu deduplikasi `event_id` karena pengiriman ulang dimungkinkan.
+
+Override environment tersedia untuk `LAYA_MQTT_HOST`, `LAYA_MQTT_PORT`, `LAYA_MQTT_USERNAME`, `LAYA_MQTT_PASSWORD`, dan `LAYA_MQTT_CLIENT_ID`. `--no-mqtt` mematikan MQTT untuk satu eksekusi; `--dry-run-output` sekaligus mencetak event JSON termasuk keputusan negatif.
+
+## Dependensi dan setup
+
+Gunakan Python 3.12, virtualenv `.env_laya`, dan PyTorch yang sesuai GPU. Dependency langsung tersedia di `backend/requirements.txt`; `requirements.lock.txt` mencatat closure versi environment yang diperiksa. Dashboard memakai HTTP server standard library dan tidak memerlukan framework web/CDN.
 
 ```bash
 ai_fraud_detection_microphone/scripts/setup_runtime.sh
 ```
 
-Faster-Whisper/CTranslate2 pada host ini memerlukan cuBLAS CUDA 12 walaupun driver mendukung CUDA 13. Library cuBLAS diinstal terpisah pada `../.cuda12` agar tidak mengganti library PyTorch. PortAudio diperlukan untuk sounddevice. Instalasi biasa Ubuntu: `sudo apt-get install libportaudio2`. Alternatif lokal yang tersedia untuk host Ubuntu x86_64:
+Setup script mengasumsikan interpreter virtualenv sudah tersedia. PortAudio diperlukan untuk sounddevice; pada Ubuntu dapat dipasang dengan `sudo apt-get install libportaudio2`. Alternatif library lokal untuk host Ubuntu x86_64 dan CUDA 12 cuBLAS:
 
 ```bash
 ai_fraud_detection_microphone/scripts/setup_runtime.sh --cuda12 --local-portaudio
 ```
 
-Launcher secara otomatis menambahkan direktori `.cuda12/nvidia/cublas/lib` dan `.native/usr/lib/x86_64-linux-gnu` jika tersedia. cuDNN 9 tersedia pada host pengujian; host baru perlu memverifikasi cuDNN sesuai [kebutuhan Faster-Whisper](https://github.com/SYSTRAN/faster-whisper#gpu). Library GPU dan perangkat tidak disimulasikan oleh `--check-config`.
+Launcher menambahkan `../.cuda12/nvidia/cublas/lib` dan `.native/usr/lib/x86_64-linux-gnu` jika tersedia. cuBLAS CUDA 12 dipisahkan dari library PyTorch; host yang diuji juga memiliki cuDNN 9. Periksa kecocokan runtime melalui [kebutuhan GPU Faster-Whisper](https://github.com/SYSTRAN/faster-whisper#gpu).
 
-## Konfigurasi dan event
-
-- `config/config.yaml`: model, broker, logging, queue bounds dan timeout.
-- `config/microphone.json`: perangkat, sample rate, RMS, silence timeout, prebuffer dan batas utterance.
-- `config/service.env.example`: contoh override broker. Salin sebagai `service.env`, chmod 600, kemudian isi konfigurasi environment sesuai host.
-- Override broker: `LAYA_MQTT_HOST`, `LAYA_MQTT_PORT`, `LAYA_MQTT_USERNAME`, `LAYA_MQTT_PASSWORD`, `LAYA_MQTT_CLIENT_ID`. Systemd memuat `service.env`; manual launcher memakai environment shell. Pengaturan `MQTT.enabled` tetap ditentukan oleh YAML atau override CLI `--no-mqtt`.
-
-Topic mengikuti `base_topic`: `/status`, `/transcription`, `/fraud_alert`, `/telemetry`. Status memakai retain dan LWT; transkrip/alert memakai QoS 1/2 tanpa retain. Deduplikasi consumer memakai `event_id` karena pengiriman ulang mungkin terjadi. Outbox SQLite menyimpan event sampai ACK, menjaga urutan dalam sesi, memiliki TTL serta kuota jumlah/payload. Jika kuota habis, event tetap dicatat pada audit, enqueue ditolak secara eksplisit dan drop count muncul di telemetry. Tidak ada klaim pengiriman tanpa batas ketika disk/kuota penuh.
-
-Telemetry mencakup kedalaman/usia antrean, durasi ASR/Laya, dropped frames, identitas perangkat, GPU temperature/memory/utilization jika `nvidia-smi` tersedia, dan status outbox/ACK. Tidak tersedianya telemetry GPU tidak menghentikan inference.
-
-Keputusan menyertakan `action_recommendation` berdasarkan level/konteks. Model saat ini menghasilkan skor risiko aktif dan empat kelas konteks. Kolom kategori rinci serta lima sinyal pada rencana awal memerlukan schema dan model terlatih tambahan; tidak disintesis menjadi skor palsu.
-
-`storage.transcript_mode`:
-
-- `omit` (default): teks diganti `[TRANSCRIPT_OMITTED]` pada log/MQTT; inference tetap menerima teks asli di memori.
-- `masked`: masking angka, email dan secret sederhana. Ini belum menganonimkan nama atau diagnosis.
-- `raw`: menyimpan/mengirim transkrip lengkap, cocok untuk pengumpulan data yang memang telah disetujui.
-
-Log harian disimpan di `log/YYYY-MM-DD/`, timezone Asia/Jakarta. Kegagalan audit/disk dan worker membuat proses keluar nonzero agar systemd dapat memulai ulang. Inference yang melewati `runtime.inference_timeout` juga memicu exit; shutdown memiliki batas drain tersendiri. Pemulihan MQTT memakai exponential backoff dan jitter. Durasi `end_to_decision` dimulai dari blok suara terakhir, termasuk endpointing; pada replay offline nilainya null karena waktu audio dipercepat.
+Model Whisper harus sudah tersedia di cache/direktori lokal untuk penggunaan tanpa unduhan. `model.whisper.model_size` dapat berisi path checkpoint lokal. `--check-config` memeriksa konfigurasi/bundle, bukan membuktikan GPU atau mikrofon siap.
 
 ## systemd
 
-Template: `systemd/hermina-fraud-detector.service`. Installer menyesuaikan root, user/group, interpreter, menyimpan `.bak` bila berubah, dan tidak menyalakan capture secara default.
+Service menjalankan pipeline mikrofon headless melalui launcher yang sama; dashboard dijalankan terpisah dengan `--dashboard`. Installer menyesuaikan root/user/group/interpreter, menyimpan backup `.bak` jika file berubah, dan tidak menyalakan capture secara default.
 
 ```bash
 sudo ai_fraud_detection_microphone/scripts/install_service.sh --user ojan
@@ -436,23 +326,99 @@ sudo systemctl enable --now hermina-fraud-detector.service
 journalctl -u hermina-fraud-detector.service -f -o cat
 ```
 
-Verifikasi rendering tanpa instalasi:
+Untuk override environment, salin `config/service.env.example` menjadi `config/service.env` dan gunakan permission 600. Systemd memuat file tersebut; launcher manual memakai environment shell. Uji akses audio/GPU sebagai user service.
+
+Verifikasi hasil rendering tanpa memasang ke OS:
 
 ```bash
 ai_fraud_detection_microphone/scripts/install_service.sh --dest /tmp/laya-service
 systemd-analyze verify /tmp/laya-service/hermina-fraud-detector.service
 ```
 
-Service menjalankan launcher yang sama agar library GPU/audio dan interpreter konsisten. Akses perangkat harus diuji sebagai user service. Default systemd timeout 40 detik; jika menaikkan timeout pipeline/MQTT, sesuaikan timeout systemd. Menyalin backup service lalu `daemon-reload` dan restart memulihkan versi sebelumnya.
+Service memakai restart on-failure dan `TimeoutStopSec=40s`. Jika menaikkan timeout drain pipeline/MQTT, sesuaikan timeout service. `SIGINT`/`SIGTERM` menghentikan capture dan menguras antrean; jangan menjalankan service dan pengujian lain pada perangkat yang sama tanpa memastikan aksesnya tersedia.
+
+## Struktur proyek dan fungsi
+
+```text
+ai_fraud_detection_microphone/
+├── README.md                         # Panduan operasional saat ini
+├── PLAN_PROJECT.md                   # Arsitektur dan roadmap
+├── IMPLEMENTATION_REVIEW.md          # Audit dan riwayat perubahan implementasi
+├── dashboard.html                    # Dashboard lokal tanpa dependency CDN
+├── docs/                             # Screenshot pengujian yang didokumentasikan
+├── backend/
+│   ├── requirements.txt              # Dependency runtime langsung
+│   ├── requirements.lock.txt         # Snapshot versi dependency environment
+│   ├── app/
+│   │   ├── main.py                   # Entrypoint CLI/dashboard dan signal handler
+│   │   └── ai_manager.py             # Worker, sesi, keputusan, audit dan dispatch
+│   └── internal/
+│       ├── ai_runtime/
+│       │   ├── ai_fraud_detection.py  # Resolve/validasi policy; binary/tiered
+│       │   └── background_process/
+│       │       ├── speech_to_text.py # Whisper, VAD dan kualitas ASR
+│       │       └── laya_ai_process.py # Laya, kalibrasi, policy dan batas token
+│       ├── client/mqtt_client.py     # Outbox SQLite, publisher opsional, ACK
+│       ├── delivery/rest_handler.py  # API dashboard dan lifecycle child pipeline
+│       └── utils/
+│           ├── config_loader.py      # YAML/JSON, path/env, policy efektif
+│           ├── audio.py              # Capture/replay, PCM, resample, segmenter
+│           ├── recording.py          # Validasi upload dan konversi audio
+│           ├── logger.py             # Log journal, JSONL, CSV dan retensi
+│           └── health.py             # GPU dan usia antrean
+├── config/
+│   ├── config.yaml                   # Mode, threshold, model, output dan runtime
+│   ├── microphone.json               # Perangkat dan parameter audio
+│   └── service.env.example           # Contoh environment untuk service
+├── model/laya-fraud-rs-best/          # Weights, tokenizer, schema, policy, kalibrasi
+├── scripts/
+│   ├── run_standalone.sh             # Launcher manual dan systemd
+│   ├── setup_runtime.sh              # Setup dependency dan library native lokal
+│   ├── install_service.sh            # Render/install service idempotent
+│   └── test_mqtt_sub.py               # Subscriber pemeriksa event
+├── systemd/hermina-fraud-detector.service
+├── log/                              # Output harian dan outbox ketika MQTT aktif
+├── tests/
+│   ├── test_binary_policy.py         # Batas biner dan independensi dari konteks
+│   ├── test_configurable_policy.py   # Override, validasi dan versi policy
+│   ├── test_runtime.py               # Audio, konfigurasi, lifecycle, watchdog
+│   ├── test_local_outputs.py         # CSV/JSONL dan output tanpa MQTT
+│   ├── test_dashboard.py             # HTTP/API, entrypoint, lifecycle dan ekspor
+│   ├── test_recording_upload.py      # Konversi, batas dan cleanup upload
+│   ├── test_mqtt_integration.py       # ACK, offline/restart/reconnect broker
+│   ├── test_gpu_e2e.py               # Model GPU → broker, opt-in
+│   ├── browser/                      # Playwright QA dan dependency terisolasi
+│   ├── broker/                       # Fixture MQTT loopback dan dependency
+│   ├── artifacts/                    # Hasil pengujian lokal yang dihasilkan
+│   └── testing_fraud_detection.html   # Petunjuk/alias dashboard lama
+└── training/
+    ├── datasets/                     # Bank template, split dan manifest v3
+    ├── scripts/                      # Generator dan runner fine-tuning
+    ├── checkpoints/                  # Checkpoint tiap seed
+    ├── evaluation/                   # Kalibrasi, evaluasi, seleksi, RESULTS.md
+    └── tests/                        # Invariant dataset dan evaluasi/policy
+```
+
+File `__init__.py` tidak ditampilkan satu per satu. Log, artifact pengujian, virtualenv, library native, audio dan bobot besar mengikuti aturan `.gitignore`; keberadaan source tidak menjamin semua artifact model/audio tersedia setelah clone.
+
+## Training dan laporan model
+
+Dataset v3 tersedia dalam split train 1.200, calibration 240, validation 400, dan test 80 contoh sintetis. Generator berada di `training/scripts/gen_fraud_dataset_v3.py`, training di `train.py`/`train_all.sh`, dan evaluasi/seleksi di `training/evaluation/`. Runner menolak menimpa direktori checkpoint yang sudah ada.
+
+[Laporan training](training/evaluation/RESULTS.md) adalah **snapshot eksperimen sebelumnya** dengan ambang diagnostik 0,50 dan policy bundle saat itu. Laporan tersebut tidak berarti runtime sekarang selalu review dan tidak menjadi pengukuran hasil threshold 65%. Model terpilih tetap seed 2; perubahan runtime tidak menjalankan training baru. Screenshot pengujian juga bukan pengganti evaluasi akurasi pada data independen.
+
+[PLAN_PROJECT.md](PLAN_PROJECT.md) memuat roadmap; [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md) memuat audit implementasi. Ketersediaan mikrofon target, akses broker target, pemasangan service, dan soak test perlu diverifikasi pada lingkungan deployment.
 
 ## Pengujian
+
+### Unit dan integrasi runtime
 
 ```bash
 .env_laya/bin/python -m unittest discover -s ai_fraud_detection_microphone/tests -v
 .env_laya/bin/python -m unittest discover -s ai_fraud_detection_microphone/training/tests -v
 ```
 
-Broker fixture hanya mendengarkan loopback. Dependency broker dipisahkan karena pin CLI-nya berbeda dari environment model:
+Test GPU dilewati pada discovery biasa. Broker fixture hanya mendengarkan loopback, dengan dependency terpisah dari environment model:
 
 ```bash
 python3 -m venv .env_laya_broker
@@ -461,11 +427,7 @@ LAYA_RUN_GPU_TESTS=1 .env_laya/bin/python -m unittest discover \
   -s ai_fraud_detection_microphone/tests -p test_gpu_e2e.py -v
 ```
 
-Hasil uji runtime dan perbandingan rencana: [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md). Acuan arsitektur dan roadmap: [PLAN_PROJECT.md](PLAN_PROJECT.md).
-
-## Pengujian dashboard di browser
-
-Unit test dashboard termasuk dalam discovery `tests/`. Untuk pemeriksaan browser nyata yang juga menjalankan rekaman contoh melalui model GPU:
+### Browser desktop/mobile dan model asli
 
 ```bash
 python3 -m venv .env_laya_ui
@@ -474,4 +436,34 @@ python3 -m venv .env_laya_ui
 .env_laya_ui/bin/python ai_fraud_detection_microphone/tests/browser/check_dashboard.py
 ```
 
-Script menjalankan server loopback pada port sementara, menguji start/stop, reload saat run, unduhan CSV, dan layout desktop/mobile, lalu menghentikan server. Screenshot dan log disimpan di `tests/artifacts/` yang diabaikan Git.
+Script menyalakan server loopback pada port sementara, menguji rekaman contoh, penolakan file rusak, upload dan inference GPU, reload saat run, unduhan CSV, start/stop, serta layout desktop/mobile. Server dihentikan setelah uji; screenshot/log tersimpan di `tests/artifacts/`. Pemeriksaan ini membuktikan integrasi pada environment yang diuji, bukan kualitas model atau latency realtime pada semua perangkat.
+
+## Pemecahan masalah singkat
+
+| Gejala | Pemeriksaan |
+|---|---|
+| Teks `[TRANSCRIPT_OMITTED]` | Mode teks masih omit; pilih raw untuk uji sintetis yang memerlukan teks lengkap |
+| Skor 60% diberi TIDAK_FRAUD | Threshold aktif saat ini 65%; periksa `--check-config` dan metadata run |
+| Masih muncul PERLU_DICEK/ESKALASI | Periksa apakah memakai mode tiered, CLI `--checkpoint`, log lama, atau run yang belum direstart |
+| TIDAK_DAPAT_DINILAI | Periksa gap/kualitas audio, teks kosong/ditolak, atau batas token |
+| Mikrofon gagal dibuka | Jalankan `--list-devices`/`--check-device`, periksa index/nama, sample rate, dan PortAudio |
+| Upload ditolak | Periksa ukuran, durasi, track audio, format yang valid, dan apakah run masih aktif |
+| Dashboard tidak terhubung | Jalankan `--dashboard`, buka URL HTTP yang dicetak, dan periksa port/terminal |
+| Perubahan threshold belum terlihat | Hentikan run lalu mulai lagi; log historis tidak berubah |
+| CUDA gagal meskipun config valid | Periksa library CUDA/cuDNN melalui launcher; check-config tidak menjalankan inference GPU |
+
+## Dashboard AI Fraud Detection - Test View
+
+### Tampilan Dashboard
+
+![Hasil Pengujian Dashboard](./docs/dashboard_test_view.png)
+
+### Hasil Test dengan data Fraud
+
+![Hasil Pengujian dengan data Fraud 1](./docs/test_fraud.png)
+![Hasil Pengujian dengan data Fraud 2](./docs/test_fraud_2.png)
+
+### Hasil Test dengan data No Fraud
+
+![Hasil Pengujian dengan data No Fraud 1](./docs/test_no_fraud.png)
+![Hasil Pengujian dengan data No Fraud 2](./docs/test_no_fraud_2.png)
