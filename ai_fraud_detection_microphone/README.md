@@ -40,7 +40,7 @@ Rekaman contoh dan upload diproses **hingga akhir file**; pengaturan durasi hany
 
 Dashboard menggunakan **mikrofon komputer tempat Python dijalankan**, melalui sounddevice; tidak meminta izin mikrofon browser. Jika browser dan Python berjalan pada komputer yang berbeda, mikrofon browser tidak dikirim ke server. Jalur mikrofon tetap melewati segmenter, Whisper, Laya, policy, dan audit yang sama dengan daemon.
 
-Dashboard selalu mematikan MQTT untuk run pengujian, melalui `--dry-run-output`, dan tetap menyimpan output lokal. Pilihan teks/perangkat/durasi tidak menulis ulang konfigurasi. `transcript_mode: omit` berarti teks juga disembunyikan di layar; pilih raw untuk kalimat sintetis jika ingin membaca hasil transkripsi. Model yang sedang dipakai dapat mengeluarkan review untuk semua ucapan karena policy pilot; dashboard menampilkan hasil sebenarnya.
+Dashboard selalu mematikan MQTT untuk run pengujian, melalui `--dry-run-output`, dan tetap menyimpan output lokal. Pilihan teks/perangkat/durasi tidak menulis ulang konfigurasi. `transcript_mode: omit` berarti teks juga disembunyikan di layar; pilih raw untuk kalimat sintetis jika ingin membaca hasil transkripsi. Model yang sedang dipakai dapat mengeluarkan review untuk semua ucapan tergantung threshold dan confidence konteks; dashboard menampilkan hasil sebenarnya.
 
 `dashboard.html` adalah antarmuka utama. File lama `tests/testing_fraud_detection.html` sekarang menjadi halaman petunjuk ketika dibuka langsung; jika diakses melalui server di `/tests/testing_fraud_detection.html`, alamat itu menampilkan dashboard yang sama. HTML yang dibuka dengan `file://` tidak bisa menjalankan pipeline: gunakan URL server lokal di atas.
 
@@ -134,7 +134,158 @@ alasan kualitas audio atau teks]
     OUTPUT -->|Tidak| LOCAL[Selesai secara lokal]
 ```
 
-Capture, segmentasi, STT dan Laya berjalan di worker berbeda dengan antrean terbatas. STT mengubah audio menjadi teks; Laya menilai konteks dan policy menentukan level/rekomendasi. Audio atau teks yang tidak lengkap masuk review. Setelah pencatatan lokal, MQTT hanya dipakai jika diaktifkan. Semua event membawa ID yang menghubungkan transkrip, keputusan, dan evidence; kegagalan output lokal menyebabkan proses keluar dengan status error agar hasil tidak hilang tanpa terdeteksi.
+Capture, segmentasi, STT dan Laya berjalan di worker berbeda dengan antrean terbatas. STT mengubah audio menjadi teks; Laya menilai konteks dan policy menentukan level/rekomendasi. Audio atau teks yang tidak lengkap masuk status tidak dapat dinilai pada mode binary, atau review pada mode tiered. Setelah pencatatan lokal, MQTT hanya dipakai jika diaktifkan. Semua event membawa ID yang menghubungkan transkrip, keputusan, dan evidence; kegagalan output lokal menyebabkan proses keluar dengan status error agar hasil tidak hilang tanpa terdeteksi.
+
+## Kondisi keputusan: apakah ucapan ini fraud?
+
+Sumber logic adalah [`assess()` pada ai_fraud_detection.py](backend/internal/ai_runtime/ai_fraud_detection.py). Fungsi ini menggabungkan **skor indikasi fraud aktif**, **kelas konteks**, dan **confidence kelas konteks** dengan ambang dasar dari `model/laya-fraud-rs-best/decision_policy.json` yang dapat ditimpa melalui `model.laya` pada `config/config.yaml`. Hasilnya adalah level tindak lanjut, bukan pembuktian bahwa pembicara melakukan fraud.
+
+### Mode biner: hanya fraud atau tidak fraud (default)
+
+Untuk penilaian langsung, gunakan **`threshold_fraud`** pada `config/config.yaml`:
+
+```yaml
+model:
+  laya:
+    decision_mode: "binary"
+    threshold_fraud: 0.50
+```
+
+| Perbandingan skor | Label (`level`) | `is_fraud` pada event JSON |
+|---|---|---|
+| `fraud_score >= threshold_fraud` | `FRAUD` | `true` |
+| `fraud_score < threshold_fraud` | `TIDAK_FRAUD` | `false` |
+
+Dengan threshold 0,50: skor 49,9% → `TIDAK_FRAUD`; tepat 50% atau 85% → `FRAUD`. Menaikkan threshold membuat label FRAUD lebih sulit tercapai; menurunkannya membuat label tersebut lebih mudah tercapai. Angka 0,50 adalah nilai manual pengujian, bukan hasil validasi produksi.
+
+**Pada mode binary hanya skor fraud menentukan klasifikasi.** Kelas konteks dan confidence tetap ditampilkan sebagai informasi tambahan, tetapi tidak mengubah label. `threshold_review`, `threshold_escalate`, dan `context_min_confidence` tidak menjadi kondisi keputusan biner. Jadi konteks `laporan_kejadian` atau `risiko_aktif` tidak lagi otomatis memaksa review: hasil mengikuti skor. Ini menyederhanakan keputusan, bukan melatih ulang atau meningkatkan akurasi model.
+
+Dashboard, CSV harian dan unduhan menggunakan label `FRAUD`/`TIDAK_FRAUD`. Event JSON juga memuat `is_fraud`, `decision_mode`, dan `threshold_fraud`. Keluaran positif tetap berarti **klasifikasi model**, bukan pembuktian fraud. Prediksi negatif dicatat pada log umum/CSV; prediksi positif dikirim ke topic fraud_alert jika MQTT diaktifkan.
+
+Jika audio/transkrip tidak lengkap atau konteks melewati batas token, labelnya **`TIDAK_DAPAT_DINILAI`** dengan `is_fraud: null`, bukan `TIDAK_FRAUD`. Itu status kegagalan input, bukan kelas fraud ketiga. Kegagalan inference/score tidak valid tetap menghasilkan error pipeline, tanpa mengarang prediksi negatif.
+
+Untuk kembali ke penilaian konteks, review dan eskalasi sebelumnya, gunakan `decision_mode: "tiered"`. Penjelasan urutan kondisi dan level review/eskalasi di bawah khusus untuk mode tersebut. Setelah mengganti mode atau threshold, restart daemon atau hentikan dan mulai run baru di dashboard.
+
+### Mengatur threshold melalui `config.yaml`
+
+Threshold mode bertingkat (`tiered`) dapat diubah pada `model.laya`:
+
+```yaml
+model:
+  laya:
+    # Path bundle, decision_policy_file dan calibration_file tetap digunakan.
+    decision_mode: "tiered"
+    threshold_review: 0.50
+    threshold_escalate: 0.85
+    context_min_confidence: 0.70
+```
+
+Nilai tersebut sekarang aktif sebagai **pengaturan manual untuk pengujian lokal**, bukan threshold yang sudah lolos validasi produksi. `0.50` berarti 50%, bukan angka `50`. Ketiganya harus berupa angka finite dalam rentang 0–1; jika eskalasi diaktifkan, threshold review harus tersedia dan `threshold_review <= threshold_escalate`.
+
+| Pengaturan | Pengaruh ketika disesuaikan |
+|---|---|
+| `threshold_review` | Pada konteks `layanan_normal`, skor di atas/sama dengan ambang menyebabkan review karena konflik. Menurunkan nilai ini membuat lebih banyak prediksi normal masuk review. Kelas `risiko_aktif` tetap direview meskipun skornya di bawah ambang ini |
+| `threshold_escalate` | Pada konteks `risiko_aktif` dengan confidence cukup, skor di atas/sama dengan ambang menyebabkan eskalasi. Menurunkannya membuat eskalasi lebih mudah dicapai |
+| `context_min_confidence` | Confidence konteks di bawah ambang selalu masuk review sebelum kondisi lainnya. Menaikkannya memperbanyak hasil yang perlu diperiksa karena ketidakpastian konteks |
+
+Prioritas konfigurasi: baca policy bundle, lalu timpa tiga key tersebut jika ada pada YAML. **Hapus key** untuk memakai nilai bundle; **`null` eksplisit** menonaktifkan threshold review/eskalasi. Untuk memaksa semua keluaran valid ke review, pilih `decision_mode: tiered`, lalu set **kedua threshold review/eskalasi** ke null:
+
+```yaml
+threshold_review: null
+threshold_escalate: null
+context_min_confidence: 0.70
+```
+
+Untuk mematikan eskalasi saja, pertahankan `threshold_review` numerik dan set `threshold_escalate: null`. Confidence konteks dan `threshold_fraud` tidak boleh null. File policy model, bobot, dan kalibrasi tidak ditulis ulang. `policy_version` pada event/CSV dihitung dari policy efektif, sehingga perubahan threshold menghasilkan versi yang dapat ditelusuri.
+
+Setelah mengedit YAML, restart proses daemon/CLI yang sedang berjalan. Pada dashboard, hentikan run lalu mulai run baru; controller membaca ulang konfigurasi saat memulai child pipeline. Nilai tidak berubah di tengah run. Verifikasi threshold yang sedang dikonfigurasi dengan:
+
+```bash
+python3 ai_fraud_detection_microphone/backend/app/main.py --check-config
+```
+
+Output mencantumkan `effective_thresholds`. Daemon, replay, upload, dan run dashboard memakai override YAML ini. CLI teks `laya_ai_process` memakai override jika dijalankan dengan `--config config/config.yaml`; mode `--checkpoint` tetap memakai policy dari bundle yang dipilih.
+
+### Arti kelas konteks
+
+| `context_status` | Makna | Contoh ucapan dan interpretasi |
+|---|---|---|
+| `risiko_aktif` | Ada permintaan/penawaran aktif yang dinilai mencurigakan oleh model | “Transfer biaya pendaftaran ke rekening pribadi saya, tidak perlu ke kasir.” → indikasi pengalihan pembayaran yang perlu diverifikasi |
+| `layanan_normal` | Layanan resmi, pertanyaan biasa, penolakan, atau edukasi anti-fraud | “Jangan transfer ke rekening pribadi petugas; bayar di kasir resmi.” → larangan melakukan transfer pribadi, bukan permintaan fraud |
+| `laporan_kejadian` | Melaporkan atau mengutip dugaan kejadian sebelumnya | “Kemarin petugas meminta saya mentransfer ke rekening pribadinya, saya ingin mengadu.” → tindak lanjuti laporan; pelapor tidak dianggap sedang meminta fraud |
+| `konteks_kurang` | Bukti percakapan belum cukup untuk menentukan maksud atau kanal | “Pembayarannya nanti lewat sana.” → minta klarifikasi; jangan langsung menyimpulkan aman atau fraud |
+
+Contoh tersebut menjelaskan target interpretasi model. Output aktual dapat berbeda karena kesalahan STT atau prediksi model. Permintaan identitas untuk pendaftaran, refund resmi, dan urgensi medis perlu dinilai sesuai konteks/SOP; kemunculan kata “rekening”, “OTP”, atau “cepat” sendiri bukan keputusan fraud.
+
+### Urutan kondisi mode `tiered` di `assess()`
+
+**Kondisi diperiksa dari atas ke bawah; kondisi pertama yang terpenuhi menentukan hasil.** `score` adalah `fraud_score`, `confidence` adalah `context_confidence`, `review` adalah `threshold_review`, dan `escalate` adalah `threshold_escalate`.
+
+| Urutan | Kondisi | `level` | `reason` dan maksudnya |
+|---|---|---|---|
+| 1 | `confidence < context_min_confidence` (default 0,70) | `PERLU_DICEK` | `confidence_konteks_rendah`: model belum cukup yakin atas kelas konteks yang dipilih |
+| 2 | `context == laporan_kejadian` | `PERLU_DICEK` | `tindak_lanjut_pengaduan`: teruskan pengaduan untuk diperiksa |
+| 3 | `context == konteks_kurang` | `PERLU_DICEK` | `minta_klarifikasi`: tujuan/maksud percakapan belum jelas |
+| 4 | `review is None` (`null` di JSON) | `PERLU_DICEK` | `ambang_belum_memenuhi_target`: belum tersedia ambang review yang diterima dari evaluasi |
+| 5 | `context == layanan_normal` dan `score >= review` | `PERLU_DICEK` | `keluaran_model_bertentangan`: kelas konteks menyebut normal, tetapi skor risiko melewati ambang review |
+| 6a | `context == risiko_aktif`, `escalate` tersedia, dan `score >= escalate` | `ESKALASI` | `indikasi_aktif_untuk_supervisor`: ada indikasi aktif dan skor cukup tinggi menurut policy; minta supervisor memverifikasi |
+| 6b | `context == risiko_aktif`, tetapi kondisi 6a tidak terpenuhi | `PERLU_DICEK` | `indikasi_aktif_perlu_verifikasi`: kelas konteks masih menunjukkan risiko meskipun skor belum mencapai ambang eskalasi |
+| 7 | Tidak ada kondisi di atas yang terpenuhi | `TIDAK_ADA_INDIKASI` | `layanan_normal`: konteks normal, confidence mencukupi, ambang review tersedia, dan skor berada di bawah ambang review |
+
+Batas bersifat eksplisit: confidence **tepat 0,70** tidak terkena kondisi `< 0,70`, dan skor **tepat pada ambang** sudah memenuhi `>=`. Kelas `risiko_aktif` dengan skor di bawah `threshold_review` tetap masuk review pada kondisi 6b. Skor tinggi saja tidak menghasilkan eskalasi jika konteks bukan `risiko_aktif` atau ada kondisi sebelumnya yang sudah terpenuhi.
+
+Sebelum kondisi tersebut, fungsi memvalidasi skor/confidence agar finite dan berada di rentang 0–1, kelas konteks harus dikenal, serta urutan ambang harus benar (`review <= escalate` jika eskalasi tersedia). Nilai yang tidak valid memicu `ValueError`; pada pipeline, kegagalan ini menghentikan worker/proses dengan status error, bukan menghasilkan label “aman”. `null` berarti **ambang tidak tersedia**, berbeda dengan ambang numerik `0`.
+
+### Arti level hasil
+
+| Level | Apakah tindakan dinyatakan fraud? | Tindak lanjut |
+|---|---|---|
+| `TIDAK_ADA_INDIKASI` | Tidak ditemukan indikasi pada bukti yang dianalisis; bukan jaminan bahwa seluruh transaksi/percakapan aman | Lanjutkan layanan sesuai prosedur |
+| `PERLU_DICEK` | Belum ada keputusan pasti. Bisa karena indikasi aktif, laporan, konteks kurang, confidence rendah, konflik output, atau ambang belum tersedia | Periksa `reason`, klarifikasi/verifikasi, atau tindak lanjuti pengaduan |
+| `ESKALASI` | Indikasi aktif memenuhi kondisi eskalasi policy; tetap bukan vonis fraud terkonfirmasi | Minta supervisor memeriksa melalui prosedur resmi |
+
+Karena itu, **`PERLU_DICEK` tidak sama dengan “fraud”**, dan **`ESKALASI` tidak sama dengan “fraud terbukti”**. Dashboard/CSV menampilkan `context_status`, `level`, dan `reason` agar penyebab keputusan dapat ditelusuri. `action_recommendation` ditambahkan oleh `ai_manager.py` setelah hasil `assess()` diterima.
+
+### Maksud persentase skor risiko
+
+`fraud_score` berasal dari `answers['is_fraud']['noul']`, keluaran model untuk pertanyaan: **apakah percakapan memuat permintaan/penawaran aktif yang jelas untuk fraud di layanan resepsionis RS?** Inference memuat `calibration.json` dari bundle model. Nilainya berada di rentang 0–1 dan dashboard mengubahnya menjadi persen:
+
+```text
+Persentase yang ditampilkan = fraud_score × 100
+fraud_score = 0.113 → Skor risiko: 11.3%
+fraud_score = 0.850 → Skor risiko: 85.0%
+```
+
+Skor yang lebih tinggi menunjukkan model memberi dukungan lebih kuat terhadap jawaban “ada indikasi fraud aktif”. Skor tersebut **bukan** persentase jumlah kata mencurigakan, tingkat kerugian, persentase akurasi model, atau persentase kesalahan petugas. Angka **85% tidak membuktikan bahwa 85 dari 100 kejadian serupa benar-benar fraud**; interpretasi probabilitas operasional memerlukan evaluasi kalibrasi pada percakapan nyata yang mewakili penggunaan. Model saat ini masih pilot berbasis data sintetis, sehingga skor dibaca bersama konteks dan alasan keputusan.
+
+`context_confidence` merupakan angka yang berbeda: dukungan model terhadap **kelas konteks terpilih**, memakai `answer_confidence` dari Laya. Contohnya, `context_confidence = 0.89` untuk `layanan_normal` berarti model cukup yakin memilih kelas normal; itu bukan skor risiko fraud 89%. Tidak ada perhitungan rata-rata antara confidence konteks dan skor fraud dalam `assess()`.
+
+**Tidak ada rentang rendah/sedang/tinggi universal yang dikodekan pada program ini.** Pengambilan keputusan memakai ambang bundle dan urutan kondisi di atas. Skor rendah tidak otomatis menjadi `TIDAK_ADA_INDIKASI`; skor tinggi juga tidak otomatis menjadi `ESKALASI`.
+
+### Policy bundle dan konfigurasi mode `tiered`
+
+Bundle `model/laya-fraud-rs-best/decision_policy.json` tetap menyimpan threshold review/eskalasi `null`, confidence minimum 0,70, `production_ready=false`, dan mode `shadow`. Ini mencatat hasil eksperimen model sebelumnya. Jika seluruh override YAML dihapus, nilai bundle berlaku dan seluruh keluaran valid `assess()` kembali masuk `PERLU_DICEK` melalui kondisi 1–4.
+
+Pada konfigurasi `decision_mode: tiered`, YAML menimpa threshold menjadi review 0,50, eskalasi 0,85, dan confidence minimum 0,70. Dengan nilai manual ini dan `context_confidence >= 0.70`, hasilnya mengikuti tabel berikut:
+
+| Skor | Kelas konteks | Level | Alasan |
+|---|---|---|---|
+| 8,0% | `layanan_normal` | `TIDAK_ADA_INDIKASI` | Konteks normal dan skor di bawah 50% |
+| 11,3% | `risiko_aktif` | `PERLU_DICEK` | `indikasi_aktif_perlu_verifikasi`: kelas konteks menunjukkan risiko meskipun skornya rendah |
+| 95,0% | `risiko_aktif` | `ESKALASI` | `indikasi_aktif_untuk_supervisor`: skor melewati ambang 85% |
+| 95,0% | `layanan_normal` | `PERLU_DICEK` | `keluaran_model_bertentangan`: skor tinggi bertentangan dengan kelas normal |
+| 5,0% | `laporan_kejadian` | `PERLU_DICEK` | `tindak_lanjut_pengaduan`: laporan tetap perlu ditindaklanjuti |
+
+Jika confidence konteks di bawah 70%, semua contoh tersebut lebih dahulu masuk `PERLU_DICEK` dengan alasan `confidence_konteks_rendah`. Nilai tepat 85% dapat menjadi eskalasi hanya ketika konteks aktif dan tidak ada kondisi sebelumnya yang terpenuhi. `production_ready` tetap false; pengaturan threshold manual tidak mengubah kualitas prediksi atau status validasi model.
+
+### Review sebelum atau di luar `assess()`
+
+Ada hasil review yang berasal dari komponen lain:
+
+- `kualitas_audio_atau_transkrip_tidak_lengkap`: `ai_manager.py` menemukan gap audio, penolakan sebagian segmen STT, atau teks kosong; model tidak dipanggil untuk keputusan tersebut.
+- `konteks_melebihi_batas_token`: `LayaEngine` mendeteksi teks melampaui budget token; model tidak dipanggil agar konteks tidak dipotong diam-diam.
+
+Pada kedua kasus, skor fraud dapat **tidak tersedia**. Dashboard menampilkan “Tidak tersedia” dan kolom CSV kosong; ini bukan skor 0% dan bukan keputusan tidak fraud.
 
 ## Struktur proyek dan fungsi
 
@@ -198,7 +349,16 @@ ai_fraud_detection_microphone/
 Folder `log/`, cache native, dan artifact pengujian sudah diabaikan oleh `.gitignore`. File `__init__.py` menandai paket Python dan tidak ditampilkan satu per satu pada struktur di atas.
 
 ## Dashboard AI Fraud Detection - Test View
+### Tampilan Dashboard
 ![Hasil Pengujian Dashboard](./docs/dashboard_test_view.png)
+
+### Hasil Test dengan data Fraud
+![Hasil Pengujian dengan data Fraud 1](./docs/test_fraud.png)
+![Hasil Pengujian dengan data Fraud 2](./docs/test_fraud_2.png)
+
+### Hasil Test dengan data No Fraud
+![Hasil Pengujian dengan data No Fraud 1](./docs/test_no_fraud.png)
+![Hasil Pengujian dengan data No Fraud 2](./docs/test_no_fraud_2.png)
 
 ## Jalankan
 

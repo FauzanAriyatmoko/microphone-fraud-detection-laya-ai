@@ -6,6 +6,7 @@ import math
 import os
 from pathlib import Path
 import yaml
+from backend.internal.ai_runtime.ai_fraud_detection import resolve_policy
 
 ROOT = Path(__file__).resolve().parents[3]
 DEFAULTS = {
@@ -95,10 +96,8 @@ def load_config(config_path=None, microphone_path=None, *, root=ROOT, verify_wei
         with (bundle/'model.safetensors').open('rb') as f: actual=hashlib.file_digest(f,'sha256').hexdigest()
         if actual!=manifest['weights_sha256']:raise ValueError('Model weights hash mismatch')
     policy=json.loads(Path(laya['decision_policy_file']).read_text())
-    review=policy.get('threshold_review');escalate=policy.get('threshold_escalate')
-    for value in [review,escalate,policy.get('context_min_confidence',.7)]:
-        if value is not None and (isinstance(value,bool) or not isinstance(value,(int,float)) or not math.isfinite(value) or not 0<=value<=1):raise ValueError('Invalid model threshold')
-    if escalate is not None and (review is None or escalate<review):raise ValueError('Threshold order invalid')
+    policy=resolve_policy(policy,laya)
+    laya['effective_policy']=policy
     calibration=json.loads(Path(laya['calibration_file']).read_text())
     if not isinstance(calibration.get('temperature'),list):raise ValueError('Calibration temperature missing')
     whisper=cfg['model']['whisper']
@@ -107,5 +106,5 @@ def load_config(config_path=None, microphone_path=None, *, root=ROOT, verify_wei
         if not isinstance(whisper.get(key),str) or not whisper[key]:raise ValueError(f'whisper.{key} required')
     cfg['microphone']=mic
     cfg['model_version']=manifest['model_version']
-    cfg['policy_version']=hashlib.sha256(Path(laya['decision_policy_file']).read_bytes()).hexdigest()[:16]
+    cfg['policy_version']=hashlib.sha256(json.dumps(policy,sort_keys=True,allow_nan=False).encode()).hexdigest()[:16]
     return cfg

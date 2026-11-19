@@ -611,7 +611,7 @@
                     </div>
                 </div>
             </div>
-            <p class="footer">Model berjalan dalam mode pengujian. Skor adalah indikasi risiko; keputusan review dapat
+            <p class="footer">Model berjalan dalam mode pengujian. Skor adalah indikasi risiko; klasifikasi mengikuti threshold; keputusan review pada mode tiered dapat
                 terjadi karena konteks atau kualitas audio yang belum cukup. Tampilan menyimpan maksimal 100 utterance;
                 unduhan run dibatasi 2.000 keputusan terbaru. File harian tetap tersedia di direktori log.</p>
         </section>
@@ -659,7 +659,7 @@
             if (event.kind === 'transcription') { card.text.textContent = event.text; card.detail.textContent = 'Speaker: unknown · ' + Number(event.speech_duration_sec || 0).toFixed(1) + ' detik'; }
             else {
                 card.text.textContent = event.transcript || card.text.textContent;
-                card.badge.textContent = event.level || 'PERLU_DICEK'; card.badge.className = 'badge ' + (event.level === 'ESKALASI' ? 'alert' : event.level === 'PERLU_DICEK' ? 'review' : '');
+                card.badge.textContent = event.level || 'PERLU_DICEK'; card.badge.className = 'badge ' + (['ESKALASI','FRAUD'].includes(event.level) ? 'alert' : ['PERLU_DICEK','TIDAK_DAPAT_DINILAI'].includes(event.level) ? 'review' : '');
                 const score = typeof event.fraud_score === 'number' ? (event.fraud_score * 100).toFixed(1) + '%' : 'Tidak tersedia';
                 card.detail.textContent = 'Skor risiko: ' + score + ' · Konteks: ' + (event.context_status || 'tidak tersedia') + ' · ' + (event.reason || '');
                 card.action.textContent = event.action_recommendation || ''; card.action.hidden = !event.action_recommendation;

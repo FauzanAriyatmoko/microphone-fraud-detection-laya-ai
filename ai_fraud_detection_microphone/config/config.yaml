@@ -39,10 +39,21 @@ model:
     beam_size: 2
   laya:
     checkpoint_dir: "./model/laya-fraud-rs-best"
-    # Load learned thresholds and calibration from the same versioned bundle.
+    # Base policy/calibration from the model bundle; thresholds below override its policy.
     # Shared by the daemon and text CLI.
     decision_policy_file: "./model/laya-fraud-rs-best/decision_policy.json"
     calibration_file: "./model/laya-fraud-rs-best/calibration.json"
+    # Binary: score >= threshold_fraud => FRAUD; otherwise TIDAK_FRAUD.
+    decision_mode: "binary"  # "tiered" restores the review/escalation logic.
+    threshold_fraud: 0.65    # 50%; adjust for local testing.
+    # The following three thresholds apply only to decision_mode: tiered.
+    # Manual LOCAL TEST thresholds: 0.50 = 50%, 0.85 = 85% (not validated production values).
+    # Remove a key to inherit the bundle. Explicit null disables review/escalation.
+    threshold_review: 0.50
+    threshold_escalate: 0.85
+    context_min_confidence: 0.70
+    # Require 0 <= review <= escalate <= 1. Confidence must be a number in [0, 1].
+    # In tiered mode, to force review for every result: set BOTH threshold_review and threshold_escalate to null.
 
 # Logging Storage
 storage:

@@ -157,7 +157,7 @@ class PipelineTests(unittest.TestCase):
         manager,engine,pub=self.run_pipeline(True)
         self.assertEqual(engine.inputs,[])
         event=next(e for topic,e in pub.records if topic=='fraud_alert')
-        self.assertEqual(event['level'],'PERLU_DICEK')
+        self.assertEqual(event['level'],'TIDAK_DAPAT_DINILAI')
     def test_worker_failure_returns_without_hanging(self):
         class Broken:
             def transcribe(self,u):raise RuntimeError('failure')

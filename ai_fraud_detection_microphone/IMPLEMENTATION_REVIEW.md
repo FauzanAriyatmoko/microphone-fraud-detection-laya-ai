@@ -95,3 +95,9 @@ Lihat README untuk API/flow, batas riwayat, dan pengujian browser. HTML pengujia
 Dashboard mendukung sumber `upload`: file dikirim ke API loopback dengan token sesi, diperiksa batas 50 MB/60 menit, dan didekode streaming melalui PyAV ke mono PCM 16 kHz sebelum child pipeline dijalankan. Server menggunakan ID unggahan, bukan path dari klien. Satu rekaman valid disimpan sementara untuk pengujian ulang dan dibersihkan ketika diganti atau server ditutup normal. Rekaman diproses sampai EOF; batas durasi run hanya berlaku untuk mikrofon.
 
 Pengujian mencakup WAV stereo 48 kHz, MP3, file rusak, upload tidak lengkap, batas ukuran/durasi, lifecycle/cleanup, dan HTTP. Browser nyata juga menguji file tidak valid, upload WAV, pemrosesan model GPU, reload halaman, unduhan CSV, stop, serta layout desktop/mobile.
+
+## Mode klasifikasi biner
+
+Konfigurasi default kini `model.laya.decision_mode=binary` dan `threshold_fraud=0.50`. Untuk input valid, hanya skor noul menentukan label: >= ambang menjadi FRAUD, di bawahnya TIDAK_FRAUD. Konteks/confidence tetap sebagai diagnostik dan tidak memaksa review. Mode tiered masih tersedia untuk logic review/eskalasi sebelumnya. Input audio tidak lengkap atau token overflow diberi status TIDAK_DAPAT_DINILAI, bukan negatif palsu.
+
+Integrasi mencakup policy, adapter, fallback audio/token, action recommendation, pemilihan audit/topic MQTT, CSV, dashboard dan dokumentasi. Bobot dan kalibrasi model tidak diubah.

@@ -112,7 +112,9 @@ class AIManager:
             started=time.monotonic()
             laya_queue_ms=max(0,(started-transcript.queued_at)*1000) if transcript.queued_at else 0.
             if poor:
-                result={'level':'PERLU_DICEK','reason':'kualitas_audio_atau_transkrip_tidak_lengkap','mode':'shadow','production_ready':False}
+                result={'level':'TIDAK_DAPAT_DINILAI' if self.cfg['model']['laya']['effective_policy'].get('decision_mode')=='binary' else 'PERLU_DICEK',
+                        'is_fraud':None,'decision_mode':self.cfg['model']['laya']['effective_policy'].get('decision_mode','tiered'),
+                        'reason':'kualitas_audio_atau_transkrip_tidak_lengkap','mode':'shadow','production_ready':False}
                 self.history.clear()
             else:
                 while self.history and utterance.ended_at-self.history[0][0]>runtime['context_window_seconds']:self.history.popleft()
@@ -131,14 +133,17 @@ class AIManager:
             elapsed=None if self.replay else max(0,(time.time()-(utterance.last_speech_at or utterance.ended_at))*1000)
             action={'ESKALASI':'Minta supervisor memverifikasi melalui prosedur resmi rumah sakit.',
                     'PERLU_DICEK':'Periksa konteks dan verifikasi melalui petugas berwenang.',
-                    'TIDAK_ADA_INDIKASI':'Lanjutkan layanan sesuai prosedur rumah sakit.'}[result['level']]
-            if result.get('context_status')=='laporan_kejadian':action='Catat pengaduan dan teruskan kepada supervisor untuk ditindaklanjuti.'
-            elif result.get('context_status')=='konteks_kurang':action='Minta klarifikasi tujuan pembayaran atau permintaan sebelum mengambil tindakan.'
+                    'TIDAK_ADA_INDIKASI':'Lanjutkan layanan sesuai prosedur rumah sakit.',
+                    'FRAUD':'Model mendeteksi indikasi fraud; verifikasi melalui prosedur rumah sakit.',
+                    'TIDAK_FRAUD':'Model tidak mendeteksi fraud berdasarkan threshold yang digunakan.',
+                    'TIDAK_DAPAT_DINILAI':'Ulangi rekaman atau periksa kualitas audio/konteks.'}[result['level']]
+            if result.get('decision_mode')!='binary' and result.get('context_status')=='laporan_kejadian':action='Catat pengaduan dan teruskan kepada supervisor untuk ditindaklanjuti.'
+            elif result.get('decision_mode')!='binary' and result.get('context_status')=='konteks_kurang':action='Minta klarifikasi tujuan pembayaran atau permintaan sebelum mengambil tindakan.'
             event=self.event('decision',**common,transcript=public_text(text,mode),evidence_utterance_ids=evidence,
                 **result,action_recommendation=action,latency_ms={'asr':transcript.asr_ms,'laya':inference_ms,'queue':transcript.queue_ms,'laya_queue':laya_queue_ms,
                     'endpointing':max(0,(utterance.ended_at-(utterance.last_speech_at or utterance.ended_at))*1000),'end_to_decision':elapsed})
-            self.audit.write('fraud_incidents' if result['level']!='TIDAK_ADA_INDIKASI' else 'events',event)
-            if result['level']!='TIDAK_ADA_INDIKASI':self.publisher.publish('fraud_alert',event)
+            self.audit.write('fraud_incidents' if result['level'] not in ['TIDAK_ADA_INDIKASI','TIDAK_FRAUD'] else 'events',event)
+            if result['level'] not in ['TIDAK_ADA_INDIKASI','TIDAK_FRAUD']:self.publisher.publish('fraud_alert',event)
             elif self.dry_run:self.publisher.publish('decision',event)
             LOG.info('decision utterance_id=%s level=%s reason=%s',utterance.utterance_id,result['level'],result['reason'])
             with self.stats_lock:
@@ -165,7 +170,7 @@ class AIManager:
             if self.engine is None:
                 from backend.internal.ai_runtime.background_process.laya_ai_process import LayaEngine
                 cfg=self.cfg['model']['laya'];LOG.info('loading_laya')
-                self.engine=LayaEngine(cfg['checkpoint_dir'],cfg['device'],cfg['decision_policy_file'],cfg['calibration_file'])
+                self.engine=LayaEngine(cfg['checkpoint_dir'],cfg['device'],cfg['decision_policy_file'],cfg['calibration_file'],policy=cfg['effective_policy'])
             if self.stop_source.is_set():return
             if self.publisher is None:
                 self.publisher=LocalPublisher(echo=self.dry_run) if self.dry_run or not self.cfg['MQTT']['enabled'] else MQTTPublisher(self.cfg['MQTT'],self.event)

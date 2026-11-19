@@ -69,7 +69,10 @@ def main(argv=None):
             if arg:cfg['model']['whisper'][key]=arg
         if args.check_config:
             print(json.dumps({'valid':True,'model_version':cfg['model_version'],'policy_version':cfg['policy_version'],
-                'config':str(args.config.resolve()),'weights_verified':args.verify_weights},indent=2));return 0
+                'config':str(args.config.resolve()),'weights_verified':args.verify_weights,
+                'decision_mode':cfg['model']['laya']['effective_policy'].get('decision_mode','tiered'),
+                'effective_thresholds':{key:cfg['model']['laya']['effective_policy'].get(key,.7 if key=='context_min_confidence' else .5 if key=='threshold_fraud' else None)
+                    for key in ['threshold_review','threshold_escalate','context_min_confidence','threshold_fraud']}},indent=2));return 0
         if args.check_device:
             from backend.internal.utils.audio import device_info
             try:index,info=device_info(cfg['microphone'])
