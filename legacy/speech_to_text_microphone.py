@@ -1,5 +1,55 @@
+import ctypes
+import ctypes.util
+import os
 import queue
 import sys
+from pathlib import Path
+
+# Load shared libraries CUDA 12 (libcublasLt.so.12 & libcublas.so.12)
+# Diperlukan oleh CTranslate2 / faster-whisper dengan flag RTLD_GLOBAL
+def load_cuda_libraries():
+    search_dirs = [
+        Path(__file__).resolve().parent.parent / ".cuda12",
+        Path(__file__).resolve().parent / ".cuda12",
+    ]
+    for p in sys.path:
+        if "site-packages" in p:
+            search_dirs.append(Path(p) / "nvidia")
+
+    libs_to_load = ["libcublasLt.so.12", "libcublas.so.12"]
+    for lib_name in libs_to_load:
+        for directory in search_dirs:
+            if not directory.exists():
+                continue
+            matches = list(directory.rglob(f"{lib_name}*"))
+            loaded = False
+            for match in matches:
+                if match.is_file():
+                    try:
+                        ctypes.CDLL(str(match), mode=ctypes.RTLD_GLOBAL)
+                        loaded = True
+                        break
+                    except Exception:
+                        pass
+            if loaded:
+                break
+
+load_cuda_libraries()
+
+# Pastikan libportaudio dapat ditemukan oleh sounddevice
+_orig_find_library = ctypes.util.find_library
+def _custom_find_library(name):
+    if name == 'portaudio':
+        candidates = [
+            Path(__file__).resolve().parent.parent / "ai_fraud_detection_microphone" / ".native" / "usr" / "lib" / "x86_64-linux-gnu" / "libportaudio.so.2",
+            Path(__file__).resolve().parent / ".native" / "usr" / "lib" / "x86_64-linux-gnu" / "libportaudio.so.2",
+        ]
+        for c in candidates:
+            if c.exists():
+                return str(c)
+    return _orig_find_library(name)
+ctypes.util.find_library = _custom_find_library
+
 from collections import deque
 import numpy as np
 import sounddevice as sd

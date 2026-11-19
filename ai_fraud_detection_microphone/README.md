@@ -197,6 +197,9 @@ ai_fraud_detection_microphone/
 
 Folder `log/`, cache native, dan artifact pengujian sudah diabaikan oleh `.gitignore`. File `__init__.py` menandai paket Python dan tidak ditampilkan satu per satu pada struktur di atas.
 
+## Dashboard AI Fraud Detection - Test View
+![Hasil Pengujian Dashboard](./docs/dashboard_test_view.png)
+
 ## Jalankan
 
 Dari root workspace:
