@@ -1,0 +1,2 @@
+# Optional browser QA; keep separate from the inference environment.
+playwright==1.65.2

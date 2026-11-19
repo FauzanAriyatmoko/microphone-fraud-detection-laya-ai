@@ -2,6 +2,64 @@
 
 Daemon Ubuntu untuk audio loket → segmentasi → Faster-Whisper → Laya → policy → audit JSONL/CSV → MQTT opsional. Setiap tahap memakai worker terpisah dan antrean terbatas. Mode replay memakai jalur yang sama. Model dimuat sekali saat startup.
 
+## Entrypoint langsung dan dashboard lokal
+
+Bisa menjalankan pipeline langsung dari root workspace menggunakan:
+
+```bash
+python3 ai_fraud_detection_microphone/backend/app/main.py
+```
+
+Entrypoint meneruskan eksekusi ke launcher yang sama dengan service agar package import, interpreter `.env_laya`, CUDA, dan PortAudio konsisten. Gunakan `LAYA_PYTHON=/path/to/python` jika ingin memilih interpreter lain. Mikrofon tetap mengikuti `config/microphone.json`; jalankan `--list-devices` atau `--check-device` untuk memeriksa konfigurasi.
+
+Untuk mengoperasikan pengujian lewat dashboard:
+
+```bash
+python3 ai_fraud_detection_microphone/backend/app/main.py --dashboard
+```
+
+Buka **http://127.0.0.1:8765/dashboard.html** di browser. Port bisa diubah dengan `--port 8766`. Server tetap berjalan sampai dihentikan dengan Ctrl+C; capture baru dimulai setelah tombol **Mulai pengujian** ditekan. Pemuatan model dilakukan pada setiap run, dengan tahap Whisper/Laya ditampilkan di monitor.
+
+Fitur dashboard:
+
+- Pilih perangkat input mikrofon, rekaman contoh `legacy/test_output_new.wav`, atau upload rekaman sendiri.
+- Pilih durasi 5–3.600 detik dan mode teks omit/masked/raw untuk run tersebut.
+- Mulai/hentikan pipeline, lihat transkripsi dan keputusan beserta skor, konteks, alasan, rekomendasi, serta telemetry audio/GPU/antrean.
+- Unduh CSV run aktif/terakhir. Seluruh hasil harian tetap mengikuti konfigurasi pencatatan di direktori log.
+
+### Menguji file rekaman sendiri
+
+1. Pilih **Upload rekaman** pada Sumber audio.
+2. Pilih file, lalu klik **Unggah rekaman**. Tunggu nama file, durasi, dan status **siap diuji** tampil.
+3. Pilih mode teks. Gunakan **Teks lengkap untuk uji sintetis** jika ingin melihat transkripsi.
+4. Klik **Mulai pengujian**. Hasil tampil pada panel percakapan dan tersimpan ke CSV/JSONL; tombol **Unduh CSV** mengekspor keputusan run tersebut.
+
+Format umum: WAV, MP3, M4A, FLAC, OGG, WebM (sesuai codec yang dapat dibaca PyAV). Batas upload **50 MB** dan durasi audio **60 menit**. Server memeriksa isi audio, bukan hanya ekstensi, lalu mengonversi secara streaming ke WAV PCM mono 16 kHz. File rusak, upload tidak lengkap, atau audio yang melewati batas ditolak sebelum model dijalankan.
+
+Rekaman contoh dan upload diproses **hingga akhir file**; pengaturan durasi hanya berlaku untuk capture mikrofon. Tombol Hentikan tetap dapat menghentikan pemrosesan rekaman. Satu rekaman unggahan disimpan sementara agar bisa diuji ulang; file sementara diganti/dihapus ketika unggahan baru berhasil atau server ditutup normal. CSV/JSONL hasil analisis mengikuti retensi log. Setelah server restart, unggah ulang file. Upload baru ditolak ketika pipeline masih aktif.
+
+Dashboard menggunakan **mikrofon komputer tempat Python dijalankan**, melalui sounddevice; tidak meminta izin mikrofon browser. Jika browser dan Python berjalan pada komputer yang berbeda, mikrofon browser tidak dikirim ke server. Jalur mikrofon tetap melewati segmenter, Whisper, Laya, policy, dan audit yang sama dengan daemon.
+
+Dashboard selalu mematikan MQTT untuk run pengujian, melalui `--dry-run-output`, dan tetap menyimpan output lokal. Pilihan teks/perangkat/durasi tidak menulis ulang konfigurasi. `transcript_mode: omit` berarti teks juga disembunyikan di layar; pilih raw untuk kalimat sintetis jika ingin membaca hasil transkripsi. Model yang sedang dipakai dapat mengeluarkan review untuk semua ucapan karena policy pilot; dashboard menampilkan hasil sebenarnya.
+
+`dashboard.html` adalah antarmuka utama. File lama `tests/testing_fraud_detection.html` sekarang menjadi halaman petunjuk ketika dibuka langsung; jika diakses melalui server di `/tests/testing_fraud_detection.html`, alamat itu menampilkan dashboard yang sama. HTML yang dibuka dengan `file://` tidak bisa menjalankan pipeline: gunakan URL server lokal di atas.
+
+HTTP server hanya bind ke loopback. API tidak memakai kredensial MQTT, tidak mengembalikan password konfigurasi, dan memeriksa Host/origin serta token sesi untuk permintaan API. Menutup tab browser tidak menghentikan capture; gunakan tombol Hentikan, tunggu durasi berakhir, atau hentikan server dengan Ctrl+C. Server menghentikan child pipeline saat keluar.
+
+Riwayat API/unduhan dibatasi 2.000 event/keputusan terbaru dan kartu layar dibatasi 100 utterance. Untuk seluruh data dari sesi panjang, gunakan file CSV/JSONL harian. Error perangkat, proses yang gagal, dan pemuatan model ditampilkan di dashboard; detail operasional juga tersedia di terminal Python.
+
+```mermaid
+flowchart LR
+    UI[dashboard.html di browser] -->|Start / Stop| API[API loopback Python]
+    API --> CHILD[Child CLI pipeline]
+    MIC[Mikrofon server / WAV] --> CHILD
+    CHILD --> FLOW[Segmenter → Whisper → Laya → policy]
+    FLOW --> FILE[CSV dan JSONL lokal]
+    FLOW -->|Event JSON stdout| API
+    API -->|Polling status/event| UI
+    API -->|Unduh CSV run| UI
+```
+
 ## Mode lokal tanpa MQTT
 
 Konfigurasi bawaan sekarang menjalankan **mode lokal**. Tidak perlu broker, koneksi MQTT, atau flag tambahan:
@@ -83,6 +141,7 @@ Capture, segmentasi, STT dan Laya berjalan di worker berbeda dengan antrean terb
 ```text
 ai_fraud_detection_microphone/
 ├── README.md                         # Setup, mode lokal/MQTT, alur, pengujian
+├── dashboard.html                    # Antarmuka pengujian lokal tanpa dependency CDN
 ├── PLAN_PROJECT.md                   # Arsitektur dan tahapan proyek
 ├── IMPLEMENTATION_REVIEW.md          # Audit implementasi dan perbandingan rencana
 ├── backend/
@@ -102,8 +161,9 @@ ai_fraud_detection_microphone/
 │       │   ├── config_loader.py      # Baca YAML/JSON, validasi, resolve path/env
 │       │   ├── audio.py              # Capture/replay, PCM, resample dan segmenter
 │       │   ├── logger.py             # Journal JSON, audit JSONL, CSV dan retensi
+│       │   ├── recording.py           # Validasi upload dan normalisasi audio untuk replay
 │       │   └── health.py             # Telemetry GPU dan usia antrean
-│       └── delivery/                 # Placeholder REST; tidak digunakan pipeline
+│       └── delivery/rest_handler.py  # API dashboard, supervisor child process, ekspor CSV
 ├── config/
 │   ├── config.yaml                   # MQTT opsional, CSV, model, queue dan timeout
 │   ├── microphone.json               # Perangkat dan parameter segmentasi
@@ -118,6 +178,10 @@ ai_fraud_detection_microphone/
 ├── log/                              # Output harian lokal dan outbox saat MQTT aktif
 ├── tests/
 │   ├── test_runtime.py               # Audio, config, audit, lifecycle dan watchdog
+│   ├── test_recording_upload.py      # Validasi, konversi dan lifecycle rekaman upload
+│   ├── test_dashboard.py             # API, keamanan loopback, lifecycle dan entrypoint
+│   ├── browser/                      # Playwright smoke test dashboard, opsional
+│   ├── testing_fraud_detection.html   # Petunjuk/alias dashboard pengujian lama
 │   ├── test_local_outputs.py         # CSV dan mode tanpa client/koneksi MQTT
 │   ├── test_mqtt_integration.py       # Integrasi broker loopback
 │   ├── test_gpu_e2e.py               # Integrasi model GPU + broker, opt-in
@@ -235,3 +299,16 @@ LAYA_RUN_GPU_TESTS=1 .env_laya/bin/python -m unittest discover \
 ```
 
 Hasil uji runtime dan perbandingan rencana: [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md). Acuan arsitektur dan roadmap: [PLAN_PROJECT.md](PLAN_PROJECT.md).
+
+## Pengujian dashboard di browser
+
+Unit test dashboard termasuk dalam discovery `tests/`. Untuk pemeriksaan browser nyata yang juga menjalankan rekaman contoh melalui model GPU:
+
+```bash
+python3 -m venv .env_laya_ui
+.env_laya_ui/bin/pip install -r ai_fraud_detection_microphone/tests/browser/requirements.txt
+.env_laya_ui/bin/python -m playwright install chromium
+.env_laya_ui/bin/python ai_fraud_detection_microphone/tests/browser/check_dashboard.py
+```
+
+Script menjalankan server loopback pada port sementara, menguji start/stop, reload saat run, unduhan CSV, dan layout desktop/mobile, lalu menghentikan server. Screenshot dan log disimpan di `tests/artifacts/` yang diabaikan Git.

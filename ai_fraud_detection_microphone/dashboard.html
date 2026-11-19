@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="laya-token" content="__LAYA_TOKEN__">
+    <title>AI Fraud Detection</title>
+    <style>
+        :root {
+            color-scheme: light;
+            --green: #096b50;
+            --deep: #063d30;
+            --mint: #e5f3ed;
+            --ink: #183c32;
+            --muted: #60746e;
+            --line: #d8e5df;
+            --bg: #f3f7f5;
+            --amber: #8a5200
+        }
+
+        * {
+            box-sizing: border-box
+        }
+
+        body {
+            margin: 0;
+            background: var(--bg);
+            color: var(--ink);
+            font: 16px/1.5 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif
+        }
+
+        button,
+        input,
+        select {
+            font: inherit
+        }
+
+        button {
+            cursor: pointer
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: .5
+        }
+
+        button:focus-visible,
+        a:focus-visible,
+        input:focus-visible,
+        select:focus-visible {
+            outline: 3px solid #e6b854;
+            outline-offset: 3px
+        }
+
+        header {
+            background: var(--deep);
+            color: white;
+            padding: 24px max(24px, calc((100vw - 1440px)/2));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 20px
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 14px
+        }
+
+        .logo {
+            font-size: 26px;
+            font-weight: 800;
+            border: 1px solid #79aa97;
+            border-radius: 14px;
+            padding: 5px 14px
+        }
+
+        .brand strong {
+            font-size: 23px
+        }
+
+        .brand small {
+            display: block;
+            color: #b9d9cb;
+            font-size: 14px
+        }
+
+        .headnote {
+            text-align: right;
+            color: #cce5da;
+            font-size: 14px
+        }
+
+        main {
+            max-width: 1440px;
+            margin: 28px auto;
+            padding: 0 24px;
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 24px
+        }
+
+        .panel {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 18px;
+            padding: 24px
+        }
+
+        .controls {
+            align-self: start
+        }
+
+        .eyebrow {
+            font-size: 13px;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            font-weight: 700;
+            color: var(--green)
+        }
+
+        h1 {
+            font-size: 26px;
+            margin: 8px 0
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 0
+        }
+
+        h3 {
+            font-size: 17px;
+            margin: 0
+        }
+
+        .muted {
+            color: var(--muted)
+        }
+
+        .intro {
+            margin: 0 0 22px;
+            color: var(--muted)
+        }
+
+        .field {
+            margin-top: 20px
+        }
+
+        label {
+            display: block;
+            font-weight: 650;
+            margin-bottom: 7px
+        }
+
+        .hint {
+            font-size: 14px;
+            color: var(--muted);
+            margin: 7px 0 0
+        }
+
+        input,
+        select {
+            width: 100%;
+            background: #fff;
+            border: 1px solid #b9cdc2;
+            color: var(--ink);
+            padding: 10px 12px;
+            border-radius: 9px;
+            min-height: 46px
+        }
+
+        select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath fill='none' stroke='%23183c32' stroke-width='2' d='m1 1 5 5 5-5'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 32px
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 24px
+        }
+
+        button,
+        .linkbtn {
+            border: 1px solid var(--line);
+            background: white;
+            color: var(--ink);
+            padding: 10px 16px;
+            border-radius: 10px;
+            min-height: 44px;
+            font-weight: 650
+        }
+
+        .primary {
+            background: var(--green);
+            color: white;
+            border-color: var(--green);
+            flex: 1
+        }
+
+        .stop {
+            border-color: #e1b9b9;
+            color: #a13232
+        }
+
+        .textbtn {
+            font-size: 14px;
+            background: none;
+            border: 0;
+            padding: 0;
+            min-height: 32px;
+            color: var(--green);
+            text-decoration: underline
+        }
+
+        .smallcard {
+            background: var(--bg);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 24px;
+            font-size: 14px
+        }
+
+        .smallcard code {
+            overflow-wrap: anywhere
+        }
+
+        .workspace {
+            min-width: 0
+        }
+
+        .notice {
+            border: 1px solid #e9ce93;
+            background: #fff8e7;
+            border-radius: 12px;
+            padding: 14px 18px;
+            color: #715017;
+            margin-bottom: 18px;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere
+        }
+
+        .notice[hidden] {
+            display: none
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin: 20px 0
+        }
+
+        .stat {
+            background: white;
+            border: 1px solid var(--line);
+            border-radius: 14px;
+            padding: 18px
+        }
+
+        .stat span {
+            font-size: 14px;
+            color: var(--muted);
+            display: block
+        }
+
+        .stat strong {
+            font-size: 32px;
+            line-height: 1.4;
+            font-weight: 700
+        }
+
+        .stat em {
+            font-size: 14px;
+            font-style: normal;
+            color: var(--muted)
+        }
+
+        .topline,
+        .sectionhead {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px
+        }
+
+        .badge {
+            display: inline-block;
+            white-space: nowrap;
+            border-radius: 30px;
+            padding: 5px 12px;
+            background: var(--mint);
+            color: var(--green);
+            font-size: 14px;
+            font-weight: 650
+        }
+
+        .badge.review {
+            background: #fff0ce;
+            color: #895300
+        }
+
+        .badge.alert {
+            background: #ffe5e2;
+            color: #ad3025
+        }
+
+        .badge.off {
+            background: #eaf0ed;
+            color: #536960
+        }
+
+        .statusline {
+            margin: 12px 0 20px;
+            color: var(--muted)
+        }
+
+        .meterbox {
+            padding: 18px;
+            background: var(--bg);
+            border-radius: 12px
+        }
+
+        .meterlabels {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            margin-bottom: 10px
+        }
+
+        .meter {
+            background: #dbe8e0;
+            height: 10px;
+            border-radius: 8px;
+            overflow: hidden
+        }
+
+        .meter div {
+            width: 0;
+            height: 100%;
+            background: var(--green);
+            transition: width .25s
+        }
+
+        .health {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 24px;
+            margin-top: 15px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .feedpanel {
+            margin-top: 24px;
+            padding-bottom: 8px
+        }
+
+        .sectionhead {
+            flex-wrap: wrap
+        }
+
+        .feed {
+            max-height: 650px;
+            overflow: auto;
+            margin-top: 16px
+        }
+
+        .empty {
+            text-align: center;
+            padding: 60px 15px;
+            color: var(--muted)
+        }
+
+        .empty svg {
+            display: block;
+            margin: 0 auto 16px;
+            color: #7da695
+        }
+
+        .item {
+            border-top: 1px solid var(--line);
+            padding: 18px 0
+        }
+
+        .itemhead {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        .item p {
+            margin: 12px 0;
+            white-space: pre-wrap;
+            overflow-wrap: anywhere
+        }
+
+        .item .detail {
+            font-size: 14px;
+            color: var(--muted);
+            margin: 7px 0
+        }
+
+        .item .recommendation {
+            background: var(--bg);
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 14px
+        }
+
+        .footer {
+            margin: 20px 0;
+            color: var(--muted);
+            font-size: 14px
+        }
+
+        .pipeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 18px;
+            font-size: 13px;
+            color: var(--muted)
+        }
+
+        .pipeline span {
+            background: #edf4ef;
+            padding: 4px 9px;
+            border-radius: 6px
+        }
+
+        .online {
+            background: #c6e9d9 !important;
+            color: #07513b !important
+        }
+
+        .buttonrow {
+            display: flex;
+            gap: 10px
+        }
+
+        .devicenote {
+            font-size: 14px;
+            color: var(--muted)
+        }
+
+        @media(max-width:980px) {
+            main {
+                grid-template-columns: 280px 1fr;
+                padding: 0 16px;
+                gap: 16px
+            }
+
+            .panel {
+                padding: 18px
+            }
+
+            .stats {
+                gap: 8px
+            }
+
+            .stat {
+                padding: 12px
+            }
+        }
+
+        @media(max-width:740px) {
+            header {
+                padding: 18px
+            }
+
+            .headnote {
+                display: none
+            }
+
+            main {
+                display: block;
+                margin: 18px auto
+            }
+
+            .controls {
+                margin-bottom: 20px
+            }
+
+            .stats {
+                margin: 16px 0
+            }
+
+            .stat strong {
+                font-size: 26px
+            }
+
+            .actions {
+                position: static
+            }
+
+            .brand strong {
+                font-size: 20px
+            }
+
+            .feed {
+                max-height: 500px
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div class="brand">
+            <div class="logo" aria-hidden="true">F</div>
+            <div><strong>AI Fraud Detection</strong><small>Hospital Reception · Local Testing Lab</small></div>
+        </div>
+        <div class="headnote">Pengujian mikrofon &amp; deteksi risiko<br>Localhost · CSV + JSONL · Tanpa MQTT</div>
+    </header>
+    <main>
+        <aside class="panel controls">
+            <div class="eyebrow">Konfigurasi pengujian</div>
+            <h1>Mulai dari suara.</h1>
+            <p class="intro">Jalankan pipeline lokal dan amati keputusan Laya secara langsung.</p>
+            <div class="field"><label for="source">Sumber audio</label><select id="source">
+                    <option value="microphone">Mikrofon komputer server</option>
+                    <option value="sample">Rekaman contoh legacy</option>
+                    <option value="upload">Upload rekaman</option>
+                </select>
+                <p id="sourceHint" class="hint">Mikrofon ditangkap oleh Python pada komputer yang menjalankan server ini.</p>
+            </div>
+            <div id="deviceField" class="field"><label for="device">Perangkat input</label><select id="device">
+                    <option value="">Memuat perangkat…</option>
+                </select><button class="textbtn" id="refresh" type="button">Muat ulang perangkat</button>
+                <p class="hint" id="deviceNote">Pilih mikrofon yang sesuai.</p>
+            </div>
+            <div id="uploadField" class="field" hidden>
+                <label for="recording">File rekaman</label>
+                <input id="recording" type="file" accept=".wav,.mp3,.m4a,.flac,.ogg,.webm,.mp4,.aac,audio/*">
+                <p class="hint">WAV, MP3, M4A, FLAC, OGG, WebM. Maksimal 50 MB dan 60 menit. Audio diproses sampai file selesai.</p>
+                <button id="upload" type="button" style="margin-top:10px" disabled>Unggah rekaman</button>
+                <p id="uploadInfo" class="hint" aria-live="polite">Pilih file, lalu unggah sebelum memulai pengujian.</p>
+            </div>
+            <div id="durationField" class="field"><label for="duration">Durasi pengujian (detik)</label><input id="duration" type="number"
+                    min="5" max="3600" value="120">
+                <p class="hint">Dimulai setelah model dan audio siap. Rekaman contoh selesai saat file habis.</p>
+            </div>
+            <div class="field"><label for="privacy">Teks pada hasil pengujian</label><select id="privacy">
+                    <option value="omit">Sembunyikan teks (omit)</option>
+                    <option value="masked">Masking angka / kontak</option>
+                    <option value="raw">Teks lengkap untuk uji sintetis</option>
+                </select>
+                <p class="hint">Pilihan berlaku pada layar, CSV, dan JSONL untuk run ini. Konfigurasi file tidak diubah.
+                </p>
+            </div>
+            <div class="actions"><button class="primary" id="start" disabled>Mulai pengujian</button><button
+                    class="stop" id="stop" disabled>Hentikan</button></div>
+            <div class="smallcard"><strong>Output lokal</strong>
+                <p>Hasil tetap disimpan ke CSV harian dan audit JSONL sesuai konfigurasi.</p><code
+                    id="outputPath">Memuat lokasi output…</code>
+                <p id="modelInfo" class="muted">Memuat versi model…</p>
+            </div>
+        </aside>
+        <section class="workspace" aria-label="Hasil pengujian">
+            <div class="notice" id="notice" role="status" hidden></div>
+            <div class="panel">
+                <div class="topline">
+                    <h2>Monitor pipeline</h2><span id="state" class="badge off">Menghubungkan</span>
+                </div>
+                <div id="stage" class="statusline" aria-live="polite">Menghubungkan ke server lokal…</div>
+                <div class="meterbox">
+                    <div class="meterlabels"><span>Level input audio</span><span id="rms">Menunggu audio</span></div>
+                    <div class="meter" role="meter" aria-label="RMS volume audio" aria-valuemin="0" aria-valuemax="1"
+                        aria-valuenow="0" id="meter">
+                        <div id="meterFill"></div>
+                    </div>
+                    <p class="hint">Nilai RMS diperbarui bersama telemetry, bukan visualisasi waveform.</p>
+                </div>
+                <div class="health"><span>ASR: <strong id="asr">—</strong></span><span>Laya: <strong
+                            id="laya">—</strong></span><span>GPU: <strong id="gpu">—</strong></span><span>Queue: <strong
+                            id="queues">—</strong></span></div>
+                <div class="pipeline" aria-label="Alur pipeline"><span>Audio</span><span>Segmenter +
+                        VAD</span><span>Whisper STT</span><span>Laya + policy</span><span>CSV / JSONL</span></div>
+            </div>
+            <div class="stats">
+                <div class="stat"><span>Transkripsi</span><strong id="transcripts">0</strong><em> utterance</em></div>
+                <div class="stat"><span>Keputusan</span><strong id="decisions">0</strong><em> hasil</em></div>
+                <div class="stat"><span>CSV run ini</span><strong id="csvRows">0</strong><em> baris tersedia</em></div>
+            </div>
+            <div class="panel feedpanel">
+                <div class="sectionhead">
+                    <div>
+                        <h2>Hasil percakapan</h2>
+                        <div class="hint">Transkripsi, konteks, dan alasan keputusan dari model lokal.</div>
+                    </div>
+                    <div class="buttonrow"><button id="download" disabled>Unduh CSV</button></div>
+                </div>
+                <div id="feed" class="feed">
+                    <div class="empty" id="empty"><svg width="44" height="44" viewBox="0 0 48 48" fill="none"
+                            aria-hidden="true">
+                            <rect x="17" y="5" width="14" height="26" rx="7" stroke="currentColor" stroke-width="2" />
+                            <path d="M11 23v2a13 13 0 0 0 26 0v-2M24 38v6M17 44h14" stroke="currentColor"
+                                stroke-width="2" />
+                        </svg><strong>Siap mendengar percakapan pertama</strong>
+                        <p>Pilih mikrofon, rekaman contoh, atau upload rekaman, lalu mulai pengujian.</p>
+                    </div>
+                </div>
+            </div>
+            <p class="footer">Model berjalan dalam mode pengujian. Skor adalah indikasi risiko; keputusan review dapat
+                terjadi karena konteks atau kualitas audio yang belum cukup. Tampilan menyimpan maksimal 100 utterance;
+                unduhan run dibatasi 2.000 keputusan terbaru. File harian tetap tersedia di direktori log.</p>
+        </section>
+    </main>
+    <script>
+        'use strict';
+        const $ = id => document.getElementById(id);
+        const token = document.querySelector('meta[name="laya-token"]').content;
+        let apiReady = false, busy = false, currentState = 'idle', cursor = 0, runId = null, polling = false, generation = 0, uploadId = null, maxUploadBytes = 50 * 1024 * 1024;
+        const cards = new Map();
+        function notice(message) { $('notice').hidden = !message; $('notice').textContent = message || ''; }
+        async function request(path, body) {
+            const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 8000);
+            try {
+                const response = await fetch(path, { method: body === undefined ? 'GET' : 'POST', headers: { 'X-Laya-Token': token, ...(body === undefined ? {} : { 'Content-Type': 'application/json' }) }, body: body === undefined ? undefined : JSON.stringify(body), signal: controller.signal });
+                if (path.endsWith('.csv')) { if (!response.ok) throw new Error('Gagal mengunduh CSV'); return await response.blob(); }
+                const data = await response.json(); if (!response.ok) throw new Error(data.error || 'Permintaan gagal'); return data;
+            } finally { clearTimeout(timeout); }
+        }
+        function controls() {
+            const active = ['starting', 'running', 'stopping'].includes(currentState);
+            $('start').disabled = !apiReady || busy || active || ($('source').value === 'microphone' && !$('device').value) || ($('source').value === 'upload' && !uploadId);
+            $('stop').disabled = !apiReady || busy || !['starting', 'running'].includes(currentState);
+            for (const id of ['source', 'device', 'duration', 'privacy', 'refresh', 'recording']) $(id).disabled = busy || active;
+            $('deviceField').hidden = $('source').value !== 'microphone';
+            $('uploadField').hidden = $('source').value !== 'upload';
+            $('sourceHint').textContent = {microphone:'Mikrofon ditangkap oleh Python pada komputer yang menjalankan server ini.', sample:'Uji pipeline dengan rekaman contoh yang tersedia pada server.', upload:'Unggah rekaman dari perangkat Anda untuk diuji oleh pipeline lokal.'}[$('source').value];
+            $('durationField').hidden = $('source').value !== 'microphone';
+            $('upload').disabled = !apiReady || busy || active || !$('recording').files.length;
+        }
+        const labels = { idle: 'Siap', starting: 'Memuat model', running: 'Berjalan', stopping: 'Menghentikan', stopped: 'Selesai', error: 'Gagal' };
+        function timestamp(value) { return value ? new Date(value).toLocaleTimeString('id-ID') : ''; }
+        function node(tag, className, text) { const n = document.createElement(tag); if (className) n.className = className; if (text !== undefined) n.textContent = text; return n; }
+        function renderEvent(event) {
+            if (!['transcription', 'decision'].includes(event.kind)) return;
+            const id = event.utterance_id; if (!id) return;
+            if (!$('empty').hidden) $('empty').hidden = true;
+            let card = cards.get(id);
+            if (!card) {
+                const el = node('article', 'item'), head = node('div', 'itemhead'), time = node('span', '', timestamp(event.timestamp)), badge = node('span', 'badge off', 'Transkripsi'); head.append(time, badge);
+                const text = node('p', '', ''), detail = node('div', 'detail', ''), action = node('div', 'recommendation', ''); action.hidden = true;
+                el.append(head, text, detail, action); $('feed').prepend(el); card = { el, badge, text, detail, action }; cards.set(id, card);
+                if (cards.size > 100) { const first = cards.keys().next().value; cards.get(first).el.remove(); cards.delete(first); }
+            }
+            if (event.kind === 'transcription') { card.text.textContent = event.text; card.detail.textContent = 'Speaker: unknown · ' + Number(event.speech_duration_sec || 0).toFixed(1) + ' detik'; }
+            else {
+                card.text.textContent = event.transcript || card.text.textContent;
+                card.badge.textContent = event.level || 'PERLU_DICEK'; card.badge.className = 'badge ' + (event.level === 'ESKALASI' ? 'alert' : event.level === 'PERLU_DICEK' ? 'review' : '');
+                const score = typeof event.fraud_score === 'number' ? (event.fraud_score * 100).toFixed(1) + '%' : 'Tidak tersedia';
+                card.detail.textContent = 'Skor risiko: ' + score + ' · Konteks: ' + (event.context_status || 'tidak tersedia') + ' · ' + (event.reason || '');
+                card.action.textContent = event.action_recommendation || ''; card.action.hidden = !event.action_recommendation;
+            }
+        }
+        function update(data) {
+            if (data.run_id !== runId) { runId = data.run_id; cards.clear(); document.querySelectorAll('.item').forEach(n => n.remove()); $('empty').hidden = false; }
+            currentState = data.state; apiReady = true;
+            if(data.upload && !$('recording').files.length) showUpload(data.upload);
+            if (['starting', 'running', 'stopping'].includes(currentState) && data.options) { $('source').value = data.options.source; $('privacy').value = data.options.transcript_mode; $('duration').value = data.options.duration; if (data.options.device_index !== null) $('device').value = String(data.options.device_index); }
+            $('state').textContent = labels[data.state] || data.state; $('state').className = 'badge ' + (data.state === 'error' ? 'alert' : data.state === 'running' ? '' : 'off'); $('stage').textContent = data.stage;
+            $('transcripts').textContent = data.counts.transcription; $('decisions').textContent = data.counts.decision; $('csvRows').textContent = data.csv_rows_available; $('download').disabled = !data.csv_rows_available;
+            for (const item of data.events) renderEvent(item.event); cursor = data.cursor;
+            if (data.error) notice(data.error); else if (data.history_truncated) notice('Sebagian event lama tidak lagi tersedia pada tampilan. Lihat file harian untuk hasil lengkap.');
+            const t = data.telemetry;
+            if (t) {
+                const rms = Number(t.audio?.rms || 0); $('rms').textContent = rms.toFixed(4) + ' RMS'; $('meterFill').style.width = Math.min(100, rms * 500) + '%'; $('meter').setAttribute('aria-valuenow', rms);
+                $('asr').textContent = Number(t.counters?.asr_ms || 0).toFixed(0) + ' ms'; $('laya').textContent = Number(t.counters?.laya_ms || 0).toFixed(0) + ' ms';
+                $('gpu').textContent = t.gpu?.devices?.length ? t.gpu.devices[0].temperature_c + ' °C' : 'Tidak tersedia';
+                $('queues').textContent = ['audio', 'utterance', 'text'].map(k => t.queues?.[k]?.depth ?? 0).join(' / ');
+            }
+            controls();
+        }
+        async function devices() {
+            $('refresh').disabled = true;
+            try {
+                const data = await request('/api/devices'); const prior = $('device').value; $('device').replaceChildren();
+                for (const d of data.devices) { const opt = node('option', '', d.name + ' · ' + d.host_api + ' (#' + d.index + ')'); opt.value = String(d.index); $('device').append(opt); }
+                if (!data.devices.length) { const opt = node('option', '', 'Tidak ada input audio'); opt.value = ''; $('device').append(opt); }
+                if ([...$('device').options].some(o => o.value === prior)) $('device').value = prior;
+                $('deviceNote').textContent = data.devices.length + ' perangkat input · sample rate capture mengikuti konfigurasi.';
+            } catch (error) { $('device').replaceChildren(); const opt = node('option', '', 'Perangkat tidak tersedia'); opt.value = ''; $('device').append(opt); notice(error.message + ' Anda dapat memakai rekaman contoh.'); }
+            controls();
+        }
+        async function poll() {
+            if (polling || busy) return; polling = true; const version = generation;
+            try { const data = await request('/api/status?after=' + cursor); if (version === generation) update(data); }
+            catch (error) { apiReady = false; $('state').textContent = 'Server terputus'; $('state').className = 'badge alert'; notice('Server lokal tidak terhubung. Pastikan Python masih berjalan.'); controls(); }
+            finally { polling = false; }
+        }
+        $('start').addEventListener('click', async () => {
+            const duration = $('source').value === 'microphone' ? Number($('duration').value) : 120; if (!Number.isInteger(duration) || duration < 5 || duration > 3600) { notice('Durasi harus 5–3600 detik.'); return; }
+            busy = true; generation++; controls(); notice('');
+            try { const data = await request('/api/start', { source: $('source').value, device_index: Number($('device').value), duration, upload_id: uploadId, transcript_mode: $('privacy').value }); update(data); }
+            catch (error) { notice(error.message); } finally { busy = false; controls(); }
+        });
+        function showUpload(data) {
+            uploadId = data.upload_id;
+            $('uploadInfo').textContent = data.name + ' · ' + Number(data.duration_seconds).toFixed(1) + ' detik · siap diuji (mono 16 kHz)';
+        }
+        $('recording').addEventListener('change', () => {
+            uploadId = null;
+            const file = $('recording').files[0];
+            $('uploadInfo').textContent = file ? file.name + ' · ' + (file.size / 1024 / 1024).toFixed(2) + ' MB · belum diunggah' : 'Pilih file rekaman.';
+            controls();
+        });
+        $('upload').addEventListener('click', async () => {
+            const file = $('recording').files[0];
+            if (!file || file.size < 1 || file.size > maxUploadBytes) { notice('Pilih rekaman berukuran 1 byte hingga 50 MB.'); return; }
+            busy = true; generation++; uploadId = null; controls(); notice('');
+            $('uploadInfo').textContent = 'Mengunggah dan menyiapkan audio…';
+            const controller = new AbortController(), timeout = setTimeout(() => controller.abort(), 120000);
+            try {
+                const response = await fetch('/api/upload', { method: 'POST', headers: { 'X-Laya-Token': token, 'X-File-Name': encodeURIComponent(file.name), 'Content-Type': 'application/octet-stream' }, body: file, signal: controller.signal });
+                const data = await response.json();
+                if (!response.ok) throw new Error(data.error || 'Upload gagal');
+                showUpload(data);
+            } catch (error) {
+                $('uploadInfo').textContent = 'Upload belum berhasil. Pilih ulang file atau coba lagi.';
+                notice(error.name === 'AbortError' ? 'Upload melewati batas waktu. Periksa status dan coba lagi.' : error.message);
+            } finally { clearTimeout(timeout); busy = false; controls(); }
+        });
+        $('stop').addEventListener('click', async () => { busy = true; generation++; controls(); try { update(await request('/api/stop', {})); } catch (error) { notice(error.message); } finally { busy = false; controls(); } });
+        $('source').addEventListener('change', controls); $('device').addEventListener('change', controls); $('refresh').addEventListener('click', devices);
+        $('download').addEventListener('click', async () => { try { const blob = await request('/api/export.csv'), url = URL.createObjectURL(blob), a = node('a'); a.href = url; a.download = 'laya-testing-' + (runId || 'local') + '.csv'; a.click(); setTimeout(() => URL.revokeObjectURL(url), 60000); } catch (error) { notice(error.message); } });
+        async function init() {
+            if (location.protocol === 'file:' || token === '__LAYA_TOKEN__') {
+                notice('Buka dashboard melalui server lokal:\npython3 ai_fraud_detection_microphone/backend/app/main.py --dashboard\nLalu kunjungi http://127.0.0.1:8765/dashboard.html'); $('state').textContent = 'Server diperlukan'; return;
+            }
+            try {
+                const config = await request('/api/config'); maxUploadBytes = config.max_upload_bytes || maxUploadBytes; $('privacy').value = config.transcript_mode; $('outputPath').textContent = config.log_dir; $('modelInfo').textContent = config.model_version;
+                if (!config.decision_csv_enabled) notice('Ekspor CSV harian dimatikan pada konfigurasi. Unduhan sesi dashboard tetap tersedia.');
+                if (!config.sample_available) $('source').options[1].disabled = true;
+                await devices(); if (config.device_index !== null && [...$('device').options].some(o => o.value === String(config.device_index))) $('device').value = String(config.device_index);
+                await poll(); setInterval(poll, 1000);
+            } catch (error) { notice(error.message); $('state').textContent = 'Gagal terhubung'; }
+        }
+        init();
+    </script>
+</body>
+
+</html>

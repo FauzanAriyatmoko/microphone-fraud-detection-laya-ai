@@ -83,3 +83,15 @@ Langkah deployment dan seluruh perintah reproduksi tersedia di [README.md](READM
 Konfigurasi bawaan sekarang `MQTT.enabled=false` dan `storage.decision_csv_enabled=true`. Seluruh keputusan diekspor ke CSV harian pada direktori log, termasuk keputusan normal dan fallback kualitas audio. Audit JSONL tetap berjalan; aturan transkrip dan retensi juga berlaku pada CSV. Mode MQTT dapat diaktifkan bersamaan dengan ekspor lokal. README memuat konfigurasi, struktur proyek dan logic flow terbaru.
 
 Verifikasi: 26 pengujian runtime/broker lulus (GPU opt-in dilewati pada discovery biasa), replay GPU tanpa MQTT menghasilkan dua baris CSV, dan pengujian GPU end-to-end dengan broker lokal dijalankan terpisah. Test khusus memastikan tidak ada konstruksi client MQTT/outbox dalam mode lokal, header CSV tidak berulang setelah restart, kolom teks Unicode/multiline terbaca benar, serta retensi dan pengaturan ekspor bekerja.
+
+## Pembaruan dashboard lokal
+
+Entrypoint mendukung `python3 ai_fraud_detection_microphone/backend/app/main.py` melalui launcher yang sama. Flag `--dashboard` menyediakan UI lokal di loopback dengan start/stop pipeline, pemilihan mikrofon server/rekaman contoh, status pemuatan model, hasil transkripsi/keputusan, telemetry, dan CSV download. `backend/internal/delivery/rest_handler.py` sekarang diimplementasikan sebagai controller/API opsional; daemon biasa tetap dapat berjalan tanpa HTTP. Dashboard menonaktifkan MQTT untuk run pengujian dan tidak mengubah konfigurasi permanen.
+
+Lihat README untuk API/flow, batas riwayat, dan pengujian browser. HTML pengujian WebRTC lama kini mengarahkan pengguna ke dashboard Laya; server melayani alias URL lama dengan antarmuka yang sama.
+
+## Upload rekaman pada dashboard
+
+Dashboard mendukung sumber `upload`: file dikirim ke API loopback dengan token sesi, diperiksa batas 50 MB/60 menit, dan didekode streaming melalui PyAV ke mono PCM 16 kHz sebelum child pipeline dijalankan. Server menggunakan ID unggahan, bukan path dari klien. Satu rekaman valid disimpan sementara untuk pengujian ulang dan dibersihkan ketika diganti atau server ditutup normal. Rekaman diproses sampai EOF; batas durasi run hanya berlaku untuk mikrofon.
+
+Pengujian mencakup WAV stereo 48 kHz, MP3, file rusak, upload tidak lengkap, batas ukuran/durasi, lifecycle/cleanup, dan HTTP. Browser nyata juga menguji file tidak valid, upload WAV, pemrosesan model GPU, reload halaman, unduhan CSV, stop, serta layout desktop/mobile.

@@ -8,7 +8,7 @@ P0 selesai dan P1 telah dijalankan: tiga seed × delapan epoch, kalibrasi terpis
 
 Status runtime diperbarui 19 November 2026: komponen P3–P7 sudah diimplementasikan, dan jalur WAV → Faster-Whisper Large-v3 → Laya → audit → MQTT broker lokal telah lulus uji dengan GPU asli. P8 memiliki template/installer systemd tervalidasi; pemasangan OS, mikrofon target, broker target dan soak test masih perlu diverifikasi di lingkungan deployment. P2/P9 tetap menjadi pekerjaan data/pilot, dan tidak menghambat penyelesaian pipeline sesuai arahan pengguna.
 
-Dokumen `../laya_ai_fraud_detection_planning.md` sudah dibandingkan. Ide action recommendation dan telemetry device/GPU digabung ke implementasi. Detail perbandingan, bukti, dan batas pengujian: [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md). Panduan menjalankan: [README.md](README.md). Kualitas model historis tetap tercatat di [laporan training](training/evaluation/RESULTS.md).
+Dokumen `../laya_ai_fraud_detection_planning.md` sudah dibandingkan. Ide action recommendation dan telemetry device/GPU digabung ke implementasi. Detail perbandingan, bukti, dan batas pengujian: [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md). Panduan menjalankan: [README.md](README.md). Dashboard pengujian lokal kini tersedia melalui `python3 backend/app/main.py --dashboard` dari root proyek; API loopback mengontrol child pipeline yang sama dan menampilkan event serta unduhan CSV. Kualitas model historis tetap tercatat di [laporan training](training/evaluation/RESULTS.md).
 
 ## 1. Tujuan dan batas keputusan
 
@@ -46,7 +46,7 @@ Tabel berikut adalah kondisi pada audit awal, bukan status implementasi terbaru.
 | `backend/internal/ai_runtime/background_process/speech_to_text.py` | Masih kosong; akan memisahkan segmentasi audio dan Whisper |
 | `backend/internal/client/__init__.py`, `mqtt_client.py` | Paket dan klien MQTT yang masih perlu diimplementasikan |
 | `backend/internal/utils/__init__.py`, `audio.py`, `config_loader.py`, `logger.py` | Paket dan utilitas runtime yang masih perlu diimplementasikan |
-| `backend/internal/delivery/__init__.py`, `rest_handler.py` | Placeholder. REST tidak dibutuhkan pada MVP headless MQTT; tidak ditambahkan ke jalur kritis |
+| `backend/internal/delivery/__init__.py`, `rest_handler.py` | Pada audit awal placeholder; kini HTTP/API dashboard lokal opsional. Daemon tanpa dashboard tetap berjalan langsung |
 | `config/config.yaml` | MQTT, model, threshold dan logging sudah ada. Semula bernilai `production`; kini `shadow` dan menunjuk policy/kalibrasi dalam model bundle, menggantikan threshold tebakan |
 | `config/microphone.json` | 16 kHz mono, index 9, blok 100 ms, hening 600 ms, prebuffer 400 ms, maksimum 15 s; perlu validasi perangkat |
 | `model/` | Destinasi paket model terpilih. Status kelayakan disimpan dalam manifest/policy |

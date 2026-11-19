@@ -139,6 +139,7 @@ class AIManager:
                     'endpointing':max(0,(utterance.ended_at-(utterance.last_speech_at or utterance.ended_at))*1000),'end_to_decision':elapsed})
             self.audit.write('fraud_incidents' if result['level']!='TIDAK_ADA_INDIKASI' else 'events',event)
             if result['level']!='TIDAK_ADA_INDIKASI':self.publisher.publish('fraud_alert',event)
+            elif self.dry_run:self.publisher.publish('decision',event)
             LOG.info('decision utterance_id=%s level=%s reason=%s',utterance.utterance_id,result['level'],result['reason'])
             with self.stats_lock:
                 self.counters.update(asr_ms=transcript.asr_ms,laya_ms=inference_ms,queue_ms=transcript.queue_ms,end_to_decision_ms=elapsed)

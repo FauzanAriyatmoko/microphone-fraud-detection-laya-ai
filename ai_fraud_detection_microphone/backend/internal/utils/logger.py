@@ -49,6 +49,14 @@ def csv_value(value):
     return value
 
 
+def decision_csv_row(event):
+    row={key:event.get(key) for key in CSV_FIELDS}
+    row['evidence_utterance_ids']=json.dumps(event.get('evidence_utterance_ids',[]),ensure_ascii=False)
+    for key,value in event.get('latency_ms',{}).items():
+        if key+'_ms' in CSV_FIELDS:row[key+'_ms']=value
+    return {key:csv_value(value) for key,value in row.items()}
+
+
 class AuditLogger:
     def __init__(self, directory, retention_days=30, decision_csv_enabled=False):
         self.root=Path(directory).resolve();self.root.mkdir(parents=True,exist_ok=True,mode=0o700)
@@ -80,11 +88,7 @@ class AuditLogger:
             writer=csv.DictWriter(file,fieldnames=CSV_FIELDS)
             if os.fstat(file.fileno()).st_size==0:
                 writer.writeheader()
-            row={key:event.get(key) for key in CSV_FIELDS}
-            row['evidence_utterance_ids']=json.dumps(event.get('evidence_utterance_ids',[]),ensure_ascii=False)
-            for key,value in event.get('latency_ms',{}).items():
-                if key+'_ms' in CSV_FIELDS:row[key+'_ms']=value
-            writer.writerow({key:csv_value(value) for key,value in row.items()})
+            writer.writerow(decision_csv_row(event))
             file.flush()
             os.fsync(file.fileno())
 

@@ -1,6 +1,7 @@
 # Python 3.12; CUDA-enabled torch must be installed for the target GPU first.
 laya==0.4.35
 faster-whisper==1.2.1
+av==19.0.2  # Audio upload decoding and resampling
 ctranslate2==4.9.0
 sounddevice==0.5.6
 soundfile==0.14.0
