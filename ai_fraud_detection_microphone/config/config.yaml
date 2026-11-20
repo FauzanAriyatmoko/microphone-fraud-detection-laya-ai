@@ -14,7 +14,7 @@ MQTT:
   password: "137450"
   clean_session: true
   keep_alive: 60
-  base_topic: "hermina/1/hydrant"
+  base_topic: "hermina/1/fraud"
   qos: 1  # 0=AtMostOnce, 1=AtLeastOnce, 2=ExactlyOnce
   retain: false
   use_tls: false

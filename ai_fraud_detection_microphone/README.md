@@ -403,6 +403,8 @@ File `__init__.py` tidak ditampilkan satu per satu. Log, artifact pengujian, vir
 
 ## Training dan laporan model
 
+Lihat [Penjelasan model Laya dan kualitas evaluasinya](penjelasan_model.md) untuk arsitektur model, dataset, parameter training, arti metrik (accuracy, loss, precision, recall, F1, TP/TN/FP/FN), hasil evaluasi, pengaruh threshold, dan keterbatasan model.
+
 Dataset v3 tersedia dalam split train 1.200, calibration 240, validation 400, dan test 80 contoh sintetis. Generator berada di `training/scripts/gen_fraud_dataset_v3.py`, training di `train.py`/`train_all.sh`, dan evaluasi/seleksi di `training/evaluation/`. Runner menolak menimpa direktori checkpoint yang sudah ada.
 
 [Laporan training](training/evaluation/RESULTS.md) adalah **snapshot eksperimen sebelumnya** dengan ambang diagnostik 0,50 dan policy bundle saat itu. Laporan tersebut tidak berarti runtime sekarang selalu review dan tidak menjadi pengukuran hasil threshold 65%. Model terpilih tetap seed 2; perubahan runtime tidak menjalankan training baru. Screenshot pengujian juga bukan pengganti evaluasi akurasi pada data independen.
@@ -410,6 +412,27 @@ Dataset v3 tersedia dalam split train 1.200, calibration 240, validation 400, da
 [PLAN_PROJECT.md](PLAN_PROJECT.md) memuat roadmap; [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md) memuat audit implementasi. Ketersediaan mikrofon target, akses broker target, pemasangan service, dan soak test perlu diverifikasi pada lingkungan deployment.
 
 ## Pengujian
+
+### Uji kalimat langsung tanpa STT
+
+Script terpisah [tests/try_laya_text.py](tests/try_laya_text.py) memuat model dan kalibrasi yang sama dengan project. Threshold serta mode keputusan dibaca dari `config/config.yaml`, bukan angka yang ditanam dalam script. Tidak menjalankan mikrofon, Whisper, MQTT, atau menulis log percakapan project.
+
+Dari root repository, jalankan mode interaktif (model dimuat satu kali):
+
+```bash
+python3 ai_fraud_detection_microphone/tests/try_laya_text.py
+```
+
+Masukkan kalimat lalu Enter; ketik `/exit` untuk keluar. Setiap kalimat dinilai mandiri, tanpa riwayat input sebelumnya. Untuk satu kalimat dan hasil JSON:
+
+```bash
+python3 ai_fraud_detection_microphone/tests/try_laya_text.py --text "Silakan bayar melalui kasir resmi rumah sakit." --json
+```
+
+Gunakan `--device cpu` bila ingin menjalankan pada CPU, atau `--config /path/config.yaml` untuk konfigurasi lain. Script otomatis memakai `.env_laya/bin/python` bila tersedia; `LAYA_PYTHON` dapat memilih interpreter lain. Dependensi model harus terpasang pada interpreter tersebut.
+
+Pada mode binary, skor `>= threshold_fraud` menghasilkan `FRAUD`, selebihnya `TIDAK_FRAUD`. Input terlalu panjang dapat menghasilkan `TIDAK_DAPAT_DINILAI`. Jika konfigurasi diubah ke tiered, script juga mengikuti keputusan tiered agar tetap sama dengan project. Hasil ini adalah prediksi model pilot, bukan label kebenaran untuk menghitung accuracy.
+
 
 ### Unit dan integrasi runtime
 
