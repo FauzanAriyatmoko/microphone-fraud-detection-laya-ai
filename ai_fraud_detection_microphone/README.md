@@ -30,7 +30,7 @@ python3 ai_fraud_detection_microphone/backend/app/main.py --dashboard
 
 Buka **http://127.0.0.1:8765/dashboard.html**. Gunakan `--port 8766` jika port tersebut sudah dipakai. Server belum menangkap audio sampai tombol **Mulai pengujian** ditekan.
 
-1. Pilih sumber: mikrofon komputer server, rekaman contoh legacy, atau upload rekaman.
+1. Pilih sumber: mikrofon komputer server atau upload rekaman.
 2. Untuk mikrofon, pilih perangkat dan durasi 5–3.600 detik.
 3. Pilih mode teks: `omit`, `masked`, atau `raw`.
 4. Mulai pengujian, tunggu tahap pemuatan Whisper/Laya, lalu lihat transkripsi dan keputusan.
@@ -51,7 +51,7 @@ Pilihan dashboard berlaku untuk satu run dan tidak menulis ulang YAML/JSON. Seti
 
 Format umum: **WAV, MP3, M4A, FLAC, OGG, WebM**, sesuai codec yang dapat dibaca PyAV. Batasnya **50 MB** (`50 × 1024 × 1024` byte) dan **60 menit audio**. Server memeriksa isi audio lalu mengonversinya secara streaming ke WAV PCM mono 16 kHz. File rusak, tanpa track audio, upload tidak lengkap, atau durasi berlebih ditolak sebelum inference.
 
-Rekaman contoh dan upload diproses **hingga akhir file**; durasi pada dashboard hanya membatasi mikrofon. Hentikan tetap dapat menghentikan pemrosesan rekaman. Satu rekaman valid disimpan sementara untuk pengujian ulang, diganti setelah upload baru berhasil, dan dibersihkan saat server ditutup normal. Setelah server restart, unggah ulang file. Upload baru ditolak selama pipeline aktif.
+Rekaman upload diproses **hingga akhir file**; durasi pada dashboard hanya membatasi mikrofon. Hentikan tetap dapat menghentikan pemrosesan rekaman. Satu rekaman valid disimpan sementara untuk pengujian ulang, diganti setelah upload baru berhasil, dan dibersihkan saat server ditutup normal. Setelah server restart, unggah ulang file. Upload baru ditolak selama pipeline aktif.
 
 ### CLI mikrofon dan replay
 
@@ -70,10 +70,10 @@ python3 ai_fraud_detection_microphone/backend/app/main.py
 python3 ai_fraud_detection_microphone/backend/app/main.py --duration 60
 
 # Replay WAV lokal tanpa mikrofon
-python3 ai_fraud_detection_microphone/backend/app/main.py --replay legacy/test_output_new.wav
+python3 ai_fraud_detection_microphone/backend/app/main.py --replay /path/to/rekaman.wav
 ```
 
-Input replay CLI menggunakan jalur pembaca WAV/SoundFile; gunakan upload dashboard untuk decoding format terkompresi melalui PyAV. Sample rate WAV diambil dari file dan audio dikonversi ke 16 kHz sebelum Whisper. Contoh legacy hanya dapat dijalankan jika file WAV tersebut tersedia secara lokal.
+Input replay CLI menggunakan jalur pembaca WAV/SoundFile; gunakan upload dashboard untuk decoding format terkompresi melalui PyAV. Sample rate WAV diambil dari file dan audio dikonversi ke 16 kHz sebelum Whisper. Path rekaman dipilih sendiri; tidak ada rekaman contoh bawaan.
 
 Entrypoint langsung meneruskan eksekusi ke `scripts/run_standalone.sh` agar import paket, interpreter, serta library CUDA/PortAudio konsisten. Launcher juga dapat dipanggil langsung dengan argumen yang sama. Default interpreter launcher adalah `../.env_laya/bin/python`; gunakan `LAYA_PYTHON=/path/to/python` untuk menggantinya.
 
@@ -423,7 +423,7 @@ Test GPU dilewati pada discovery biasa. Broker fixture hanya mendengarkan loopba
 ```bash
 python3 -m venv .env_laya_broker
 .env_laya_broker/bin/pip install -r ai_fraud_detection_microphone/tests/broker/requirements.txt
-LAYA_RUN_GPU_TESTS=1 .env_laya/bin/python -m unittest discover \
+LAYA_RUN_GPU_TESTS=1 LAYA_TEST_RECORDING=/path/to/rekaman.wav .env_laya/bin/python -m unittest discover \
   -s ai_fraud_detection_microphone/tests -p test_gpu_e2e.py -v
 ```
 
@@ -433,10 +433,10 @@ LAYA_RUN_GPU_TESTS=1 .env_laya/bin/python -m unittest discover \
 python3 -m venv .env_laya_ui
 .env_laya_ui/bin/pip install -r ai_fraud_detection_microphone/tests/browser/requirements.txt
 .env_laya_ui/bin/python -m playwright install chromium
-.env_laya_ui/bin/python ai_fraud_detection_microphone/tests/browser/check_dashboard.py
+.env_laya_ui/bin/python ai_fraud_detection_microphone/tests/browser/check_dashboard.py /path/to/rekaman.wav
 ```
 
-Script menyalakan server loopback pada port sementara, menguji rekaman contoh, penolakan file rusak, upload dan inference GPU, reload saat run, unduhan CSV, start/stop, serta layout desktop/mobile. Server dihentikan setelah uji; screenshot/log tersimpan di `tests/artifacts/`. Pemeriksaan ini membuktikan integrasi pada environment yang diuji, bukan kualitas model atau latency realtime pada semua perangkat.
+Script menyalakan server loopback pada port sementara, menguji rekaman yang dipilih pengguna, penolakan file rusak, upload dan inference GPU, reload saat run, unduhan CSV, start/stop, serta layout desktop/mobile. Server dihentikan setelah uji; screenshot/log tersimpan di `tests/artifacts/`. Pemeriksaan ini membuktikan integrasi pada environment yang diuji, bukan kualitas model atau latency realtime pada semua perangkat.
 
 ## Pemecahan masalah singkat
 

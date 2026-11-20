@@ -86,7 +86,7 @@ Verifikasi: 26 pengujian runtime/broker lulus (GPU opt-in dilewati pada discover
 
 ## Pembaruan dashboard lokal
 
-Entrypoint mendukung `python3 ai_fraud_detection_microphone/backend/app/main.py` melalui launcher yang sama. Flag `--dashboard` menyediakan UI lokal di loopback dengan start/stop pipeline, pemilihan mikrofon server/rekaman contoh, status pemuatan model, hasil transkripsi/keputusan, telemetry, dan CSV download. `backend/internal/delivery/rest_handler.py` sekarang diimplementasikan sebagai controller/API opsional; daemon biasa tetap dapat berjalan tanpa HTTP. Dashboard menonaktifkan MQTT untuk run pengujian dan tidak mengubah konfigurasi permanen.
+Entrypoint mendukung `python3 ai_fraud_detection_microphone/backend/app/main.py` melalui launcher yang sama. Flag `--dashboard` menyediakan UI lokal di loopback dengan start/stop pipeline, pemilihan mikrofon server/upload rekaman, status pemuatan model, hasil transkripsi/keputusan, telemetry, dan CSV download. `backend/internal/delivery/rest_handler.py` sekarang diimplementasikan sebagai controller/API opsional; daemon biasa tetap dapat berjalan tanpa HTTP. Dashboard menonaktifkan MQTT untuk run pengujian dan tidak mengubah konfigurasi permanen.
 
 Lihat README untuk API/flow, batas riwayat, dan pengujian browser. HTML pengujian WebRTC lama kini mengarahkan pengguna ke dashboard Laya; server melayani alias URL lama dengan antarmuka yang sama.
 
@@ -101,3 +101,7 @@ Pengujian mencakup WAV stereo 48 kHz, MP3, file rusak, upload tidak lengkap, bat
 Konfigurasi default kini `model.laya.decision_mode=binary` dan `threshold_fraud=0.50`. Untuk input valid, hanya skor noul menentukan label: >= ambang menjadi FRAUD, di bawahnya TIDAK_FRAUD. Konteks/confidence tetap sebagai diagnostik dan tidak memaksa review. Mode tiered masih tersedia untuk logic review/eskalasi sebelumnya. Input audio tidak lengkap atau token overflow diberi status TIDAK_DAPAT_DINILAI, bukan negatif palsu.
 
 Integrasi mencakup policy, adapter, fallback audio/token, action recommendation, pemilihan audit/topic MQTT, CSV, dashboard dan dokumentasi. Bobot dan kalibrasi model tidak diubah.
+
+## Penghapusan sumber rekaman contoh bawaan
+
+Dashboard dan API sekarang hanya menerima `microphone` dan `upload`. Opsi `sample`, field `sample_available`, dan path rekaman legacy yang sebelumnya dipasang di controller telah dihapus. Permintaan API dengan source lama ditolak sebagai sumber tidak valid. Pengujian browser/GPU menerima path rekaman dari pengguna; replay WAV CLI tetap dapat digunakan dengan path eksplisit.

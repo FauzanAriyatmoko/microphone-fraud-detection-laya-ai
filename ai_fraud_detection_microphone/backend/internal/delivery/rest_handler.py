@@ -64,7 +64,7 @@ class DashboardController:
 
     def start(self,options):
         mode=options.get('source','microphone')
-        if mode not in ['microphone','sample','upload']:raise ValueError('Sumber audio tidak valid')
+        if mode not in ['microphone','upload']:raise ValueError('Sumber audio tidak valid')
         text_mode=options.get('transcript_mode','omit')
         if text_mode not in ['omit','masked','raw']:raise ValueError('Mode transkrip tidak valid')
         duration=options.get('duration',120) if mode=='microphone' else 120
@@ -72,11 +72,7 @@ class DashboardController:
         cfg=load_config(self.config,self.microphone)
         command=[str(ROOT/'scripts/run_standalone.sh'),'--config',str(self.config),'--microphone-config',str(self.microphone),
                  '--dry-run-output','--transcript-mode',text_mode]
-        if mode=='sample':
-            sample=ROOT.parent/'legacy/test_output_new.wav'
-            if not sample.is_file():raise ValueError('Rekaman contoh legacy/test_output_new.wav tidak tersedia')
-            command+=['--replay',str(sample)]
-        elif mode=='upload':
+        if mode=='upload':
             # Resolve opaque IDs inside the lifecycle lock below; never accept client paths.
             pass
         else:
@@ -224,7 +220,7 @@ def make_handler(controller,token,port):
                     self.respond(200,{'model_version':cfg['model_version'],'sample_rate':cfg['microphone']['sample_rate'],
                         'device_index':cfg['microphone'].get('device_index'),'transcript_mode':cfg['storage']['transcript_mode'],
                         'log_dir':cfg['storage']['log_dir'],'decision_csv_enabled':cfg['storage']['decision_csv_enabled'],
-                        'sample_available':(ROOT.parent/'legacy/test_output_new.wav').is_file(),'mqtt_enabled_for_dashboard':False,
+                        'mqtt_enabled_for_dashboard':False,
                         'max_upload_bytes':MAX_UPLOAD_BYTES,'max_audio_seconds':MAX_AUDIO_SECONDS})
                 elif path.path=='/api/export.csv':self.respond(200,controller.export(),'text/csv; charset=utf-8',download=True)
                 else:self.respond(404,{'error':'Tidak ditemukan'})

@@ -1,4 +1,5 @@
 """Optional real-browser smoke test. Run with a Playwright-enabled Python env."""
+import argparse
 import re
 import csv
 import socket
@@ -7,6 +8,11 @@ import time
 from pathlib import Path
 from urllib.request import urlopen
 from playwright.sync_api import sync_playwright,expect
+
+parser=argparse.ArgumentParser()
+parser.add_argument('recording',type=Path,help='User-provided speech recording for upload testing')
+recording=parser.parse_args().recording.resolve()
+if not recording.is_file():parser.error('Recording file not found')
 
 ROOT=Path(__file__).resolve().parents[2]
 ARTIFACTS=ROOT/'tests/artifacts';ARTIFACTS.mkdir(exist_ok=True)
@@ -31,27 +37,14 @@ with (ARTIFACTS/'dashboard_server.log').open('w') as log:
             errors=[];page.on('pageerror',lambda error:errors.append(str(error)))
             page.goto(url);expect(page.locator('#state')).to_have_text('Siap')
             page.screenshot(path=str(ARTIFACTS/'dashboard_desktop.png'),full_page=True)
-            page.select_option('#source','sample');page.select_option('#privacy','omit')
-            page.click('#start')
-            expect(page.locator('#state')).to_have_text(re.compile('^(Memuat model|Berjalan)$'))
-            page.reload()
-            expect(page.locator('#state')).to_have_text(re.compile('^(Memuat model|Berjalan|Selesai)$'))
-            expect(page.locator('#state')).to_have_text('Selesai',timeout=90000)
-            expect(page.locator('#decisions')).not_to_have_text('0')
-            assert page.locator('.item').count()>0
-            assert page.locator('.item').first.inner_text().find('[TRANSCRIPT_OMITTED]')>=0
-            with page.expect_download() as download:
-                page.click('#download')
-            csv_path=ARTIFACTS/'dashboard_download.csv';download.value.save_as(csv_path)
-            with csv_path.open(encoding='utf-8-sig',newline='') as file:rows=list(csv.DictReader(file))
-            assert len(rows)==int(page.locator('#decisions').inner_text())
-            page.screenshot(path=str(ARTIFACTS/'dashboard_results.png'),full_page=True)
+            assert page.locator('#source option').count()==2
+            page.select_option('#privacy','omit')
             page.select_option('#source','upload')
             page.set_input_files('#recording',{'name':'invalid.wav','mimeType':'audio/wav','buffer':b'not audio'})
             page.click('#upload')
             expect(page.locator('#notice')).to_contain_text('tidak dapat dibaca')
             expect(page.locator('#start')).to_be_disabled()
-            page.set_input_files('#recording',str(ROOT.parent/'legacy/test_output_new.wav'))
+            page.set_input_files('#recording',str(recording))
             page.click('#upload')
             expect(page.locator('#uploadInfo')).to_contain_text('siap diuji',timeout=30000)
             page.screenshot(path=str(ARTIFACTS/'dashboard_upload.png'),full_page=True)
@@ -60,7 +53,7 @@ with (ARTIFACTS/'dashboard_server.log').open('w') as log:
             page.reload()
             expect(page.locator('#state')).to_have_text('Selesai',timeout=90000)
             expect(page.locator('#decisions')).not_to_have_text('0')
-            expect(page.locator('#uploadInfo')).to_contain_text('test_output_new.wav')
+            expect(page.locator('#uploadInfo')).to_contain_text(recording.name)
             with page.expect_download() as uploaded_download:
                 page.click('#download')
             uploaded_download.value.save_as(ARTIFACTS/'dashboard_upload_download.csv')
@@ -73,7 +66,7 @@ with (ARTIFACTS/'dashboard_server.log').open('w') as log:
             expect(page.locator('#state')).to_have_text('Selesai',timeout=45000)
             assert not errors,errors
             browser.close()
-            print('Browser QA passed: desktop/mobile, reload, real GPU sample/upload, invalid upload, CSV download, stop; no JS errors.')
+            print('Browser QA passed: desktop/mobile, reload, real GPU upload, invalid upload, CSV download, stop; no JS errors.')
     finally:
         server.terminate()
         try:server.wait(timeout=45)

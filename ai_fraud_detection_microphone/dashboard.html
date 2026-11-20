@@ -518,7 +518,7 @@
     <header>
         <div class="brand">
             <div class="logo" aria-hidden="true">F</div>
-            <div><strong>AI Fraud Detection</strong><small>Hospital Reception · Local Testing Lab</small></div>
+            <div><strong>AI Fraud Detection</strong><small>Hospital Receptionist · Local Testing Lab</small></div>
         </div>
         <div class="headnote">Pengujian mikrofon &amp; deteksi risiko<br>Localhost · CSV + JSONL · Tanpa MQTT</div>
     </header>
@@ -526,13 +526,13 @@
         <aside class="panel controls">
             <div class="eyebrow">Konfigurasi pengujian</div>
             <h1>Mulai dari suara.</h1>
-            <p class="intro">Jalankan pipeline lokal dan amati keputusan Laya secara langsung.</p>
+            <p class="intro">Jalankan pipeline lokal dan amati keputusan AI Fraud Detection secara langsung.</p>
             <div class="field"><label for="source">Sumber audio</label><select id="source">
                     <option value="microphone">Mikrofon komputer server</option>
-                    <option value="sample">Rekaman contoh legacy</option>
                     <option value="upload">Upload rekaman</option>
                 </select>
-                <p id="sourceHint" class="hint">Mikrofon ditangkap oleh Python pada komputer yang menjalankan server ini.</p>
+                <p id="sourceHint" class="hint">Mikrofon ditangkap oleh Python pada komputer yang menjalankan server
+                    ini.</p>
             </div>
             <div id="deviceField" class="field"><label for="device">Perangkat input</label><select id="device">
                     <option value="">Memuat perangkat…</option>
@@ -542,13 +542,15 @@
             <div id="uploadField" class="field" hidden>
                 <label for="recording">File rekaman</label>
                 <input id="recording" type="file" accept=".wav,.mp3,.m4a,.flac,.ogg,.webm,.mp4,.aac,audio/*">
-                <p class="hint">WAV, MP3, M4A, FLAC, OGG, WebM. Maksimal 50 MB dan 60 menit. Audio diproses sampai file selesai.</p>
+                <p class="hint">WAV, MP3, M4A, FLAC, OGG, WebM. Maksimal 50 MB dan 60 menit. Audio diproses sampai file
+                    selesai.</p>
                 <button id="upload" type="button" style="margin-top:10px" disabled>Unggah rekaman</button>
-                <p id="uploadInfo" class="hint" aria-live="polite">Pilih file, lalu unggah sebelum memulai pengujian.</p>
+                <p id="uploadInfo" class="hint" aria-live="polite">Pilih file, lalu unggah sebelum memulai pengujian.
+                </p>
             </div>
-            <div id="durationField" class="field"><label for="duration">Durasi pengujian (detik)</label><input id="duration" type="number"
-                    min="5" max="3600" value="120">
-                <p class="hint">Dimulai setelah model dan audio siap. Rekaman contoh selesai saat file habis.</p>
+            <div id="durationField" class="field"><label for="duration">Durasi pengujian (detik)</label><input
+                    id="duration" type="number" min="5" max="3600" value="120">
+                <p class="hint">Dimulai setelah model dan audio siap. Capture berhenti ketika durasi tercapai.</p>
             </div>
             <div class="field"><label for="privacy">Teks pada hasil pengujian</label><select id="privacy">
                     <option value="omit">Sembunyikan teks (omit)</option>
@@ -607,11 +609,12 @@
                             <path d="M11 23v2a13 13 0 0 0 26 0v-2M24 38v6M17 44h14" stroke="currentColor"
                                 stroke-width="2" />
                         </svg><strong>Siap mendengar percakapan pertama</strong>
-                        <p>Pilih mikrofon, rekaman contoh, atau upload rekaman, lalu mulai pengujian.</p>
+                        <p>Pilih mikrofon atau upload rekaman, lalu mulai pengujian.</p>
                     </div>
                 </div>
             </div>
-            <p class="footer">Model berjalan dalam mode pengujian. Skor adalah indikasi risiko; klasifikasi mengikuti threshold; keputusan review pada mode tiered dapat
+            <p class="footer">Model berjalan dalam mode pengujian. Skor adalah indikasi risiko; klasifikasi mengikuti
+                threshold; keputusan review pada mode tiered dapat
                 terjadi karena konteks atau kualitas audio yang belum cukup. Tampilan menyimpan maksimal 100 utterance;
                 unduhan run dibatasi 2.000 keputusan terbaru. File harian tetap tersedia di direktori log.</p>
         </section>
@@ -638,7 +641,7 @@
             for (const id of ['source', 'device', 'duration', 'privacy', 'refresh', 'recording']) $(id).disabled = busy || active;
             $('deviceField').hidden = $('source').value !== 'microphone';
             $('uploadField').hidden = $('source').value !== 'upload';
-            $('sourceHint').textContent = {microphone:'Mikrofon ditangkap oleh Python pada komputer yang menjalankan server ini.', sample:'Uji pipeline dengan rekaman contoh yang tersedia pada server.', upload:'Unggah rekaman dari perangkat Anda untuk diuji oleh pipeline lokal.'}[$('source').value];
+            $('sourceHint').textContent = { microphone: 'Mikrofon ditangkap oleh Python pada komputer yang menjalankan server ini.', upload: 'Unggah rekaman dari perangkat Anda untuk diuji oleh pipeline lokal.' }[$('source').value];
             $('durationField').hidden = $('source').value !== 'microphone';
             $('upload').disabled = !apiReady || busy || active || !$('recording').files.length;
         }
@@ -659,7 +662,7 @@
             if (event.kind === 'transcription') { card.text.textContent = event.text; card.detail.textContent = 'Speaker: unknown · ' + Number(event.speech_duration_sec || 0).toFixed(1) + ' detik'; }
             else {
                 card.text.textContent = event.transcript || card.text.textContent;
-                card.badge.textContent = event.level || 'PERLU_DICEK'; card.badge.className = 'badge ' + (['ESKALASI','FRAUD'].includes(event.level) ? 'alert' : ['PERLU_DICEK','TIDAK_DAPAT_DINILAI'].includes(event.level) ? 'review' : '');
+                card.badge.textContent = event.level || 'PERLU_DICEK'; card.badge.className = 'badge ' + (['ESKALASI', 'FRAUD'].includes(event.level) ? 'alert' : ['PERLU_DICEK', 'TIDAK_DAPAT_DINILAI'].includes(event.level) ? 'review' : '');
                 const score = typeof event.fraud_score === 'number' ? (event.fraud_score * 100).toFixed(1) + '%' : 'Tidak tersedia';
                 card.detail.textContent = 'Skor risiko: ' + score + ' · Konteks: ' + (event.context_status || 'tidak tersedia') + ' · ' + (event.reason || '');
                 card.action.textContent = event.action_recommendation || ''; card.action.hidden = !event.action_recommendation;
@@ -668,7 +671,7 @@
         function update(data) {
             if (data.run_id !== runId) { runId = data.run_id; cards.clear(); document.querySelectorAll('.item').forEach(n => n.remove()); $('empty').hidden = false; }
             currentState = data.state; apiReady = true;
-            if(data.upload && !$('recording').files.length) showUpload(data.upload);
+            if (data.upload && !$('recording').files.length) showUpload(data.upload);
             if (['starting', 'running', 'stopping'].includes(currentState) && data.options) { $('source').value = data.options.source; $('privacy').value = data.options.transcript_mode; $('duration').value = data.options.duration; if (data.options.device_index !== null) $('device').value = String(data.options.device_index); }
             $('state').textContent = labels[data.state] || data.state; $('state').className = 'badge ' + (data.state === 'error' ? 'alert' : data.state === 'running' ? '' : 'off'); $('stage').textContent = data.stage;
             $('transcripts').textContent = data.counts.transcription; $('decisions').textContent = data.counts.decision; $('csvRows').textContent = data.csv_rows_available; $('download').disabled = !data.csv_rows_available;
@@ -691,7 +694,7 @@
                 if (!data.devices.length) { const opt = node('option', '', 'Tidak ada input audio'); opt.value = ''; $('device').append(opt); }
                 if ([...$('device').options].some(o => o.value === prior)) $('device').value = prior;
                 $('deviceNote').textContent = data.devices.length + ' perangkat input · sample rate capture mengikuti konfigurasi.';
-            } catch (error) { $('device').replaceChildren(); const opt = node('option', '', 'Perangkat tidak tersedia'); opt.value = ''; $('device').append(opt); notice(error.message + ' Anda dapat memakai rekaman contoh.'); }
+            } catch (error) { $('device').replaceChildren(); const opt = node('option', '', 'Perangkat tidak tersedia'); opt.value = ''; $('device').append(opt); notice(error.message + ' Anda dapat mengunggah rekaman.'); }
             controls();
         }
         async function poll() {
@@ -742,7 +745,6 @@
             try {
                 const config = await request('/api/config'); maxUploadBytes = config.max_upload_bytes || maxUploadBytes; $('privacy').value = config.transcript_mode; $('outputPath').textContent = config.log_dir; $('modelInfo').textContent = config.model_version;
                 if (!config.decision_csv_enabled) notice('Ekspor CSV harian dimatikan pada konfigurasi. Unduhan sesi dashboard tetap tersedia.');
-                if (!config.sample_available) $('source').options[1].disabled = true;
                 await devices(); if (config.device_index !== null && [...$('device').options].some(o => o.value === String(config.device_index))) $('device').value = String(config.device_index);
                 await poll(); setInterval(poll, 1000);
             } catch (error) { notice(error.message); $('state').textContent = 'Gagal terhubung'; }

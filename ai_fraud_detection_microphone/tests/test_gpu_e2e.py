@@ -15,6 +15,8 @@ ROOT=Path(__file__).resolve().parents[1]
 @unittest.skipUnless(os.environ.get('LAYA_RUN_GPU_TESTS')=='1','Set LAYA_RUN_GPU_TESTS=1 for real model integration')
 class GPUPipelineTests(unittest.TestCase):
     def test_audio_to_broker_ack(self):
+        recording=Path(os.environ.get('LAYA_TEST_RECORDING',''))
+        if not recording.is_file():self.skipTest('Set LAYA_TEST_RECORDING to a speech WAV for GPU replay')
         import paho.mqtt.client as mqtt
         broker_python=Path(os.environ.get('LAYA_TEST_BROKER_PYTHON',ROOT.parent/'.env_laya_broker/bin/python'))
         with socket.socket() as sock:
@@ -46,7 +48,7 @@ class GPUPipelineTests(unittest.TestCase):
                 config=Path(directory)/'config.yaml';config.write_text(yaml.safe_dump(cfg))
                 env=os.environ.copy()
                 for field in ['HOST','PORT','USERNAME','PASSWORD','CLIENT_ID']:env.pop('LAYA_MQTT_'+field,None)
-                result=subprocess.run([str(ROOT/'scripts/run_standalone.sh'),'--config',str(config),'--replay',str(ROOT.parent/'legacy/test_output_new.wav')],
+                result=subprocess.run([str(ROOT/'scripts/run_standalone.sh'),'--config',str(config),'--replay',str(recording.resolve())],
                       capture_output=True,text=True,timeout=90,env=env)
                 self.assertEqual(result.returncode,0,result.stderr)
                 time.sleep(.2)

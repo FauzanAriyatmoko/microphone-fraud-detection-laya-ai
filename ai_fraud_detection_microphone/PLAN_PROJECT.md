@@ -253,7 +253,7 @@ Entrypoint `python -m backend.app.main` sekarang menjalankan pipeline. Launcher 
 
 ```bash
 scripts/run_standalone.sh --check-config --verify-weights
-scripts/run_standalone.sh --replay ../legacy/test_output_new.wav --dry-run-output
+scripts/run_standalone.sh --replay /path/to/rekaman.wav --dry-run-output
 ```
 
 Perintah di atas dijalankan dari root proyek `ai_fraud_detection_microphone/`. Mode dry-run memakai model asli, menulis audit lokal dan mencetak event yang mengikuti konfigurasi transkrip, tanpa MQTT. Lihat README untuk mode mikrofon, broker, setup dependency, dan systemd.

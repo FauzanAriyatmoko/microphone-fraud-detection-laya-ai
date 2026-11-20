@@ -37,6 +37,7 @@ class HTTPTests(unittest.TestCase):
         self.assertIn('content="test-token"',html)
         self.assertRegex(html,r"token\s*===\s*'__LAYA_TOKEN__'")
         self.assertIn('Mulai pengujian',html)
+        self.assertNotIn('value="sample"',html)
         with self.request('/tests/testing_fraud_detection.html') as r:self.assertEqual(r.read().decode(),html)
     def test_api_rejects_missing_token_cross_origin_and_invalid_host(self):
         for headers in [{'X-Laya-Token':''},{'Origin':'https://untrusted.invalid'},{'Host':'untrusted.invalid'}]:
@@ -46,6 +47,7 @@ class HTTPTests(unittest.TestCase):
         with self.request('/api/config') as response:data=json.load(response)
         self.assertNotIn('password',data);self.assertNotIn('username',data)
         self.assertFalse(data['mqtt_enabled_for_dashboard'])
+        self.assertNotIn('sample_available',data)
     def test_invalid_start_does_not_create_process(self):
         with patch('backend.internal.delivery.rest_handler.subprocess.Popen') as popen:
             with self.assertRaises(HTTPError) as exc:self.request('/api/start',{'source':'invalid'})
@@ -80,12 +82,22 @@ class HTTPTests(unittest.TestCase):
 class LifecycleTests(unittest.TestCase):
     def controller(self):return DashboardController(ROOT/'config/config.yaml',ROOT/'config/microphone.json')
     def test_start_uses_pipeline_launcher_and_blocks_duplicate_runs(self):
-        c=self.controller()
+        c=self.controller();self.addCleanup(c.close)
+        import numpy as np
+        import soundfile as sf
+        audio=io.BytesIO();sf.write(audio,np.full(1600,.1),16000,format='WAV')
+        data=audio.getvalue();upload=c.upload(io.BytesIO(data),len(data),'test.wav')
         with patch('backend.internal.delivery.rest_handler.subprocess.Popen') as popen,patch('backend.internal.delivery.rest_handler.threading.Thread'):
-            c.start({'source':'sample','duration':10,'transcript_mode':'raw'})
+            c.start({'source':'upload','upload_id':upload['upload_id'],'transcript_mode':'raw'})
             command=popen.call_args.args[0]
             self.assertIn('--dry-run-output',command);self.assertIn('--replay',command);self.assertIn('raw',command)
-            with self.assertRaises(RuntimeError):c.start({'source':'sample'})
+            with self.assertRaises(RuntimeError):c.start({'source':'upload','upload_id':upload['upload_id']})
+    def test_removed_sample_source_is_rejected(self):
+        c=self.controller()
+        with patch('backend.internal.delivery.rest_handler.subprocess.Popen') as popen:
+            with self.assertRaises(ValueError):c.start({'source':'sample'})
+            popen.assert_not_called()
+
     def test_monitor_handles_all_decisions_and_stage(self):
         c=self.controller();c.state='starting'
         event={'event':{'kind':'decision','utterance_id':'id','level':'TIDAK_ADA_INDIKASI'}}
