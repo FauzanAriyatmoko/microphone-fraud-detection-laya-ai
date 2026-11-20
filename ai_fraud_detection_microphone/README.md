@@ -409,8 +409,6 @@ Dataset v3 tersedia dalam split train 1.200, calibration 240, validation 400, da
 
 [Laporan training](training/evaluation/RESULTS.md) adalah **snapshot eksperimen sebelumnya** dengan ambang diagnostik 0,50 dan policy bundle saat itu. Laporan tersebut tidak berarti runtime sekarang selalu review dan tidak menjadi pengukuran hasil threshold 65%. Model terpilih tetap seed 2; perubahan runtime tidak menjalankan training baru. Screenshot pengujian juga bukan pengganti evaluasi akurasi pada data independen.
 
-[PLAN_PROJECT.md](PLAN_PROJECT.md) memuat roadmap; [IMPLEMENTATION_REVIEW.md](IMPLEMENTATION_REVIEW.md) memuat audit implementasi. Ketersediaan mikrofon target, akses broker target, pemasangan service, dan soak test perlu diverifikasi pada lingkungan deployment.
-
 ## Pengujian
 
 ### Uji kalimat langsung tanpa STT
